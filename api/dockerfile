@@ -1,0 +1,13 @@
+FROM golang:1.20
+
+WORKDIR /api
+
+COPY . .
+
+RUN go mod download
+RUN go mod tidy
+
+EXPOSE 8081
+
+# 起動コマンド
+CMD ["go", "run", "main.go"]

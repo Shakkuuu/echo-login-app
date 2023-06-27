@@ -1,0 +1,50 @@
+version: "3"
+
+services:
+  api:
+    container_name: echo-login-app-api
+    build: ./api
+    tty: true
+    volumes:
+      - ./api:/api
+    ports:
+      - 8081:8081
+    environment:
+      PMA_HOST: db:3306
+      USERNAME: ${ELA_USERNAME}
+      USERPASS: ${ELA_USERPASS}
+      DATABASE: ${ELA_DATABASE}
+      ROOTPASS: ${ELA_ROOTPASS}
+    depends_on:
+      - "db"
+  app:
+    container_name: echo-login-app-app
+    build: ./app
+    tty: true
+    volumes:
+      - ./app:/app
+    ports:
+      - 8082:8082
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${ELA_ROOTPASS}
+      MYSQL_DATABASE: ${ELA_DATABASE}
+      MYSQL_USER: ${ELA_USERNAME}
+      MYSQL_PASSWORD: ${ELA_USERPASS}
+      MYSQL_TCP_PORT: 3306
+      TZ: 'Asia/Tokyo'
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    tty: true
+    restart: always
+
+volumes:
+  mysql-data:
+    driver: local
