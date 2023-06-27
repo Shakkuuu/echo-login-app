@@ -10,7 +10,16 @@ import (
 func main() {
 	e := echo.New()
 	e.Use(middleware.Recover())
-	e.Use(middleware.Logger())
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "\n" + `time: ${time_rfc3339_nano}` + "\n" +
+			`method: ${method}` + "\n" +
+			`remote_ip: ${remote_ip}` + "\n" +
+			`host: ${host}` + "\n" +
+			`uri: ${uri}` + "\n" +
+			`status: ${status}` + "\n" +
+			`error: ${error}` + "\n" +
+			`latency: ${latency}(${latency_human})` + "\n",
+	}))
 
 	e.GET("/taro", Taro)
 	e.Logger.Fatal(e.Start(":8081"))
