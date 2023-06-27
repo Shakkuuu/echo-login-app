@@ -34,7 +34,7 @@ func main() {
 	}))
 
 	renderer := &TemplateRender{
-		templates: template.Must(template.ParseGlob("../views/*.html")),
+		templates: template.Must(template.ParseGlob("./views/*.html")),
 	}
 	e.Renderer = renderer
 
