@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"io"
+	"log"
 	"net/http"
 	"text/template"
 
@@ -39,6 +41,7 @@ func main() {
 	e.GET("/", Hello)
 	e.GET("/map", Mappp)
 	e.GET("struct", Structtt)
+	e.GET("taroget", GetTaro)
 	e.Logger.Fatal(e.Start(":8082"))
 }
 
@@ -63,4 +66,32 @@ func Structtt(c echo.Context) error {
 
 func Hello(c echo.Context) error {
 	return c.String(http.StatusOK, "Hello")
+}
+
+type Taro struct {
+	Name string `json:"name"`
+	Age  int    `json:"age"`
+}
+
+func GetTaro(c echo.Context) error {
+	url := "http://localhost:8081/taro"
+
+	resp, err := http.Get(url)
+	if err != nil {
+		log.Printf("error http.Get: %v", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("error io.ReadAll: %v", err)
+	}
+
+	// openしたjsonを構造体にデコード
+	var d Taro
+	if err := json.Unmarshal(body, &d); err != nil {
+		log.Printf("error json.Unmarshal: %v", err)
+	}
+
+	return c.Render(http.StatusOK, "gettaro", d)
 }
