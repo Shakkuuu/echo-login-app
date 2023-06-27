@@ -6,6 +6,7 @@ import (
 	"text/template"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 type TemplateRender struct {
@@ -18,16 +19,18 @@ func (t *TemplateRender) Render(w io.Writer, name string, data interface{}, c ec
 
 func main() {
 	e := echo.New()
+	e.Use(middleware.Recover())
+	e.Use(middleware.Logger())
 
 	renderer := &TemplateRender{
-		templates: template.Must(template.ParseGlob("views/*.html")),
+		templates: template.Must(template.ParseGlob("../views/*.html")),
 	}
 	e.Renderer = renderer
 
 	e.GET("/", Hello)
 	e.GET("/map", Mappp)
 	e.GET("struct", Structtt)
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Logger.Fatal(e.Start(":8082"))
 }
 
 func Mappp(c echo.Context) error {
