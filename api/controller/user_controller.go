@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo"
 )
 
-type ErrRes entity.ErrorResponse
+type ResMess entity.ResponseMessage
 
 type UserController struct{}
 
@@ -20,7 +20,7 @@ func (uc UserController) GetAll(c echo.Context) error {
 	if err != nil {
 		message := fmt.Sprintf("UserService.GetAll: %d", err)
 		log.Printf(message)
-		e := ErrRes{Status: 500, Message: message}
+		e := ResMess{Status: 500, Message: message}
 		return c.JSON(e.Status, e)
 	}
 
@@ -35,7 +35,7 @@ func (uc UserController) Create(c echo.Context) error {
 	if err != nil {
 		message := fmt.Sprintf("User Create Bind: %d", err)
 		log.Printf(message)
-		e := ErrRes{Status: 500, Message: message}
+		e := ResMess{Status: 500, Message: message}
 		return c.JSON(e.Status, e)
 	}
 
@@ -43,9 +43,43 @@ func (uc UserController) Create(c echo.Context) error {
 	if err != nil {
 		message := fmt.Sprintf("UserService.Create: %d", err)
 		log.Printf(message)
-		e := ErrRes{Status: 500, Message: message}
+		e := ResMess{Status: 500, Message: message}
 		return c.JSON(e.Status, e)
 	}
 
 	return c.JSON(201, user)
+}
+
+func (uc UserController) GetByID(c echo.Context) error {
+	id := c.Param("id")
+
+	var us service.UserService
+
+	u, err := us.GetByID(id)
+	if err != nil {
+		message := fmt.Sprintf("UserService.GetByID: %d", err)
+		log.Printf(message)
+		e := ResMess{Status: 500, Message: message}
+		return c.JSON(e.Status, e)
+	}
+
+	return c.JSON(200, u)
+}
+
+func (uc UserController) Delete(c echo.Context) error {
+	id := c.Param("id")
+
+	var us service.UserService
+
+	err := us.Delete(id)
+	if err != nil {
+		message := fmt.Sprintf("UserService.GetAll: %d", err)
+		log.Printf(message)
+		e := ResMess{Status: 500, Message: message}
+		return c.JSON(e.Status, e)
+	}
+
+	m := ResMess{Status: 200, Message: "User Deleted: " + id}
+
+	return c.JSON(200, m)
 }

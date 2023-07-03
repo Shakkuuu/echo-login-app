@@ -24,6 +24,8 @@ func Init() {
 	var uc controller.UserController
 	e.GET("/user", uc.GetAll)
 	e.POST("/user", uc.Create)
+	e.GET("/user/:id", uc.GetByID)
+	e.DELETE("/user/:id", uc.Delete)
 
 	e.Logger.Fatal(e.Start(":8081"))
 }

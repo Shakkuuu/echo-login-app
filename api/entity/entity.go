@@ -9,7 +9,7 @@ type User struct {
 	CreatedAt time.Time `json:"createdat"`
 }
 
-type ErrorResponse struct {
+type ResponseMessage struct {
 	Status  int    `json:"status"`
 	Message string `json:"message"`
 }
