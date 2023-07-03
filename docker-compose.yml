@@ -10,7 +10,7 @@ services:
     ports:
       - 8081:8081
     environment:
-      PMA_HOST: db:3306
+      PMA_HOST: db:3307
       USERNAME: ${ELA_USERNAME}
       USERPASS: ${ELA_USERPASS}
       DATABASE: ${ELA_DATABASE}
@@ -32,14 +32,14 @@ services:
       MYSQL_DATABASE: ${ELA_DATABASE}
       MYSQL_USER: ${ELA_USERNAME}
       MYSQL_PASSWORD: ${ELA_USERPASS}
-      MYSQL_TCP_PORT: 3306
+      MYSQL_TCP_PORT: 3307
       TZ: 'Asia/Tokyo'
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
       - mysql-data:/var/lib/mysql
       - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
     ports:
-      - 3306:3306
+      - 3307:3307
     expose:
       - 3306
     tty: true

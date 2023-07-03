@@ -1,37 +1,24 @@
 package main
 
 import (
-	"net/http"
-
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	"echo-login-app/api/db"
+	"echo-login-app/api/server"
+	"os"
 )
 
 func main() {
-	e := echo.New()
-	e.Use(middleware.Recover())
-	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Format: "\n" + `time: ${time_rfc3339_nano}` + "\n" +
-			`method: ${method}` + "\n" +
-			`remote_ip: ${remote_ip}` + "\n" +
-			`host: ${host}` + "\n" +
-			`uri: ${uri}` + "\n" +
-			`status: ${status}` + "\n" +
-			`error: ${error}` + "\n" +
-			`latency: ${latency}(${latency_human})` + "\n",
-	}))
+	un, up, dbn := loadEnv()
+	db.Init(un, up, dbn)
+	server.Init()
 
-	e.GET("/taro", Taro)
-	e.Logger.Fatal(e.Start(":8081"))
+	db.Close()
 }
 
-func Taro(c echo.Context) error {
-	d := struct {
-		Name string `json:"name"`
-		Age  int    `json:"age"`
-	}{
-		Name: "Taro",
-		Age:  1200,
-	}
-	return c.JSON(http.StatusOK, d)
+func loadEnv() (string, string, string) {
+	// Docker-compose.ymlでDocker起動時に設定した環境変数の取得
+	username := os.Getenv("USERNAME")
+	userpass := os.Getenv("USERPASS")
+	database := os.Getenv("DATABASE")
+
+	return username, userpass, database
 }
