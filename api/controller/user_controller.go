@@ -18,8 +18,8 @@ func (uc UserController) GetAll(c echo.Context) error {
 
 	u, err := us.GetAll()
 	if err != nil {
-		message := fmt.Sprintf("UserService.GetAll: %d", err)
-		log.Printf(message)
+		message := fmt.Sprintf("UserService.GetAll: %v", err)
+		log.Println(message)
 		e := ResMess{Status: 500, Message: message}
 		return c.JSON(e.Status, e)
 	}
@@ -33,16 +33,16 @@ func (uc UserController) Create(c echo.Context) error {
 	var u entity.User
 	err := c.Bind(&u)
 	if err != nil {
-		message := fmt.Sprintf("User Create Bind: %d", err)
-		log.Printf(message)
+		message := fmt.Sprintf("User Create Bind: %v", err)
+		log.Println(message)
 		e := ResMess{Status: 500, Message: message}
 		return c.JSON(e.Status, e)
 	}
 
 	user, err := us.Create(&u)
 	if err != nil {
-		message := fmt.Sprintf("UserService.Create: %d", err)
-		log.Printf(message)
+		message := fmt.Sprintf("UserService.Create: %v", err)
+		log.Println(message)
 		e := ResMess{Status: 500, Message: message}
 		return c.JSON(e.Status, e)
 	}
@@ -57,8 +57,8 @@ func (uc UserController) GetByID(c echo.Context) error {
 
 	u, err := us.GetByID(id)
 	if err != nil {
-		message := fmt.Sprintf("UserService.GetByID: %d", err)
-		log.Printf(message)
+		message := fmt.Sprintf("UserService.GetByID: %v", err)
+		log.Println(message)
 		e := ResMess{Status: 500, Message: message}
 		return c.JSON(e.Status, e)
 	}
@@ -73,8 +73,8 @@ func (uc UserController) Delete(c echo.Context) error {
 
 	err := us.Delete(id)
 	if err != nil {
-		message := fmt.Sprintf("UserService.GetAll: %d", err)
-		log.Printf(message)
+		message := fmt.Sprintf("UserService.GetAll: %v", err)
+		log.Println(message)
 		e := ResMess{Status: 500, Message: message}
 		return c.JSON(e.Status, e)
 	}
