@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Top</title>
+</head>
+<body>
+    <h1>Top</h1>
+    {{range $v := .}}
+        <div>
+            <div>
+                <p>{{$v.Name}}</p>
+            </div>
+        </div>
+    {{end}}
+</body>
+</html>
