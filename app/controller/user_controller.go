@@ -50,6 +50,24 @@ func (uc UserController) Login(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "login.html", m)
 	}
 
+	ulist, err := us.GetAll()
+	if err != nil {
+		log.Println("us.GetAll error")
+	}
+	var count int = 0
+	for _, v := range ulist {
+		if v.Name == username {
+			count++
+		}
+	}
+	if count == 0 {
+		log.Println("そのユーザー名は存在しません")
+		m := map[string]interface{}{
+			"message": "そのユーザー名は存在しません",
+		}
+		return c.Render(http.StatusBadRequest, "login.html", m)
+	}
+
 	u, err := us.GetByName(username)
 	if err != nil {
 		log.Println("ID取得時にエラーが発生しました。")
