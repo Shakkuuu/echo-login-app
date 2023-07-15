@@ -5,8 +5,10 @@ import (
 	"io"
 	"text/template"
 
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/gorilla/sessions"
+	"github.com/labstack/echo-contrib/session"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 type TemplateRender struct {
@@ -30,6 +32,7 @@ func Init() {
 			`error: ${error}` + "\n" +
 			`latency: ${latency}(${latency_human})` + "\n",
 	}))
+	e.Use(session.Middleware(sessions.NewCookieStore([]byte("secret"))))
 
 	renderer := &TemplateRender{
 		templates: template.Must(template.ParseGlob("./views/*.html")),
