@@ -9,6 +9,8 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserService struct{}
@@ -89,11 +91,18 @@ func (us UserService) Login(id int, username, password string) error {
 		return err
 	}
 
-	if password != u.Password {
+	err = bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
+	if err != nil {
+		log.Printf("error bcrypt.CompareHashAndPassword: %v", err)
 		err := fmt.Errorf("パスワードが一致していません。")
 		log.Printf("パスワードチェック: %v", err)
 		return err
 	}
+	// if password != u.Password {
+	// 	err := fmt.Errorf("パスワードが一致していません。")
+	// 	log.Printf("パスワードチェック: %v", err)
+	// 	return err
+	// }
 
 	return nil
 }

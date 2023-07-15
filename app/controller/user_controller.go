@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/labstack/echo"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserController struct{}
@@ -131,11 +132,20 @@ func (uc UserController) Signup(c echo.Context) error {
 	rand.Seed(time.Now().UnixNano())
 	id := rand.Intn(100000000)
 
-	err = us.Create(id, username, password)
+	hashp, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		log.Println("bcrypt.GenerateFromPassword error")
+		m := map[string]interface{}{
+			"message": "ユーザー作成時にエラーが発生しました。",
+		}
+		return c.Render(http.StatusBadRequest, "signup.html", m)
+	}
+
+	err = us.Create(id, username, string(hashp))
 	if err != nil {
 		log.Println("us.Create error")
 		m := map[string]interface{}{
-			"message": "作成時にエラーが発生しました。",
+			"message": "ユーザー作成時にエラーが発生しました。",
 		}
 		return c.Render(http.StatusBadRequest, "signup.html", m)
 	}
