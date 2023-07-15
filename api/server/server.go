@@ -26,7 +26,8 @@ func Init() {
 	e.GET("/", Pong)
 	e.GET("/user", uc.GetAll)
 	e.POST("/user", uc.Create)
-	e.GET("/user/:id", uc.GetByID)
+	e.GET("/user/id/:id", uc.GetByID)
+	e.GET("/user/username/:username", uc.GetByName)
 	e.DELETE("/user/:id", uc.Delete)
 
 	e.Logger.Fatal(e.Start(":8081"))

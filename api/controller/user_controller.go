@@ -66,6 +66,22 @@ func (uc UserController) GetByID(c echo.Context) error {
 	return c.JSON(200, u)
 }
 
+func (uc UserController) GetByName(c echo.Context) error {
+	id := c.Param("username")
+
+	var us service.UserService
+
+	u, err := us.GetByName(id)
+	if err != nil {
+		message := fmt.Sprintf("UserService.GetByName: %v", err)
+		log.Println(message)
+		e := ResMess{Status: 500, Message: message}
+		return c.JSON(e.Status, e)
+	}
+
+	return c.JSON(200, u)
+}
+
 func (uc UserController) Delete(c echo.Context) error {
 	id := c.Param("id")
 

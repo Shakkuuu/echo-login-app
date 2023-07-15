@@ -38,5 +38,9 @@ func Init() {
 
 	var uc controller.UserController
 	e.GET("/", uc.Index)
+	e.GET("/signup", uc.SignupView)
+	e.GET("/login", uc.LoginView)
+	e.POST("/signup", uc.Signup)
+	e.POST("/login", uc.Login)
 	e.Logger.Fatal(e.Start(":8082"))
 }
