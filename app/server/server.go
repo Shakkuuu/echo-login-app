@@ -45,5 +45,11 @@ func Init() {
 	e.GET("/login", uc.LoginView)
 	e.POST("/signup", uc.Signup)
 	e.POST("/login", uc.Login)
+
+	app := e.Group("/app")
+	var ac controller.AppController
+	app.Use(controller.SessionCheck)
+	app.GET("", ac.Top)
+
 	e.Logger.Fatal(e.Start(":8082"))
 }

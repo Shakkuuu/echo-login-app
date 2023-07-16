@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gorilla/sessions"
+	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -87,8 +89,32 @@ func (uc UserController) Login(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "login.html", m)
 	}
 
+	// セッション
+	sess, err := session.Get("session", c)
+	if err != nil {
+		log.Printf("session.Get error: %v\n", err)
+		m := map[string]interface{}{
+			"message": "セッションの確立に失敗しました。もう一度お試しください。",
+		}
+		return c.Render(http.StatusBadRequest, "login.html", m)
+	}
+	sess.Options = &sessions.Options{
+		MaxAge:   600,
+		HttpOnly: true,
+	}
+	sess.Values["ID"] = u.ID
+	sess.Values["auth"] = true
+	err = sess.Save(c.Request(), c.Response())
+	if err != nil {
+		log.Printf("session.Save error: %v\n", err)
+		m := map[string]interface{}{
+			"message": "セッションの確立に失敗しました。もう一度お試しください。",
+		}
+		return c.Render(http.StatusBadRequest, "login.html", m)
+	}
+
 	fmt.Println("ログイン成功したよ")
-	return c.Redirect(http.StatusFound, "/")
+	return c.Redirect(http.StatusFound, "/app")
 }
 
 func (uc UserController) Signup(c echo.Context) error {
@@ -151,5 +177,5 @@ func (uc UserController) Signup(c echo.Context) error {
 	}
 
 	fmt.Println("ユーザー登録成功したよ")
-	return c.Redirect(http.StatusFound, "/")
+	return c.Redirect(http.StatusFound, "/login")
 }

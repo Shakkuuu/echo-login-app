@@ -2,10 +2,10 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>Top</title>
+    <title>index</title>
 </head>
 <body>
-    <h1>Top</h1>
+    <h1>index</h1>
     {{range $v := .}}
         <div>
             <div>
@@ -13,5 +13,8 @@
             </div>
         </div>
     {{end}}
+    <p><a href="/login">ログイン</a></p>
+    <p><a href="/signup">サインアップ</a></p>
+    <p><a href="/app">メインページ(ログインが必要です)</a></p>
 </body>
 </html>

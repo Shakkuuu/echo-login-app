@@ -65,6 +65,32 @@ func (us UserService) GetByName(username string) (entity.User, error) {
 	return u, nil
 }
 
+func (us UserService) GetByID(id int) (entity.User, error) {
+	var u entity.User
+	sid := strconv.Itoa(id)
+	url := "http://echo-login-app-api:8081/user/id/" + sid
+
+	resp, err := http.Get(url)
+	if err != nil {
+		log.Printf("error http.Get: %v", err)
+		return u, err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("error io.ReadAll: %v", err)
+		return u, err
+	}
+
+	if err := json.Unmarshal(body, &u); err != nil {
+		log.Printf("error json.Unmarshal: %v", err)
+		return u, err
+	}
+
+	return u, nil
+}
+
 func (us UserService) Login(id int, username, password string) error {
 	var u entity.User
 	sid := strconv.Itoa(id)
@@ -98,11 +124,6 @@ func (us UserService) Login(id int, username, password string) error {
 		log.Printf("パスワードチェック: %v", err)
 		return err
 	}
-	// if password != u.Password {
-	// 	err := fmt.Errorf("パスワードが一致していません。")
-	// 	log.Printf("パスワードチェック: %v", err)
-	// 	return err
-	// }
 
 	return nil
 }
