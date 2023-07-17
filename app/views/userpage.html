@@ -11,7 +11,22 @@
     <p><a href="/setting/changename">ユーザー名変更</a></p>
     <p><a href="/setting/changepassword">パスワード変更</a></p>
     <p><a href="/setting/logout">ログアウト</a></p>
-    <p><a href="/setting/delete">ユーザー削除</a></p>
+
+    <p><a href="/setting/delete" target="_blank" class="link_confirm">ユーザー削除</a></p>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const linkConfirms = Array.prototype.slice.call(document.querySelectorAll('.link_confirm'));
+            linkConfirms.forEach(function(linkConfirm) {
+                linkConfirm.addEventListener('click', function(event) {
+                    const resultConfirm = confirm('ユーザーを削除します。よろしいですか？');
+                    if(!resultConfirm) {
+                        event.preventDefault();
+                    }
+                });
+            });
+        }, false);
+    </script>
+
     <p><a href="/app">戻る</a></p>
 </body>
 </html>
