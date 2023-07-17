@@ -16,8 +16,10 @@ import (
 
 type UserController struct{}
 
+// GET indexページ表示
 func (uc UserController) Index(c echo.Context) error {
 	var us service.UserService
+	// ユーザー全取得
 	u, err := us.GetAll()
 	if err != nil {
 		log.Println("us.GetAll error")
@@ -25,6 +27,7 @@ func (uc UserController) Index(c echo.Context) error {
 	return c.Render(http.StatusOK, "index.html", u)
 }
 
+// GET Loginページ表示
 func (uc UserController) LoginView(c echo.Context) error {
 	m := map[string]interface{}{
 		"message": "",
@@ -32,6 +35,7 @@ func (uc UserController) LoginView(c echo.Context) error {
 	return c.Render(http.StatusOK, "login.html", m)
 }
 
+// GET Signupページ表示
 func (uc UserController) SignupView(c echo.Context) error {
 	m := map[string]interface{}{
 		"message": "",
@@ -39,12 +43,15 @@ func (uc UserController) SignupView(c echo.Context) error {
 	return c.Render(http.StatusOK, "signup.html", m)
 }
 
+// POST Login処理
 func (uc UserController) Login(c echo.Context) error {
 	var us service.UserService
 
+	// htmlのformから値取得
 	username := c.FormValue("username")
 	password := c.FormValue("password")
 
+	// 入力漏れチェック
 	if username == "" || password == "" {
 		log.Println("入力されていない項目があるよ。")
 		m := map[string]interface{}{
@@ -53,6 +60,7 @@ func (uc UserController) Login(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "login.html", m)
 	}
 
+	// ユーザー名が存在するかチェック
 	ulist, err := us.GetAll()
 	if err != nil {
 		log.Println("us.GetAll error")
@@ -71,6 +79,7 @@ func (uc UserController) Login(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "login.html", m)
 	}
 
+	// ユーザー名からID取得
 	u, err := us.GetByName(username)
 	if err != nil {
 		log.Println("ID取得時にエラーが発生しました。")
@@ -80,6 +89,7 @@ func (uc UserController) Login(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "login.html", m)
 	}
 
+	// Login処理 パスワードチェック
 	err = us.Login(u.ID, password)
 	if err != nil {
 		log.Println("us.Login error")
@@ -98,10 +108,12 @@ func (uc UserController) Login(c echo.Context) error {
 		}
 		return c.Render(http.StatusBadRequest, "login.html", m)
 	}
+	// セッション作成
 	sess.Options = &sessions.Options{
 		MaxAge:   600,
 		HttpOnly: true,
 	}
+	// セッションに値入れ
 	sess.Values["ID"] = u.ID
 	sess.Values["auth"] = true
 	err = sess.Save(c.Request(), c.Response())
@@ -117,14 +129,16 @@ func (uc UserController) Login(c echo.Context) error {
 	return c.Redirect(http.StatusFound, "/app")
 }
 
+// POST Signup処理
 func (uc UserController) Signup(c echo.Context) error {
 	var us service.UserService
 
-	// id, _ := strconv.Atoi(c.FormValue("id"))
+	// htmlからformの取得
 	username := c.FormValue("username")
 	password := c.FormValue("password")
 	checkpass := c.FormValue("checkpassword")
 
+	// 入力漏れチェック
 	if username == "" || password == "" || checkpass == "" {
 		log.Println("入力されていない項目があるよ。")
 		m := map[string]interface{}{
@@ -133,6 +147,7 @@ func (uc UserController) Signup(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "signup.html", m)
 	}
 
+	// 確認用再入力パスワードがあっているか
 	if password != checkpass {
 		log.Println("パスワードが一致していないよ。")
 		m := map[string]interface{}{
@@ -141,6 +156,7 @@ func (uc UserController) Signup(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "signup.html", m)
 	}
 
+	// 既にユーザー名が使用されていないかチェック
 	u, err := us.GetAll()
 	if err != nil {
 		log.Println("us.GetAll error")
@@ -155,9 +171,11 @@ func (uc UserController) Signup(c echo.Context) error {
 		}
 	}
 
+	// ID生成
 	rand.Seed(time.Now().UnixNano())
 	id := rand.Intn(100000000)
 
+	// パスワードのハッシュ化
 	hashp, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		log.Println("bcrypt.GenerateFromPassword error")
@@ -167,6 +185,7 @@ func (uc UserController) Signup(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "signup.html", m)
 	}
 
+	// ユーザー作成
 	err = us.Create(id, username, string(hashp))
 	if err != nil {
 		log.Println("us.Create error")
@@ -180,6 +199,7 @@ func (uc UserController) Signup(c echo.Context) error {
 	return c.Redirect(http.StatusFound, "/login")
 }
 
+// GET ログイン後のユーザーページ
 func (uc UserController) UserPage(c echo.Context) error {
 	// セッション
 	sess, err := session.Get("session", c)
@@ -199,6 +219,7 @@ func (uc UserController) UserPage(c echo.Context) error {
 	}
 	id := sess.Values["ID"].(int)
 	var us service.UserService
+	// セッションに保存されているIDからユーザーデータの取得
 	u, err := us.GetByID(id)
 	if err != nil {
 		log.Printf("service.GetByID error: %v\n", err)
@@ -210,6 +231,7 @@ func (uc UserController) UserPage(c echo.Context) error {
 	return c.Render(http.StatusOK, "userpage.html", u)
 }
 
+// GET ログアウト処理
 func (uc UserController) Logout(c echo.Context) error {
 	// セッション
 	sess, err := session.Get("session", c)
@@ -221,6 +243,7 @@ func (uc UserController) Logout(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "login.html", m)
 	}
 
+	// セッションの無効化
 	sess.Values["auth"] = false
 	sess.Options.MaxAge = -1
 	err = sess.Save(c.Request(), c.Response())
@@ -237,6 +260,7 @@ func (uc UserController) Logout(c echo.Context) error {
 	return c.Render(http.StatusOK, "login.html", m)
 }
 
+// GET ユーザー名変更ページ
 func (uc UserController) ChangeNameView(c echo.Context) error {
 	m := map[string]interface{}{
 		"message": "",
@@ -244,11 +268,14 @@ func (uc UserController) ChangeNameView(c echo.Context) error {
 	return c.Render(http.StatusOK, "userchangename.html", m)
 }
 
+// POST ユーザー名変更処理
 func (uc UserController) ChangeName(c echo.Context) error {
 	var us service.UserService
 
+	// htmlのformから値の取得
 	username := c.FormValue("username")
 
+	// 入力漏れのチェック
 	if username == "" {
 		log.Println("入力されていない項目があるよ。")
 		m := map[string]interface{}{
@@ -257,6 +284,7 @@ func (uc UserController) ChangeName(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "userchangename.html", m)
 	}
 
+	// ユーザー名が既に使用されていないかチェック
 	u, err := us.GetAll()
 	if err != nil {
 		log.Println("us.GetAll error")
@@ -288,16 +316,9 @@ func (uc UserController) ChangeName(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "userchangename.html", m)
 	}
 	id := sess.Values["ID"].(int)
-	user, err := us.GetByID(id)
-	if err != nil {
-		log.Printf("service.GetByID error: %v\n", err)
-		m := map[string]interface{}{
-			"message": "ユーザーデータの取得に失敗しました。",
-		}
-		return c.Render(http.StatusBadRequest, "userchangename.html", m)
-	}
 
-	err = us.ChangeName(user.ID, username)
+	// ユーザー名変更処理
+	err = us.ChangeName(id, username)
 	if err != nil {
 		log.Println("us.ChangeName error")
 		m := map[string]interface{}{
@@ -310,6 +331,7 @@ func (uc UserController) ChangeName(c echo.Context) error {
 	return c.Redirect(http.StatusFound, "/app")
 }
 
+// GET ユーザーパスワード変更ページ
 func (uc UserController) ChangePasswordView(c echo.Context) error {
 	m := map[string]interface{}{
 		"message": "",
@@ -317,13 +339,16 @@ func (uc UserController) ChangePasswordView(c echo.Context) error {
 	return c.Render(http.StatusOK, "userchangepassword.html", m)
 }
 
+// POST ユーザーパスワード変更処理
 func (uc UserController) ChangePassword(c echo.Context) error {
 	var us service.UserService
 
+	// htmlのformから値の取得
 	oldpassword := c.FormValue("oldpassword")
 	newpassword := c.FormValue("newpassword")
 	newcheckpassword := c.FormValue("newcheckpassword")
 
+	// 入力漏れのチェック
 	if oldpassword == "" || newpassword == "" || newcheckpassword == "" {
 		log.Println("入力されていない項目があるよ。")
 		m := map[string]interface{}{
@@ -332,6 +357,7 @@ func (uc UserController) ChangePassword(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "userchangepassword.html", m)
 	}
 
+	// 新しいパスワードと確認用再入力パスワードが一致しているかチェック
 	if newpassword != newcheckpassword {
 		log.Println("新しいパスワードが一致していないよ。")
 		m := map[string]interface{}{
@@ -357,16 +383,9 @@ func (uc UserController) ChangePassword(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "userchangepassword.html", m)
 	}
 	id := sess.Values["ID"].(int)
-	user, err := us.GetByID(id)
-	if err != nil {
-		log.Printf("service.GetByID error: %v\n", err)
-		m := map[string]interface{}{
-			"message": "ユーザーデータの取得に失敗しました。",
-		}
-		return c.Render(http.StatusBadRequest, "userchangepassword.html", m)
-	}
 
-	err = us.Login(user.ID, oldpassword)
+	// パスワードチェック
+	err = us.Login(id, oldpassword)
 	if err != nil {
 		log.Println("us.Login error")
 		m := map[string]interface{}{
@@ -375,6 +394,7 @@ func (uc UserController) ChangePassword(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "userchangepassword.html", m)
 	}
 
+	// パスワードのハッシュ化
 	hashp, err := bcrypt.GenerateFromPassword([]byte(newpassword), bcrypt.DefaultCost)
 	if err != nil {
 		log.Println("bcrypt.GenerateFromPassword error")
@@ -384,7 +404,8 @@ func (uc UserController) ChangePassword(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, ".html", m)
 	}
 
-	err = us.ChangePassword(user.ID, string(hashp))
+	// パスワードの変更処理
+	err = us.ChangePassword(id, string(hashp))
 	if err != nil {
 		log.Println("us.ChangePassword error")
 		m := map[string]interface{}{
@@ -398,9 +419,9 @@ func (uc UserController) ChangePassword(c echo.Context) error {
 		"message": "パスワードの変更成功したよ",
 	}
 	return c.Render(http.StatusFound, "userchangepassword.html", m)
-	// return c.Redirect(http.StatusFound, "/app")
 }
 
+// GET ユーザー削除処理
 func (uc UserController) Delete(c echo.Context) error {
 	var us service.UserService
 
@@ -421,16 +442,9 @@ func (uc UserController) Delete(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "top.html", m)
 	}
 	id := sess.Values["ID"].(int)
-	user, err := us.GetByID(id)
-	if err != nil {
-		log.Printf("service.GetByID error: %v\n", err)
-		m := map[string]interface{}{
-			"message": "ユーザーデータの取得に失敗しました。",
-		}
-		return c.Render(http.StatusBadRequest, "top.html", m)
-	}
 
-	err = us.Delete(user.ID)
+	// ユーザー削除処理
+	err = us.Delete(id)
 	if err != nil {
 		log.Println("us.Delete error")
 		m := map[string]interface{}{
@@ -439,6 +453,7 @@ func (uc UserController) Delete(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "top.html", m)
 	}
 
+	// セッションの無効化
 	sess.Values["auth"] = false
 	sess.Options.MaxAge = -1
 	err = sess.Save(c.Request(), c.Response())

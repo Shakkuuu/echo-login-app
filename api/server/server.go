@@ -11,6 +11,7 @@ import (
 func Init() {
 	e := echo.New()
 	e.Use(middleware.Recover())
+	// ログを見やすいように調整
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "\n" + `time: ${time_rfc3339_nano}` + "\n" +
 			`method: ${method}` + "\n" +
@@ -36,6 +37,7 @@ func Init() {
 	e.Logger.Fatal(e.Start(":8081"))
 }
 
+// apiの起動確認用(app起動時に使用)
 func Pong(c echo.Context) error {
 	type PingCheck struct {
 		Status  int

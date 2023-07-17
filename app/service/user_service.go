@@ -15,10 +15,12 @@ import (
 
 type UserService struct{}
 
+// ユーザー全取得
 func (us UserService) GetAll() ([]entity.User, error) {
 	var u []entity.User
 	url := "http://echo-login-app-api:8081/user"
 
+	// APIから取得
 	resp, err := http.Get(url)
 	if err != nil {
 		log.Printf("error http.Get: %v", err)
@@ -32,6 +34,7 @@ func (us UserService) GetAll() ([]entity.User, error) {
 		return u, err
 	}
 
+	// JSONをGoのデータに変換
 	if err := json.Unmarshal(body, &u); err != nil {
 		log.Printf("error json.Unmarshal: %v", err)
 		return u, err
@@ -40,10 +43,12 @@ func (us UserService) GetAll() ([]entity.User, error) {
 	return u, nil
 }
 
+// 名前からユーザーデータの取得
 func (us UserService) GetByName(username string) (entity.User, error) {
 	var u entity.User
 	url := "http://echo-login-app-api:8081/user/username/" + username
 
+	// APIから取得
 	resp, err := http.Get(url)
 	if err != nil {
 		log.Printf("error http.Get: %v", err)
@@ -57,6 +62,7 @@ func (us UserService) GetByName(username string) (entity.User, error) {
 		return u, err
 	}
 
+	// JSONをGoのデータに変換
 	if err := json.Unmarshal(body, &u); err != nil {
 		log.Printf("error json.Unmarshal: %v", err)
 		return u, err
@@ -65,11 +71,13 @@ func (us UserService) GetByName(username string) (entity.User, error) {
 	return u, nil
 }
 
+// IDからユーザーデータの取得
 func (us UserService) GetByID(id int) (entity.User, error) {
 	var u entity.User
 	sid := strconv.Itoa(id)
 	url := "http://echo-login-app-api:8081/user/id/" + sid
 
+	// APIから取得
 	resp, err := http.Get(url)
 	if err != nil {
 		log.Printf("error http.Get: %v", err)
@@ -83,6 +91,7 @@ func (us UserService) GetByID(id int) (entity.User, error) {
 		return u, err
 	}
 
+	// JSONをGoのデータに変換
 	if err := json.Unmarshal(body, &u); err != nil {
 		log.Printf("error json.Unmarshal: %v", err)
 		return u, err
@@ -91,11 +100,13 @@ func (us UserService) GetByID(id int) (entity.User, error) {
 	return u, nil
 }
 
+// Login処理
 func (us UserService) Login(id int, password string) error {
 	var u entity.User
 	sid := strconv.Itoa(id)
 	url := "http://echo-login-app-api:8081/user/id/" + sid
 
+	// APIから取得
 	resp, err := http.Get(url)
 	if err != nil {
 		log.Printf("error http.Get: %v", err)
@@ -111,12 +122,14 @@ func (us UserService) Login(id int, password string) error {
 		return err
 	}
 
+	// JSONをGoのデータに変換
 	if err := json.Unmarshal(body, &u); err != nil {
 		log.Printf("error json.Unmarshal: %v", err)
 		err := fmt.Errorf("ログイン処理時にエラーが派生しました。")
 		return err
 	}
 
+	// ハッシュ化されたパスワードの解読と一致確認
 	err = bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
 	if err != nil {
 		log.Printf("error bcrypt.CompareHashAndPassword: %v", err)
@@ -128,6 +141,7 @@ func (us UserService) Login(id int, password string) error {
 	return nil
 }
 
+// ユーザー作成処理
 func (us UserService) Create(id int, username, password string) error {
 	var u entity.User
 	url := "http://echo-login-app-api:8081/user"
@@ -136,6 +150,7 @@ func (us UserService) Create(id int, username, password string) error {
 	u.Name = username
 	u.Password = password
 
+	// GoのデータをJSONに変換
 	j, _ := json.Marshal(u)
 
 	// apiへのユーザー情報送信
@@ -153,6 +168,7 @@ func (us UserService) Create(id int, username, password string) error {
 	return nil
 }
 
+// ユーザー名の変更処理
 func (us UserService) ChangeName(id int, username string) error {
 	var u entity.User
 	sid := strconv.Itoa(id)
@@ -160,6 +176,7 @@ func (us UserService) ChangeName(id int, username string) error {
 
 	u.Name = username
 
+	// GoのデータをJSONに変換
 	j, _ := json.Marshal(u)
 
 	// apiへのユーザー情報送信
@@ -173,6 +190,7 @@ func (us UserService) ChangeName(id int, username string) error {
 		return err
 	}
 
+	// Headerセット
 	req.Header.Set("Content-Type", "application/json")
 	client := &http.Client{}
 	re, err := client.Do(req)
@@ -185,6 +203,7 @@ func (us UserService) ChangeName(id int, username string) error {
 	return nil
 }
 
+// パスワード変更処理
 func (us UserService) ChangePassword(id int, password string) error {
 	var u entity.User
 	sid := strconv.Itoa(id)
@@ -192,6 +211,7 @@ func (us UserService) ChangePassword(id int, password string) error {
 
 	u.Password = password
 
+	// GoのデータをJSONに変換
 	j, _ := json.Marshal(u)
 
 	// apiへのユーザー情報送信
@@ -205,6 +225,7 @@ func (us UserService) ChangePassword(id int, password string) error {
 		return err
 	}
 
+	// Headerのセット
 	req.Header.Set("Content-Type", "application/json")
 	client := &http.Client{}
 	re, err := client.Do(req)
@@ -217,6 +238,7 @@ func (us UserService) ChangePassword(id int, password string) error {
 	return nil
 }
 
+// ユーザー削除処理
 func (us UserService) Delete(id int) error {
 	sid := strconv.Itoa(id)
 	url := "http://echo-login-app-api:8081/user/" + sid

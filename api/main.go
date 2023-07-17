@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+	// 環境変数読み込み
 	un, up, dbn := loadEnv()
 	db.Init(un, up, dbn)
 	server.Init()
@@ -14,6 +15,7 @@ func main() {
 	db.Close()
 }
 
+// 環境変数読み込み
 func loadEnv() (string, string, string) {
 	// Docker-compose.ymlでDocker起動時に設定した環境変数の取得
 	username := os.Getenv("USERNAME")

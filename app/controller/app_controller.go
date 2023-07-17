@@ -10,6 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// ログインしてセッションがあるか確認するミドルウェア
 func SessionCheck(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		// セッション
@@ -21,6 +22,7 @@ func SessionCheck(next echo.HandlerFunc) echo.HandlerFunc {
 			}
 			return c.Render(http.StatusBadRequest, "login.html", m)
 		}
+		// セッションが有効化されているか
 		if sess.Values["auth"] != true {
 			m := map[string]interface{}{
 				"message": "ログインをしてください。",
@@ -36,6 +38,7 @@ func SessionCheck(next echo.HandlerFunc) echo.HandlerFunc {
 
 type AppController struct{}
 
+// GET ログイン後のTopページ表示
 func (ac AppController) Top(c echo.Context) error {
 	// セッション
 	sess, err := session.Get("session", c)
@@ -55,6 +58,7 @@ func (ac AppController) Top(c echo.Context) error {
 	}
 	id := sess.Values["ID"].(int)
 	var us service.UserService
+	// セッションのIDからユーザーデータを取得
 	u, err := us.GetByID(id)
 	m := map[string]interface{}{
 		"message": u.Name + "さんこんにちは!!!",

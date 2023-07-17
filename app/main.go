@@ -19,12 +19,6 @@ func main() {
 }
 
 func ConnectCheck() {
-	// type PingCheck struct {
-	// 	Status  int
-	// 	Message string
-	// }
-	// var p PingCheck
-
 	url := "http://echo-login-app-api:8081/"
 
 	// 接続できるまで一定回数リトライ

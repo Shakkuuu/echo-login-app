@@ -22,6 +22,7 @@ func (t *TemplateRender) Render(w io.Writer, name string, data interface{}, c ec
 func Init() {
 	e := echo.New()
 	e.Use(middleware.Recover())
+	// ログの整理
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "\n" + `time: ${time_rfc3339_nano}` + "\n" +
 			`method: ${method}` + "\n" +
@@ -32,6 +33,7 @@ func Init() {
 			`error: ${error}` + "\n" +
 			`latency: ${latency}(${latency_human})` + "\n",
 	}))
+	// セッション用ミドルウェア
 	e.Use(session.Middleware(sessions.NewCookieStore([]byte("secret"))))
 
 	renderer := &TemplateRender{
@@ -39,6 +41,7 @@ func Init() {
 	}
 	e.Renderer = renderer
 
+	// ログイン系
 	var uc controller.UserController
 	e.GET("/", uc.Index)
 	e.GET("/signup", uc.SignupView)
@@ -46,6 +49,7 @@ func Init() {
 	e.POST("/signup", uc.Signup)
 	e.POST("/login", uc.Login)
 
+	// 設定系
 	setting := e.Group("/setting")
 	setting.Use(controller.SessionCheck)
 	setting.GET("/logout", uc.Logout)
@@ -55,6 +59,7 @@ func Init() {
 	setting.POST("/changepassword", uc.ChangePassword)
 	setting.GET("/delete", uc.Delete)
 
+	// ログイン後のアプリ系
 	app := e.Group("/app")
 	var ac controller.AppController
 	app.Use(controller.SessionCheck)
