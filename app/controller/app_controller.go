@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"echo-login-app/backend/service"
+	"echo-login-app/app/service"
 	"fmt"
 	"log"
 	"net/http"

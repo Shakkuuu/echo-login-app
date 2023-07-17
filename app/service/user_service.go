@@ -2,7 +2,7 @@ package service
 
 import (
 	"bytes"
-	"echo-login-app/backend/entity"
+	"echo-login-app/app/entity"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -206,6 +206,31 @@ func (us UserService) ChangePassword(id int, password string) error {
 	}
 
 	req.Header.Set("Content-Type", "application/json")
+	client := &http.Client{}
+	re, err := client.Do(req)
+	if err != nil {
+		log.Printf("error http.client.Do: %v", err)
+		return err
+	}
+	defer re.Body.Close()
+
+	return nil
+}
+
+func (us UserService) Delete(id int) error {
+	sid := strconv.Itoa(id)
+	url := "http://echo-login-app-api:8081/user/" + sid
+
+	// apiへのユーザー情報送信
+	req, err := http.NewRequest(
+		"DELETE",
+		url,
+		nil,
+	)
+	if err != nil {
+		log.Printf("error http.DELETE: %v", err)
+		return err
+	}
 	client := &http.Client{}
 	re, err := client.Do(req)
 	if err != nil {

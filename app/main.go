@@ -1,7 +1,7 @@
 package main
 
 import (
-	"echo-login-app/backend/server"
+	"echo-login-app/app/server"
 	"fmt"
 	"log"
 	"net/http"

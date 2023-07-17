@@ -1,4 +1,4 @@
-module echo-login-app/backend
+module echo-login-app/app
 
 go 1.20
 

@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"echo-login-app/backend/service"
+	"echo-login-app/app/service"
 	"fmt"
 	"log"
 	"math/rand"
@@ -200,6 +200,13 @@ func (uc UserController) UserPage(c echo.Context) error {
 	id := sess.Values["ID"].(int)
 	var us service.UserService
 	u, err := us.GetByID(id)
+	if err != nil {
+		log.Printf("service.GetByID error: %v\n", err)
+		m := map[string]interface{}{
+			"message": "ユーザーデータの取得に失敗しました。",
+		}
+		return c.Render(http.StatusBadRequest, "login.html", m)
+	}
 	return c.Render(http.StatusOK, "userpage.html", u)
 }
 
@@ -282,6 +289,13 @@ func (uc UserController) ChangeName(c echo.Context) error {
 	}
 	id := sess.Values["ID"].(int)
 	user, err := us.GetByID(id)
+	if err != nil {
+		log.Printf("service.GetByID error: %v\n", err)
+		m := map[string]interface{}{
+			"message": "ユーザーデータの取得に失敗しました。",
+		}
+		return c.Render(http.StatusBadRequest, "userchangename.html", m)
+	}
 
 	err = us.ChangeName(user.ID, username)
 	if err != nil {
@@ -344,6 +358,13 @@ func (uc UserController) ChangePassword(c echo.Context) error {
 	}
 	id := sess.Values["ID"].(int)
 	user, err := us.GetByID(id)
+	if err != nil {
+		log.Printf("service.GetByID error: %v\n", err)
+		m := map[string]interface{}{
+			"message": "ユーザーデータの取得に失敗しました。",
+		}
+		return c.Render(http.StatusBadRequest, "userchangepassword.html", m)
+	}
 
 	err = us.Login(user.ID, oldpassword)
 	if err != nil {
@@ -378,4 +399,61 @@ func (uc UserController) ChangePassword(c echo.Context) error {
 	}
 	return c.Render(http.StatusFound, "userchangepassword.html", m)
 	// return c.Redirect(http.StatusFound, "/app")
+}
+
+func (uc UserController) Delete(c echo.Context) error {
+	var us service.UserService
+
+	// セッション
+	sess, err := session.Get("session", c)
+	if err != nil {
+		log.Printf("session.Get error: %v\n", err)
+		m := map[string]interface{}{
+			"message": "セッションの取得に失敗しました。もう一度お試しください。",
+		}
+		return c.Render(http.StatusBadRequest, "top.html", m)
+	}
+	if id, ok := sess.Values["ID"].(int); ok != true {
+		log.Printf("不明なIDが保存されています: %v\n", id)
+		m := map[string]interface{}{
+			"message": "セッションの取得に失敗しました。もう一度お試しください。",
+		}
+		return c.Render(http.StatusBadRequest, "top.html", m)
+	}
+	id := sess.Values["ID"].(int)
+	user, err := us.GetByID(id)
+	if err != nil {
+		log.Printf("service.GetByID error: %v\n", err)
+		m := map[string]interface{}{
+			"message": "ユーザーデータの取得に失敗しました。",
+		}
+		return c.Render(http.StatusBadRequest, "top.html", m)
+	}
+
+	err = us.Delete(user.ID)
+	if err != nil {
+		log.Println("us.Delete error")
+		m := map[string]interface{}{
+			"message": "ユーザー削除時にエラーが発生しました。",
+		}
+		return c.Render(http.StatusBadRequest, "top.html", m)
+	}
+
+	sess.Values["auth"] = false
+	sess.Options.MaxAge = -1
+	err = sess.Save(c.Request(), c.Response())
+	if err != nil {
+		log.Printf("session.Save error: %v\n", err)
+		m := map[string]interface{}{
+			"message": "セッションの削除に失敗しました。もう一度お試しください。",
+		}
+		return c.Render(http.StatusBadRequest, "login.html", m)
+	}
+
+	fmt.Println("ユーザーを削除しました")
+	m := map[string]interface{}{
+		"message": "ユーザーを削除しました。",
+	}
+
+	return c.Render(http.StatusFound, "login.html", m)
 }

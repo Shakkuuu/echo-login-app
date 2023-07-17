@@ -1,7 +1,7 @@
 package server
 
 import (
-	"echo-login-app/backend/controller"
+	"echo-login-app/app/controller"
 	"io"
 	"text/template"
 
@@ -53,6 +53,7 @@ func Init() {
 	setting.POST("/changename", uc.ChangeName)
 	setting.GET("/changepassword", uc.ChangePasswordView)
 	setting.POST("/changepassword", uc.ChangePassword)
+	setting.GET("/delete", uc.Delete)
 
 	app := e.Group("/app")
 	var ac controller.AppController
