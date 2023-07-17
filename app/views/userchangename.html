@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>UserChangeName</title>
+</head>
+<body>
+    <h1>UserChangeName</h1>
+    <p>{{.message}}</p>
+    <p>ユーザー名変更</p>
+    <form action="/setting/changename" method="POST">
+        <div>
+            <input type="text" name="username" placeholder="username" autocomplete="off">
+        </div>
+        <p><input type="submit" value="変更"></p>
+    </form>
+    <p><a href="/app/userpage">戻る</a></p>
+</body>
+</html>

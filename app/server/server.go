@@ -48,13 +48,15 @@ func Init() {
 
 	setting := e.Group("/setting")
 	setting.Use(controller.SessionCheck)
-	setting.GET("", uc.UserPage)
 	setting.GET("/logout", uc.Logout)
+	setting.GET("/changename", uc.ChangeNameView)
+	setting.POST("/changename", uc.ChangeName)
 
 	app := e.Group("/app")
 	var ac controller.AppController
 	app.Use(controller.SessionCheck)
 	app.GET("", ac.Top)
+	app.GET("/userpage", uc.UserPage)
 
 	e.Logger.Fatal(e.Start(":8082"))
 }

@@ -54,6 +54,17 @@ func (us UserService) GetByName(username string) (entity.User, error) {
 	return u, nil
 }
 
+func (us UserService) PutByID(u *entity.User, id string) (*entity.User, error) {
+	db := db.GetDB()
+
+	err := db.Where("id = ?", id).Model(&u).Updates(&u).Error
+	if err != nil {
+		return u, err
+	}
+
+	return u, nil
+}
+
 func (us UserService) Delete(id string) error {
 	db := db.GetDB()
 

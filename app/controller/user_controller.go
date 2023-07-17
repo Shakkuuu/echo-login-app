@@ -229,3 +229,91 @@ func (uc UserController) Logout(c echo.Context) error {
 	}
 	return c.Render(http.StatusOK, "login.html", m)
 }
+
+func (uc UserController) ChangeNameView(c echo.Context) error {
+	// セッション
+	sess, err := session.Get("session", c)
+	if err != nil {
+		log.Printf("session.Get error: %v\n", err)
+		m := map[string]interface{}{
+			"message": "セッションの取得に失敗しました。もう一度お試しください。",
+		}
+		return c.Render(http.StatusBadRequest, "login.html", m)
+	}
+	if id, ok := sess.Values["ID"].(int); ok != true {
+		log.Printf("不明なIDが保存されています: %v\n", id)
+		m := map[string]interface{}{
+			"message": "セッションの取得に失敗しました。もう一度お試しください。",
+		}
+		return c.Render(http.StatusBadRequest, "login.html", m)
+	}
+	id := sess.Values["ID"].(int)
+	var us service.UserService
+	u, err := us.GetByID(id)
+
+	m := map[string]interface{}{
+		"message": "",
+		"user":    u,
+	}
+
+	return c.Render(http.StatusOK, "userchangename.html", m)
+}
+
+func (uc UserController) ChangeName(c echo.Context) error {
+	var us service.UserService
+
+	username := c.FormValue("username")
+
+	if username == "" {
+		log.Println("入力されていない項目があるよ。")
+		m := map[string]interface{}{
+			"message": "入力されていない項目があるよ。",
+		}
+		return c.Render(http.StatusBadRequest, "userchangename.html", m)
+	}
+
+	u, err := us.GetAll()
+	if err != nil {
+		log.Println("us.GetAll error")
+	}
+	for _, v := range u {
+		if v.Name == username {
+			log.Println("そのユーザー名は既に使われているよ")
+			m := map[string]interface{}{
+				"message": "そのユーザー名は既に使われているよ。",
+			}
+			return c.Render(http.StatusBadRequest, "userchangename.html", m)
+		}
+	}
+
+	// セッション
+	sess, err := session.Get("session", c)
+	if err != nil {
+		log.Printf("session.Get error: %v\n", err)
+		m := map[string]interface{}{
+			"message": "セッションの取得に失敗しました。もう一度お試しください。",
+		}
+		return c.Render(http.StatusBadRequest, "userchangename.html", m)
+	}
+	if id, ok := sess.Values["ID"].(int); ok != true {
+		log.Printf("不明なIDが保存されています: %v\n", id)
+		m := map[string]interface{}{
+			"message": "セッションの取得に失敗しました。もう一度お試しください。",
+		}
+		return c.Render(http.StatusBadRequest, "userchangename.html", m)
+	}
+	id := sess.Values["ID"].(int)
+	user, err := us.GetByID(id)
+
+	err = us.ChangeName(user.ID, username)
+	if err != nil {
+		log.Println("us.ChangeName error")
+		m := map[string]interface{}{
+			"message": "ユーザー名変更時にエラーが発生しました。",
+		}
+		return c.Render(http.StatusBadRequest, "userchangename.html", m)
+	}
+
+	fmt.Println("ユーザー名変更成功したよ")
+	return c.Redirect(http.StatusFound, "/app")
+}

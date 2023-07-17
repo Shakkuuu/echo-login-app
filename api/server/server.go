@@ -24,11 +24,14 @@ func Init() {
 
 	var uc controller.UserController
 	e.GET("/", Pong)
-	e.GET("/user", uc.GetAll)
-	e.POST("/user", uc.Create)
-	e.GET("/user/id/:id", uc.GetByID)
-	e.GET("/user/username/:username", uc.GetByName)
-	e.DELETE("/user/:id", uc.Delete)
+
+	usr := e.Group("/user")
+	usr.GET("", uc.GetAll)
+	usr.POST("", uc.Create)
+	usr.GET("/id/:id", uc.GetByID)
+	usr.GET("/username/:username", uc.GetByName)
+	usr.PUT("/:id", uc.PutByID)
+	usr.DELETE("/:id", uc.Delete)
 
 	e.Logger.Fatal(e.Start(":8081"))
 }

@@ -82,6 +82,32 @@ func (uc UserController) GetByName(c echo.Context) error {
 	return c.JSON(200, u)
 }
 
+func (uc UserController) PutByID(c echo.Context) error {
+	id := c.Param("id")
+
+	var us service.UserService
+
+	var u entity.User
+	err := c.Bind(&u)
+	if err != nil {
+		message := fmt.Sprintf("User Update Bind: %v", err)
+		log.Println(message)
+		e := ResMess{Status: 500, Message: message}
+		return c.JSON(e.Status, e)
+	}
+	print(&u)
+
+	user, err := us.PutByID(&u, id)
+	if err != nil {
+		message := fmt.Sprintf("UserService.PutByID: %v", err)
+		log.Println(message)
+		e := ResMess{Status: 500, Message: message}
+		return c.JSON(e.Status, e)
+	}
+
+	return c.JSON(200, user)
+}
+
 func (uc UserController) Delete(c echo.Context) error {
 	id := c.Param("id")
 
@@ -89,7 +115,7 @@ func (uc UserController) Delete(c echo.Context) error {
 
 	err := us.Delete(id)
 	if err != nil {
-		message := fmt.Sprintf("UserService.GetAll: %v", err)
+		message := fmt.Sprintf("UserService.Delete: %v", err)
 		log.Println(message)
 		e := ResMess{Status: 500, Message: message}
 		return c.JSON(e.Status, e)
