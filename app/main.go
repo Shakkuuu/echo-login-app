@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -14,8 +15,18 @@ var (
 )
 
 func main() {
+	// 環境変数読み込み
+	sk := loadEnv()
 	ConnectCheck()
-	server.Init()
+	server.Init(sk)
+}
+
+// 環境変数読み込み
+func loadEnv() string {
+	// Docker-compose.ymlでDocker起動時に設定した環境変数の取得
+	session_key := os.Getenv("SESSION_KEY")
+
+	return session_key
 }
 
 func ConnectCheck() {

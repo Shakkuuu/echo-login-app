@@ -25,6 +25,8 @@ services:
       - ./app:/app
     ports:
       - 8082:8082
+    environment:
+      PMA_HOST: ${SESSION_KEY}
   db:
     image: mysql:8.0
     environment:

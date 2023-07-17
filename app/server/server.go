@@ -19,7 +19,7 @@ func (t *TemplateRender) Render(w io.Writer, name string, data interface{}, c ec
 	return t.templates.ExecuteTemplate(w, name, data)
 }
 
-func Init() {
+func Init(sk string) {
 	e := echo.New()
 	e.Use(middleware.Recover())
 	// ログの整理
@@ -34,7 +34,7 @@ func Init() {
 			`latency: ${latency}(${latency_human})` + "\n",
 	}))
 	// セッション用ミドルウェア
-	e.Use(session.Middleware(sessions.NewCookieStore([]byte("secret"))))
+	e.Use(session.Middleware(sessions.NewCookieStore([]byte(sk))))
 
 	renderer := &TemplateRender{
 		templates: template.Must(template.ParseGlob("./views/*.html")),
