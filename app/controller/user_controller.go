@@ -179,3 +179,53 @@ func (uc UserController) Signup(c echo.Context) error {
 	fmt.Println("ユーザー登録成功したよ")
 	return c.Redirect(http.StatusFound, "/login")
 }
+
+func (uc UserController) UserPage(c echo.Context) error {
+	// セッション
+	sess, err := session.Get("session", c)
+	if err != nil {
+		log.Printf("session.Get error: %v\n", err)
+		m := map[string]interface{}{
+			"message": "セッションの取得に失敗しました。もう一度お試しください。",
+		}
+		return c.Render(http.StatusBadRequest, "login.html", m)
+	}
+	if id, ok := sess.Values["ID"].(int); ok != true {
+		log.Printf("不明なIDが保存されています: %v\n", id)
+		m := map[string]interface{}{
+			"message": "セッションの取得に失敗しました。もう一度お試しください。",
+		}
+		return c.Render(http.StatusBadRequest, "login.html", m)
+	}
+	id := sess.Values["ID"].(int)
+	var us service.UserService
+	u, err := us.GetByID(id)
+	return c.Render(http.StatusOK, "userpage.html", u)
+}
+
+func (uc UserController) Logout(c echo.Context) error {
+	// セッション
+	sess, err := session.Get("session", c)
+	if err != nil {
+		log.Printf("session.Get error: %v\n", err)
+		m := map[string]interface{}{
+			"message": "セッションの取得に失敗しました。もう一度お試しください。",
+		}
+		return c.Render(http.StatusBadRequest, "login.html", m)
+	}
+
+	sess.Values["auth"] = false
+	sess.Options.MaxAge = -1
+	err = sess.Save(c.Request(), c.Response())
+	if err != nil {
+		log.Printf("session.Save error: %v\n", err)
+		m := map[string]interface{}{
+			"message": "セッションの削除に失敗しました。もう一度お試しください。",
+		}
+		return c.Render(http.StatusBadRequest, "login.html", m)
+	}
+	m := map[string]interface{}{
+		"message": "ログアウトしたよ。",
+	}
+	return c.Render(http.StatusOK, "login.html", m)
+}

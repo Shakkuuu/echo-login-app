@@ -46,6 +46,11 @@ func Init() {
 	e.POST("/signup", uc.Signup)
 	e.POST("/login", uc.Login)
 
+	setting := e.Group("/setting")
+	setting.Use(controller.SessionCheck)
+	setting.GET("", uc.UserPage)
+	setting.GET("/logout", uc.Logout)
+
 	app := e.Group("/app")
 	var ac controller.AppController
 	app.Use(controller.SessionCheck)
