@@ -80,7 +80,7 @@ func (uc UserController) Login(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "login.html", m)
 	}
 
-	err = us.Login(u.ID, username, password)
+	err = us.Login(u.ID, password)
 	if err != nil {
 		log.Println("us.Login error")
 		m := map[string]interface{}{
@@ -231,31 +231,9 @@ func (uc UserController) Logout(c echo.Context) error {
 }
 
 func (uc UserController) ChangeNameView(c echo.Context) error {
-	// セッション
-	sess, err := session.Get("session", c)
-	if err != nil {
-		log.Printf("session.Get error: %v\n", err)
-		m := map[string]interface{}{
-			"message": "セッションの取得に失敗しました。もう一度お試しください。",
-		}
-		return c.Render(http.StatusBadRequest, "login.html", m)
-	}
-	if id, ok := sess.Values["ID"].(int); ok != true {
-		log.Printf("不明なIDが保存されています: %v\n", id)
-		m := map[string]interface{}{
-			"message": "セッションの取得に失敗しました。もう一度お試しください。",
-		}
-		return c.Render(http.StatusBadRequest, "login.html", m)
-	}
-	id := sess.Values["ID"].(int)
-	var us service.UserService
-	u, err := us.GetByID(id)
-
 	m := map[string]interface{}{
 		"message": "",
-		"user":    u,
 	}
-
 	return c.Render(http.StatusOK, "userchangename.html", m)
 }
 
@@ -316,4 +294,88 @@ func (uc UserController) ChangeName(c echo.Context) error {
 
 	fmt.Println("ユーザー名変更成功したよ")
 	return c.Redirect(http.StatusFound, "/app")
+}
+
+func (uc UserController) ChangePasswordView(c echo.Context) error {
+	m := map[string]interface{}{
+		"message": "",
+	}
+	return c.Render(http.StatusOK, "userchangepassword.html", m)
+}
+
+func (uc UserController) ChangePassword(c echo.Context) error {
+	var us service.UserService
+
+	oldpassword := c.FormValue("oldpassword")
+	newpassword := c.FormValue("newpassword")
+	newcheckpassword := c.FormValue("newcheckpassword")
+
+	if oldpassword == "" || newpassword == "" || newcheckpassword == "" {
+		log.Println("入力されていない項目があるよ。")
+		m := map[string]interface{}{
+			"message": "入力されていない項目があるよ。",
+		}
+		return c.Render(http.StatusBadRequest, "userchangepassword.html", m)
+	}
+
+	if newpassword != newcheckpassword {
+		log.Println("新しいパスワードが一致していないよ。")
+		m := map[string]interface{}{
+			"message": "新しいパスワードが一致していないよ。",
+		}
+		return c.Render(http.StatusBadRequest, "userchangepassword.html", m)
+	}
+
+	// セッション
+	sess, err := session.Get("session", c)
+	if err != nil {
+		log.Printf("session.Get error: %v\n", err)
+		m := map[string]interface{}{
+			"message": "セッションの取得に失敗しました。もう一度お試しください。",
+		}
+		return c.Render(http.StatusBadRequest, "userchangepassword.html", m)
+	}
+	if id, ok := sess.Values["ID"].(int); ok != true {
+		log.Printf("不明なIDが保存されています: %v\n", id)
+		m := map[string]interface{}{
+			"message": "セッションの取得に失敗しました。もう一度お試しください。",
+		}
+		return c.Render(http.StatusBadRequest, "userchangepassword.html", m)
+	}
+	id := sess.Values["ID"].(int)
+	user, err := us.GetByID(id)
+
+	err = us.Login(user.ID, oldpassword)
+	if err != nil {
+		log.Println("us.Login error")
+		m := map[string]interface{}{
+			"message": err,
+		}
+		return c.Render(http.StatusBadRequest, "userchangepassword.html", m)
+	}
+
+	hashp, err := bcrypt.GenerateFromPassword([]byte(newpassword), bcrypt.DefaultCost)
+	if err != nil {
+		log.Println("bcrypt.GenerateFromPassword error")
+		m := map[string]interface{}{
+			"message": "パスワード変更時にエラーが発生しました。",
+		}
+		return c.Render(http.StatusBadRequest, ".html", m)
+	}
+
+	err = us.ChangePassword(user.ID, string(hashp))
+	if err != nil {
+		log.Println("us.ChangePassword error")
+		m := map[string]interface{}{
+			"message": "パスワード変更時にエラーが発生しました。",
+		}
+		return c.Render(http.StatusBadRequest, "userchangepassword.html", m)
+	}
+
+	fmt.Println("パスワードの変更成功したよ")
+	m := map[string]interface{}{
+		"message": "パスワードの変更成功したよ",
+	}
+	return c.Render(http.StatusFound, "userchangepassword.html", m)
+	// return c.Redirect(http.StatusFound, "/app")
 }

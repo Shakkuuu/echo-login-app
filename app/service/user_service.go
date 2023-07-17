@@ -91,7 +91,7 @@ func (us UserService) GetByID(id int) (entity.User, error) {
 	return u, nil
 }
 
-func (us UserService) Login(id int, username, password string) error {
+func (us UserService) Login(id int, password string) error {
 	var u entity.User
 	sid := strconv.Itoa(id)
 	url := "http://echo-login-app-api:8081/user/id/" + sid
@@ -159,6 +159,38 @@ func (us UserService) ChangeName(id int, username string) error {
 	url := "http://echo-login-app-api:8081/user/" + sid
 
 	u.Name = username
+
+	j, _ := json.Marshal(u)
+
+	// apiへのユーザー情報送信
+	req, err := http.NewRequest(
+		"PUT",
+		url,
+		bytes.NewBuffer(j),
+	)
+	if err != nil {
+		log.Printf("error http.PUT: %v", err)
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	client := &http.Client{}
+	re, err := client.Do(req)
+	if err != nil {
+		log.Printf("error http.client.Do: %v", err)
+		return err
+	}
+	defer re.Body.Close()
+
+	return nil
+}
+
+func (us UserService) ChangePassword(id int, password string) error {
+	var u entity.User
+	sid := strconv.Itoa(id)
+	url := "http://echo-login-app-api:8081/user/" + sid
+
+	u.Password = password
 
 	j, _ := json.Marshal(u)
 

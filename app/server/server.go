@@ -51,6 +51,8 @@ func Init() {
 	setting.GET("/logout", uc.Logout)
 	setting.GET("/changename", uc.ChangeNameView)
 	setting.POST("/changename", uc.ChangeName)
+	setting.GET("/changepassword", uc.ChangePasswordView)
+	setting.POST("/changepassword", uc.ChangePassword)
 
 	app := e.Group("/app")
 	var ac controller.AppController
