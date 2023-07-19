@@ -74,11 +74,11 @@ func (uc UserController) GetByID(c echo.Context) error {
 
 // GET 名前からユーザーデータ取得
 func (uc UserController) GetByName(c echo.Context) error {
-	id := c.Param("username")
+	username := c.Param("username")
 
 	var us service.UserService
 	// 名前からユーザーデータ取得処理
-	u, err := us.GetByName(id)
+	u, err := us.GetByName(username)
 	if err != nil {
 		message := fmt.Sprintf("UserService.GetByName: %v", err)
 		log.Println(message)

@@ -10,6 +10,15 @@ type User struct {
 	CreatedAt time.Time `json:"createdat"`
 }
 
+// メモ
+type Memo struct {
+	ID        int       `json:"id" gorm:"primaryKey"`
+	Title     string    `json:"title"`
+	Content   string    `json:"content"`
+	CreatedAt time.Time `json:"createdat"`
+	User_ID   int       `json:"user_id"`
+}
+
 // レスポンスメッセージ用構造体
 type ResponseMessage struct {
 	Status  int    `json:"status"`

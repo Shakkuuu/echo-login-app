@@ -65,4 +65,5 @@ func Close() {
 // entityを参照してテーブル作成　マイグレーション
 func autoMigration() {
 	db.AutoMigrate(&entity.User{})
+	db.AutoMigrate(&entity.Memo{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
 }

@@ -23,9 +23,9 @@ func Init() {
 			`latency: ${latency}(${latency_human})` + "\n",
 	}))
 
-	var uc controller.UserController
 	e.GET("/", Pong)
 
+	var uc controller.UserController
 	usr := e.Group("/user")
 	usr.GET("", uc.GetAll)
 	usr.POST("", uc.Create)
@@ -33,6 +33,15 @@ func Init() {
 	usr.GET("/username/:username", uc.GetByName)
 	usr.PUT("/:id", uc.PutByID)
 	usr.DELETE("/:id", uc.Delete)
+
+	var mc controller.MemoController
+	memo := e.Group("/memo")
+	memo.GET("", mc.GetAll)
+	memo.POST("", mc.Create)
+	memo.GET("/id/:id", mc.GetByID)
+	memo.GET("/user_id/:user_id", mc.GetByUserID)
+	memo.PUT("/:id", mc.PutByID)
+	memo.DELETE("/:id", mc.Delete)
 
 	e.Logger.Fatal(e.Start(":8081"))
 }
