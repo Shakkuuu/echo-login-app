@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>MemoCreate</title>
+</head>
+<body>
+    <h1>MemoCreate</h1>
+    <p>{{.message}}</p>
+    <p>メモ作成</p>
+    <form action="/app/memo/create" method="POST">
+        <div>
+            <input type="text" name="title" placeholder="title" autocomplete="off">
+        </div>
+        <div>
+            <input type="text" name="content" placeholder="content" autocomplete="off">
+        </div>
+        <p><input type="submit" value="作成"></p>
+    </form>
+    <p><a href="/app/memo">戻る</a></p>
+</body>
+</html>

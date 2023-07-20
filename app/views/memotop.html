@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>MemoTop</title>
+</head>
+<body>
+    <h1>MemoTop</h1>
+    {{range $v := .}}
+        <div>
+            <div>
+                <p>{{$v.Title}} {{.CreatedAt}}</p>
+            </div>
+        </div>
+    {{end}}
+    <p><a href="/app/memo/create">メモ作成</a></p>
+    <p><a href="/app">戻る</a></p>
+</body>
+</html>

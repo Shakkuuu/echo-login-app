@@ -1,10 +1,21 @@
 package entity
 
+import "time"
+
 // ユーザー
 type User struct {
 	ID       int    `json:"id"`
 	Name     string `json:"name"`
 	Password string `json:"password"`
+}
+
+// メモ
+type Memo struct {
+	ID        int       `json:"id" gorm:"primaryKey"`
+	Title     string    `json:"title"`
+	Content   string    `json:"content"`
+	CreatedAt time.Time `json:"createdat"`
+	User_ID   int       `json:"user_id"`
 }
 
 // レスポンスメッセージ用構造体

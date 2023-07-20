@@ -66,5 +66,12 @@ func Init(sk string) {
 	app.GET("", ac.Top)
 	app.GET("/userpage", uc.UserPage)
 
+	// メモ機能
+	memo := app.Group("/memo")
+	var mc controller.MemoController
+	memo.GET("", mc.Top)
+	memo.GET("/create", mc.CreatePage)
+	memo.POST("/create", mc.Create)
+
 	e.Logger.Fatal(e.Start(":8082"))
 }
