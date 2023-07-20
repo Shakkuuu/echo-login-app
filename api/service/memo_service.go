@@ -50,7 +50,7 @@ func (ms MemoService) GetByUserID(user_id string) ([]entity.Memo, error) {
 	db := db.GetDB()
 	var m []entity.Memo
 
-	err := db.Where("user_id = ?", user_id).First(&m).Error
+	err := db.Where("user_id = ?", user_id).Find(&m).Error
 	if err != nil {
 		return m, err
 	}
