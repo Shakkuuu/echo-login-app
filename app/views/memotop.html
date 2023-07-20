@@ -6,10 +6,12 @@
 </head>
 <body>
     <h1>MemoTop</h1>
-    {{range $v := .}}
+    <p>{{.message}}</p>
+    {{range $v := .memo}}
         <div>
             <div>
-                <p>{{$v.Title}} {{.CreatedAt}}</p>
+                <p>タイトル: {{$v.Title}} 作成日: {{$v.CreatedAt}}</p>
+                <p><a href="/app/memo/view/{{$v.ID}}">中身表示</a></p>
             </div>
         </div>
     {{end}}

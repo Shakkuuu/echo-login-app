@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
@@ -33,12 +34,21 @@ func (mc MemoController) Top(c echo.Context) error {
 	user_id := sess.Values["ID"].(int)
 
 	var ms service.MemoService
-	// ユーザー全取得
+	// メモ全取得
 	u, err := ms.GetByUserID(user_id)
 	if err != nil {
-		log.Println("us.GetAll error")
+		log.Printf("ms.GetByUserID error: %v\n", err)
+		m := map[string]interface{}{
+			"message": "メモの取得に失敗しました。",
+			"memo":    nil,
+		}
+		return c.Render(http.StatusBadRequest, "memotop.html", m)
 	}
-	return c.Render(http.StatusOK, "memotop.html", u)
+	m := map[string]interface{}{
+		"message": "",
+		"memo":    u,
+	}
+	return c.Render(http.StatusOK, "memotop.html", m)
 }
 
 // GET メモ作成ページ
@@ -96,4 +106,67 @@ func (mc MemoController) Create(c echo.Context) error {
 
 	fmt.Println("メモ作成成功したよ")
 	return c.Redirect(http.StatusFound, "/app/memo")
+}
+
+// GET メモの中身表示
+func (mc MemoController) ContentView(c echo.Context) error {
+	form_id := c.Param("id")
+	id, err := strconv.Atoi(form_id)
+	if err != nil {
+		log.Println("strconv.Atoi error")
+		m := map[string]interface{}{
+			"message": "メモ取得時にエラーが発生しました。",
+			"memo":    nil,
+		}
+		return c.Render(http.StatusBadRequest, "memotop.html", m)
+	}
+
+	var ms service.MemoService
+	// IDからメモ取得
+	u, err := ms.GetByID(id)
+	if err != nil {
+		log.Printf("ms.GetByID error: %v\n", err)
+		m := map[string]interface{}{
+			"message": "メモの取得に失敗しました。",
+			"memo":    nil,
+		}
+		return c.Render(http.StatusBadRequest, "memotop.html", m)
+	}
+
+	return c.Render(http.StatusOK, "memoview.html", u)
+}
+
+// GET メモ削除処理
+func (mc MemoController) Delete(c echo.Context) error {
+	var ms service.MemoService
+
+	form_id := c.Param("id")
+	id, err := strconv.Atoi(form_id)
+	if err != nil {
+		log.Println("strconv.Atoi error")
+		m := map[string]interface{}{
+			"message": "メモID取得時にエラーが発生しました。",
+			"memo":    nil,
+		}
+		return c.Render(http.StatusBadRequest, "memotop.html", m)
+	}
+
+	// ユーザー削除処理
+	err = ms.Delete(id)
+	if err != nil {
+		log.Println("ms.Delete error")
+		m := map[string]interface{}{
+			"message": "メモ削除時にエラーが発生しました。",
+			"memo":    nil,
+		}
+		return c.Render(http.StatusBadRequest, "memotop.html", m)
+	}
+
+	fmt.Println("メモを削除しました")
+	m := map[string]interface{}{
+		"message": "メモを削除しました。",
+		"memo":    nil,
+	}
+
+	return c.Render(http.StatusFound, "memotop.html", m)
 }

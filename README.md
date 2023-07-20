@@ -33,4 +33,6 @@ ab -n 100 -c 100 localhost:8081/
 フロントのブラウザ(HTML)とバックエンド間はセッションで管理
 バックエンドとAPIはTokenで管理
 
+middleware.RemoveTrailingSlash()：こいつはGroupを使っているルータに使おうとすると、下の階層のGroupには反映されなかった。(なので実装見送り)
+
 interface型の知識が浅かった

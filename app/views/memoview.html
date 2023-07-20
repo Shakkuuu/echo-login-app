@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>MemoView</title>
+</head>
+<body>
+    <h1>MemoView</h1>
+    <h3>タイトル: {{.Title}} 作成日: {{.CreatedAt}}</h3>
+    <p>{{.Content}}</p>
+    <p><a href="/app/memo/delete/{{.ID}}">メモの削除</a></p>
+    <p><a href="/app/memo">戻る</a></p>
+</body>
+</html>
