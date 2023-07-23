@@ -7,7 +7,15 @@
 <body>
     <h1>MemoView</h1>
     <h3>タイトル: {{.Title}} 作成日: {{.CreatedAt}}</h3>
-    <p>{{.Content}}</p>
+    <form action="/app/memo/change/{{.ID}}" method="POST">
+        <div>
+            <input type="text" name="title" placeholder="title" value={{.Title}} autocomplete="off">
+        </div>
+        <div>
+            <textarea name="content", cols="70", rows="20">{{.Content}}</textarea>
+        </div>
+        <p><input type="submit" value="修正"></p>
+    </form>
     <p><a href="/app/memo/delete/{{.ID}}">メモの削除</a></p>
     <p><a href="/app/memo">戻る</a></p>
 </body>

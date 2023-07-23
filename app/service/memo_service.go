@@ -125,40 +125,40 @@ func (ms MemoService) Create(title, content string, user_id int) error {
 	return nil
 }
 
-// // ユーザー名の変更処理
-// func (us UserService) ChangeName(id int, username string) error {
-// 	var u entity.User
-// 	sid := strconv.Itoa(id)
-// 	url := "http://echo-login-app-api:8081/user/" + sid
+// メモの変更処理
+func (ms MemoService) Change(id, title, content string) error {
+	var m entity.Memo
+	url := "http://echo-login-app-api:8081/memo/" + id
 
-// 	u.Name = username
+	m.Title = title
+	m.Content = content
 
-// 	// GoのデータをJSONに変換
-// 	j, _ := json.Marshal(u)
+	// GoのデータをJSONに変換
+	j, _ := json.Marshal(m)
 
-// 	// apiへのユーザー情報送信
-// 	req, err := http.NewRequest(
-// 		"PUT",
-// 		url,
-// 		bytes.NewBuffer(j),
-// 	)
-// 	if err != nil {
-// 		log.Printf("error http.PUT: %v", err)
-// 		return err
-// 	}
+	// apiへのメモ情報送信
+	req, err := http.NewRequest(
+		"PUT",
+		url,
+		bytes.NewBuffer(j),
+	)
+	if err != nil {
+		log.Printf("error http.PUT: %v", err)
+		return err
+	}
 
-// 	// Headerセット
-// 	req.Header.Set("Content-Type", "application/json")
-// 	client := &http.Client{}
-// 	re, err := client.Do(req)
-// 	if err != nil {
-// 		log.Printf("error http.client.Do: %v", err)
-// 		return err
-// 	}
-// 	defer re.Body.Close()
+	// Headerセット
+	req.Header.Set("Content-Type", "application/json")
+	client := &http.Client{}
+	re, err := client.Do(req)
+	if err != nil {
+		log.Printf("error http.client.Do: %v", err)
+		return err
+	}
+	defer re.Body.Close()
 
-// 	return nil
-// }
+	return nil
+}
 
 // // パスワード変更処理
 // func (us UserService) ChangePassword(id int, password string) error {

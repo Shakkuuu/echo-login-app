@@ -110,8 +110,8 @@ func (mc MemoController) Create(c echo.Context) error {
 
 // GET メモの中身表示
 func (mc MemoController) ContentView(c echo.Context) error {
-	form_id := c.Param("id")
-	id, err := strconv.Atoi(form_id)
+	param_id := c.Param("id")
+	id, err := strconv.Atoi(param_id)
 	if err != nil {
 		log.Println("strconv.Atoi error")
 		m := map[string]interface{}{
@@ -151,7 +151,7 @@ func (mc MemoController) Delete(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "memotop.html", m)
 	}
 
-	// ユーザー削除処理
+	// メモ削除処理
 	err = ms.Delete(id)
 	if err != nil {
 		log.Println("ms.Delete error")
@@ -169,4 +169,47 @@ func (mc MemoController) Delete(c echo.Context) error {
 	}
 
 	return c.Render(http.StatusFound, "memotop.html", m)
+}
+
+// // GET メモ変更ページ
+// func (mc MemoController) ChangeView(c echo.Context) error {
+// 	m := map[string]interface{}{
+// 		"message": "",
+// 	}
+// 	return c.Render(http.StatusOK, ".html", m)
+// }
+
+// POST メモ変更処理
+func (mc MemoController) Change(c echo.Context) error {
+	param_id := c.Param("id")
+
+	var ms service.MemoService
+
+	// htmlのformから値の取得
+	title := c.FormValue("title")
+	content := c.FormValue("content")
+
+	// 入力漏れのチェック
+	if title == "" || content == "" {
+		log.Println("入力されていない項目があるよ。")
+		m := map[string]interface{}{
+			"message": "入力されていない項目があるよ。",
+			"memo":    nil,
+		}
+		return c.Render(http.StatusBadRequest, "memotop.html", m)
+	}
+
+	// メモ変更処理
+	err := ms.Change(param_id, title, content)
+	if err != nil {
+		log.Println("ms.Change error")
+		m := map[string]interface{}{
+			"message": "メモ変更時にエラーが発生しました。",
+			"memo":    nil,
+		}
+		return c.Render(http.StatusBadRequest, "memotop.html", m)
+	}
+
+	fmt.Println("ユーザー名変更成功したよ")
+	return c.Redirect(http.StatusFound, "/app/memo/view/"+param_id)
 }

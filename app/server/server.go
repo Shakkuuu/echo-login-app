@@ -74,6 +74,7 @@ func Init(sk string) {
 	memo.POST("/create", mc.Create)
 	memo.GET("/view/:id", mc.ContentView)
 	memo.GET("/delete/:id", mc.Delete)
+	memo.POST("/change/:id", mc.Change)
 
 	e.Logger.Fatal(e.Start(":8082"))
 }
