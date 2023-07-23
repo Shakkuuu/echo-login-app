@@ -207,41 +207,6 @@ func (ms MemoService) Change(id, title, content, token string) error {
 	return nil
 }
 
-// // パスワード変更処理
-// func (us UserService) ChangePassword(id int, password string) error {
-// 	var u entity.User
-// 	sid := strconv.Itoa(id)
-// 	url := "http://echo-login-app-api:8081/user/" + sid
-
-// 	u.Password = password
-
-// 	// GoのデータをJSONに変換
-// 	j, _ := json.Marshal(u)
-
-// 	// apiへのユーザー情報送信
-// 	req, err := http.NewRequest(
-// 		"PUT",
-// 		url,
-// 		bytes.NewBuffer(j),
-// 	)
-// 	if err != nil {
-// 		log.Printf("error http.PUT: %v", err)
-// 		return err
-// 	}
-
-// 	// Headerのセット
-// 	req.Header.Set("Content-Type", "application/json")
-// 	client := &http.Client{}
-// 	re, err := client.Do(req)
-// 	if err != nil {
-// 		log.Printf("error http.client.Do: %v", err)
-// 		return err
-// 	}
-// 	defer re.Body.Close()
-
-// 	return nil
-// }
-
 // メモ削除処理
 func (ms MemoService) Delete(id int, token string) error {
 	sid := strconv.Itoa(id)

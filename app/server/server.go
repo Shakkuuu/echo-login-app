@@ -41,6 +41,8 @@ func Init(sk string) {
 	}
 	e.Renderer = renderer
 
+	var auc controller.AuthController
+
 	// ログイン系
 	var uc controller.UserController
 	e.GET("/", uc.Index)
@@ -51,7 +53,7 @@ func Init(sk string) {
 
 	// 設定系
 	setting := e.Group("/setting")
-	setting.Use(controller.SessionCheck)
+	setting.Use(auc.SessionCheck)
 	setting.GET("/logout", uc.Logout)
 	setting.GET("/changename", uc.ChangeNameView)
 	setting.POST("/changename", uc.ChangeName)
@@ -61,9 +63,9 @@ func Init(sk string) {
 
 	// ログイン後のアプリ系
 	app := e.Group("/app")
-	var ac controller.AppController
-	app.Use(controller.SessionCheck)
-	app.GET("", ac.Top)
+	var apc controller.AppController
+	app.Use(auc.SessionCheck)
+	app.GET("", apc.Top)
 	app.GET("/userpage", uc.UserPage)
 
 	// メモ機能

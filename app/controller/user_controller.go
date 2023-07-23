@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gorilla/sessions"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
@@ -19,6 +18,7 @@ type UserController struct{}
 // GET indexページ表示
 func (uc UserController) Index(c echo.Context) error {
 	var us service.UserService
+
 	// ユーザー全取得
 	u, err := us.GetAll()
 	if err != nil {
@@ -98,29 +98,12 @@ func (uc UserController) Login(c echo.Context) error {
 		}
 		return c.Render(http.StatusBadRequest, "login.html", m)
 	}
-	fmt.Printf("ログイン処理後のToken: %v", token)
 
+	var auc AuthController
 	// セッション
-	sess, err := session.Get("session", c)
+	err = auc.SessionCreate(c, u, token)
 	if err != nil {
-		log.Printf("session.Get error: %v\n", err)
-		m := map[string]interface{}{
-			"message": "セッションの確立に失敗しました。もう一度お試しください。",
-		}
-		return c.Render(http.StatusBadRequest, "login.html", m)
-	}
-	// セッション作成
-	sess.Options = &sessions.Options{
-		MaxAge:   600,
-		HttpOnly: true,
-	}
-	// セッションに値入れ
-	sess.Values["ID"] = u.ID
-	sess.Values["auth"] = true
-	sess.Values["token"] = token.Token
-	err = sess.Save(c.Request(), c.Response())
-	if err != nil {
-		log.Printf("session.Save error: %v\n", err)
+		log.Printf("auc.SessionCreate error: %v\n", err)
 		m := map[string]interface{}{
 			"message": "セッションの確立に失敗しました。もう一度お試しください。",
 		}
@@ -203,23 +186,18 @@ func (uc UserController) Signup(c echo.Context) error {
 
 // GET ログイン後のユーザーページ
 func (uc UserController) UserPage(c echo.Context) error {
+	var auc AuthController
+
 	// セッション
-	sess, err := session.Get("session", c)
+	id, err := auc.IDGetBySession(c)
 	if err != nil {
-		log.Printf("session.Get error: %v\n", err)
+		log.Printf("auc.IDGetSession error: %v\n", err)
 		m := map[string]interface{}{
-			"message": "セッションの取得に失敗しました。もう一度お試しください。",
+			"message": "セッションの取得に失敗しました。",
 		}
 		return c.Render(http.StatusBadRequest, "login.html", m)
 	}
-	if id, ok := sess.Values["ID"].(int); ok != true {
-		log.Printf("不明なIDが保存されています: %v\n", id)
-		m := map[string]interface{}{
-			"message": "セッションの取得に失敗しました。もう一度お試しください。",
-		}
-		return c.Render(http.StatusBadRequest, "login.html", m)
-	}
-	id := sess.Values["ID"].(int)
+
 	var us service.UserService
 	// セッションに保存されているIDからユーザーデータの取得
 	u, err := us.GetByID(id)
@@ -273,6 +251,7 @@ func (uc UserController) ChangeNameView(c echo.Context) error {
 // POST ユーザー名変更処理
 func (uc UserController) ChangeName(c echo.Context) error {
 	var us service.UserService
+	var auc AuthController
 
 	// htmlのformから値の取得
 	username := c.FormValue("username")
@@ -302,22 +281,14 @@ func (uc UserController) ChangeName(c echo.Context) error {
 	}
 
 	// セッション
-	sess, err := session.Get("session", c)
+	id, err := auc.IDGetBySession(c)
 	if err != nil {
-		log.Printf("session.Get error: %v\n", err)
+		log.Printf("auc.IDGetSession error: %v\n", err)
 		m := map[string]interface{}{
-			"message": "セッションの取得に失敗しました。もう一度お試しください。",
+			"message": "セッションの取得に失敗しました。",
 		}
 		return c.Render(http.StatusBadRequest, "userchangename.html", m)
 	}
-	if id, ok := sess.Values["ID"].(int); ok != true {
-		log.Printf("不明なIDが保存されています: %v\n", id)
-		m := map[string]interface{}{
-			"message": "セッションの取得に失敗しました。もう一度お試しください。",
-		}
-		return c.Render(http.StatusBadRequest, "userchangename.html", m)
-	}
-	id := sess.Values["ID"].(int)
 
 	// ユーザー名変更処理
 	err = us.ChangeName(id, username)
@@ -344,6 +315,7 @@ func (uc UserController) ChangePasswordView(c echo.Context) error {
 // POST ユーザーパスワード変更処理
 func (uc UserController) ChangePassword(c echo.Context) error {
 	var us service.UserService
+	var auc AuthController
 
 	// htmlのformから値の取得
 	oldpassword := c.FormValue("oldpassword")
@@ -369,22 +341,14 @@ func (uc UserController) ChangePassword(c echo.Context) error {
 	}
 
 	// セッション
-	sess, err := session.Get("session", c)
+	id, err := auc.IDGetBySession(c)
 	if err != nil {
-		log.Printf("session.Get error: %v\n", err)
+		log.Printf("auc.IDGetSession error: %v\n", err)
 		m := map[string]interface{}{
-			"message": "セッションの取得に失敗しました。もう一度お試しください。",
+			"message": "セッションの取得に失敗しました。",
 		}
 		return c.Render(http.StatusBadRequest, "userchangepassword.html", m)
 	}
-	if id, ok := sess.Values["ID"].(int); ok != true {
-		log.Printf("不明なIDが保存されています: %v\n", id)
-		m := map[string]interface{}{
-			"message": "セッションの取得に失敗しました。もう一度お試しください。",
-		}
-		return c.Render(http.StatusBadRequest, "userchangepassword.html", m)
-	}
-	id := sess.Values["ID"].(int)
 
 	// パスワードチェック
 	_, err = us.Login(id, oldpassword, false)

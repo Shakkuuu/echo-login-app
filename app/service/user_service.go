@@ -144,44 +144,6 @@ func (us UserService) Login(id int, password string, pleasetoken bool) (*entity.
 	}
 
 	return nil, nil
-
-	// var u entity.User
-	// sid := strconv.Itoa(id)
-	// url := "http://echo-login-app-api:8081/user/id/" + sid
-
-	// // APIから取得
-	// resp, err := http.Get(url)
-	// if err != nil {
-	// 	log.Printf("error http.Get: %v", err)
-	// 	err := fmt.Errorf("ログイン処理時にエラーが派生しました。")
-	// 	return err
-	// }
-	// defer resp.Body.Close()
-
-	// body, err := io.ReadAll(resp.Body)
-	// if err != nil {
-	// 	log.Printf("error io.ReadAll: %v", err)
-	// 	err := fmt.Errorf("ログイン処理時にエラーが派生しました。")
-	// 	return err
-	// }
-
-	// // JSONをGoのデータに変換
-	// if err := json.Unmarshal(body, &u); err != nil {
-	// 	log.Printf("error json.Unmarshal: %v", err)
-	// 	err := fmt.Errorf("ログイン処理時にエラーが派生しました。")
-	// 	return err
-	// }
-
-	// // ハッシュ化されたパスワードの解読と一致確認
-	// err = bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
-	// if err != nil {
-	// 	log.Printf("error bcrypt.CompareHashAndPassword: %v", err)
-	// 	err := fmt.Errorf("パスワードが一致していません。")
-	// 	log.Printf("パスワードチェック: %v", err)
-	// 	return err
-	// }
-
-	// return nil
 }
 
 // ユーザー作成処理
