@@ -13,19 +13,31 @@ import (
 type MemoService struct{}
 
 // メモ全取得
-func (ms MemoService) GetAll() ([]entity.Memo, error) {
+func (ms MemoService) GetAll(token string) ([]entity.Memo, error) {
 	var m []entity.Memo
 	url := "http://echo-login-app-api:8081/memo"
 
 	// APIから取得
-	resp, err := http.Get(url)
+	req, err := http.NewRequest(
+		"GET",
+		url,
+		nil,
+	)
 	if err != nil {
 		log.Printf("error http.Get: %v", err)
 		return m, err
 	}
-	defer resp.Body.Close()
+	// Headerセット
+	req.Header.Set("Authorization", "Bearer "+token)
+	client := &http.Client{}
+	re, err := client.Do(req)
+	if err != nil {
+		log.Printf("error http.client.Do: %v", err)
+		return m, err
+	}
+	defer re.Body.Close()
 
-	body, err := io.ReadAll(resp.Body)
+	body, err := io.ReadAll(re.Body)
 	if err != nil {
 		log.Printf("error io.ReadAll: %v", err)
 		return m, err
@@ -41,20 +53,32 @@ func (ms MemoService) GetAll() ([]entity.Memo, error) {
 }
 
 // ユーザーIDからメモの取得
-func (ms MemoService) GetByUserID(user_id int) ([]entity.Memo, error) {
+func (ms MemoService) GetByUserID(user_id int, token string) ([]entity.Memo, error) {
 	var m []entity.Memo
 	sid := strconv.Itoa(user_id)
 	url := "http://echo-login-app-api:8081/memo/user_id/" + sid
 
 	// APIから取得
-	resp, err := http.Get(url)
+	req, err := http.NewRequest(
+		"GET",
+		url,
+		nil,
+	)
 	if err != nil {
 		log.Printf("error http.Get: %v", err)
 		return m, err
 	}
-	defer resp.Body.Close()
+	// Headerセット
+	req.Header.Set("Authorization", "Bearer "+token)
+	client := &http.Client{}
+	re, err := client.Do(req)
+	if err != nil {
+		log.Printf("error http.client.Do: %v", err)
+		return m, err
+	}
+	defer re.Body.Close()
 
-	body, err := io.ReadAll(resp.Body)
+	body, err := io.ReadAll(re.Body)
 	if err != nil {
 		log.Printf("error io.ReadAll: %v", err)
 		return m, err
@@ -70,20 +94,32 @@ func (ms MemoService) GetByUserID(user_id int) ([]entity.Memo, error) {
 }
 
 // IDからメモの取得
-func (ms MemoService) GetByID(id int) (entity.Memo, error) {
+func (ms MemoService) GetByID(id int, token string) (entity.Memo, error) {
 	var m entity.Memo
 	sid := strconv.Itoa(id)
 	url := "http://echo-login-app-api:8081/memo/id/" + sid
 
 	// APIから取得
-	resp, err := http.Get(url)
+	req, err := http.NewRequest(
+		"GET",
+		url,
+		nil,
+	)
 	if err != nil {
 		log.Printf("error http.Get: %v", err)
 		return m, err
 	}
-	defer resp.Body.Close()
+	// Headerセット
+	req.Header.Set("Authorization", "Bearer "+token)
+	client := &http.Client{}
+	re, err := client.Do(req)
+	if err != nil {
+		log.Printf("error http.client.Do: %v", err)
+		return m, err
+	}
+	defer re.Body.Close()
 
-	body, err := io.ReadAll(resp.Body)
+	body, err := io.ReadAll(re.Body)
 	if err != nil {
 		log.Printf("error io.ReadAll: %v", err)
 		return m, err
@@ -99,7 +135,7 @@ func (ms MemoService) GetByID(id int) (entity.Memo, error) {
 }
 
 // メモ作成処理
-func (ms MemoService) Create(title, content string, user_id int) error {
+func (ms MemoService) Create(title, content string, user_id int, token string) error {
 	var m entity.Memo
 	url := "http://echo-login-app-api:8081/memo"
 
@@ -111,22 +147,32 @@ func (ms MemoService) Create(title, content string, user_id int) error {
 	j, _ := json.Marshal(m)
 
 	// apiへのユーザー情報送信
-	req, err := http.Post(
+	req, err := http.NewRequest(
+		"POST",
 		url,
-		"application/json",
 		bytes.NewBuffer(j),
 	)
 	if err != nil {
 		log.Printf("error http.POST: %v", err)
 		return err
 	}
-	defer req.Body.Close()
+
+	// Headerセット
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+token)
+	client := &http.Client{}
+	re, err := client.Do(req)
+	if err != nil {
+		log.Printf("error http.client.Do: %v", err)
+		return err
+	}
+	defer re.Body.Close()
 
 	return nil
 }
 
 // メモの変更処理
-func (ms MemoService) Change(id, title, content string) error {
+func (ms MemoService) Change(id, title, content, token string) error {
 	var m entity.Memo
 	url := "http://echo-login-app-api:8081/memo/" + id
 
@@ -149,6 +195,7 @@ func (ms MemoService) Change(id, title, content string) error {
 
 	// Headerセット
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+token)
 	client := &http.Client{}
 	re, err := client.Do(req)
 	if err != nil {
@@ -196,7 +243,7 @@ func (ms MemoService) Change(id, title, content string) error {
 // }
 
 // メモ削除処理
-func (ms MemoService) Delete(id int) error {
+func (ms MemoService) Delete(id int, token string) error {
 	sid := strconv.Itoa(id)
 	url := "http://echo-login-app-api:8081/memo/" + sid
 
@@ -210,6 +257,7 @@ func (ms MemoService) Delete(id int) error {
 		log.Printf("error http.DELETE: %v", err)
 		return err
 	}
+	req.Header.Set("Authorization", "Bearer "+token)
 	client := &http.Client{}
 	re, err := client.Do(req)
 	if err != nil {

@@ -137,3 +137,65 @@ func (uc UserController) Delete(c echo.Context) error {
 
 	return c.JSON(200, m)
 }
+
+// POST ユーザーログイン
+func (uc UserController) Login(c echo.Context) error {
+	var us service.UserService
+
+	var u entity.User
+	// JSONをGoのデータに変換
+	err := c.Bind(&u)
+	if err != nil {
+		message := fmt.Sprintf("User Login Bind: %v", err)
+		log.Println(message)
+		e := ResMess{Status: 500, Message: message}
+		return c.JSON(e.Status, e)
+	}
+
+	// ログイン処理
+	err = us.Login(&u)
+	if err != nil {
+		message := fmt.Sprintf("UserService.Login: %v", err)
+		log.Println(message)
+		e := ResMess{Status: 500, Message: message}
+		return c.JSON(e.Status, e)
+	}
+
+	// m := ResMess{Status: 200, Message: "ログイン成功しました。"}
+
+	// Tokens作成処理
+	t, err := us.TokenCreate(u.ID)
+	if err != nil || t == "" {
+		message := fmt.Sprintf("us.TokenCreate: %v", err)
+		log.Println(message)
+		e := ResMess{Status: 500, Message: message}
+		return c.JSON(e.Status, e)
+	}
+
+	jtoken := entity.Token{Token: t}
+
+	return c.JSON(200, jtoken)
+}
+
+// // Token確認処理
+// func TokenCheck(next echo.HandlerFunc) echo.HandlerFunc {
+// 	return func(c echo.Context) error {
+
+// 	}
+// }
+
+// // 署名の検証
+// token, err := request.ParseFromRequest(c.Request, request.OAuth2Extractor, func(token *jwt.Token) (interface{}, error) {
+// 	b := []byte(secretKey)
+// 	return b, nil
+// })
+// if err != nil {
+// 	return "", err
+// }
+
+// claims := token.Claims.(jwt.MapClaims)
+// uname := fmt.Sprint(claims["user"])
+// msg := fmt.Sprintf("こんにちは、「 %s 」さん", uname)
+// fmt.Println(msg)
+
+// return uname, nil

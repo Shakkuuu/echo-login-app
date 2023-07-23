@@ -52,9 +52,9 @@ func ConnectCheck() {
 			resp, err = http.Get(url)
 		}
 	}
-	if resp.Status != "200 OK" {
+	if resp.StatusCode != 200 {
 		for {
-			if resp.Status == "200 OK" {
+			if resp.StatusCode == 200 {
 				fmt.Println("")
 				break
 			}

@@ -15,6 +15,7 @@ services:
       USERPASS: ${ELA_USERPASS}
       DATABASE: ${ELA_DATABASE}
       ROOTPASS: ${ELA_ROOTPASS}
+      TOKEN_KEY: ${TOKEN_KEY}
     depends_on:
       - "db"
   app:

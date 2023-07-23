@@ -33,9 +33,18 @@ func (mc MemoController) Top(c echo.Context) error {
 	}
 	user_id := sess.Values["ID"].(int)
 
+	token, err := TokenGet(c)
+	if err != nil {
+		log.Printf("TokenGet error: %v\n", err)
+		m := map[string]interface{}{
+			"message": "Tokenの取得に失敗しました。もう一度お試しください。",
+		}
+		return c.Render(http.StatusBadRequest, "login.html", m)
+	}
+
 	var ms service.MemoService
 	// メモ全取得
-	u, err := ms.GetByUserID(user_id)
+	u, err := ms.GetByUserID(user_id, token)
 	if err != nil {
 		log.Printf("ms.GetByUserID error: %v\n", err)
 		m := map[string]interface{}{
@@ -92,10 +101,18 @@ func (mc MemoController) Create(c echo.Context) error {
 	}
 	user_id := sess.Values["ID"].(int)
 
-	var ms service.MemoService
+	token, err := TokenGet(c)
+	if err != nil {
+		log.Printf("TokenGet error: %v\n", err)
+		m := map[string]interface{}{
+			"message": "Tokenの取得に失敗しました。もう一度お試しください。",
+		}
+		return c.Render(http.StatusBadRequest, "login.html", m)
+	}
 
+	var ms service.MemoService
 	// メモ作成
-	err = ms.Create(title, content, user_id)
+	err = ms.Create(title, content, user_id, token)
 	if err != nil {
 		log.Println("ms.Create error")
 		m := map[string]interface{}{
@@ -121,9 +138,18 @@ func (mc MemoController) ContentView(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "memotop.html", m)
 	}
 
+	token, err := TokenGet(c)
+	if err != nil {
+		log.Printf("TokenGet error: %v\n", err)
+		m := map[string]interface{}{
+			"message": "Tokenの取得に失敗しました。",
+			"memo":    nil,
+		}
+		return c.Render(http.StatusBadRequest, "memotop.html", m)
+	}
 	var ms service.MemoService
 	// IDからメモ取得
-	u, err := ms.GetByID(id)
+	u, err := ms.GetByID(id, token)
 	if err != nil {
 		log.Printf("ms.GetByID error: %v\n", err)
 		m := map[string]interface{}{
@@ -151,8 +177,18 @@ func (mc MemoController) Delete(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "memotop.html", m)
 	}
 
+	token, err := TokenGet(c)
+	if err != nil {
+		log.Println("TokenGet error")
+		m := map[string]interface{}{
+			"message": "Token取得時にエラーが発生しました。",
+			"memo":    nil,
+		}
+		return c.Render(http.StatusBadRequest, "memotop.html", m)
+	}
+
 	// メモ削除処理
-	err = ms.Delete(id)
+	err = ms.Delete(id, token)
 	if err != nil {
 		log.Println("ms.Delete error")
 		m := map[string]interface{}{
@@ -199,8 +235,18 @@ func (mc MemoController) Change(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "memotop.html", m)
 	}
 
+	token, err := TokenGet(c)
+	if err != nil {
+		log.Println("TokenGet error")
+		m := map[string]interface{}{
+			"message": "Token取得時にエラーが発生しました。",
+			"memo":    nil,
+		}
+		return c.Render(http.StatusBadRequest, "memotop.html", m)
+	}
+
 	// メモ変更処理
-	err := ms.Change(param_id, title, content)
+	err = ms.Change(param_id, title, content, token)
 	if err != nil {
 		log.Println("ms.Change error")
 		m := map[string]interface{}{

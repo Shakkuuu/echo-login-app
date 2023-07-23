@@ -36,6 +36,21 @@ func SessionCheck(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
+func TokenGet(c echo.Context) (string, error) {
+	// セッション
+	sess, err := session.Get("session", c)
+	if err != nil {
+		log.Printf("session.Get error: %v\n", err)
+		return "", err
+	}
+	if id, ok := sess.Values["token"].(string); ok != true {
+		log.Printf("不明なIDが保存されています: %v\n", id)
+		return "", err
+	}
+	token := sess.Values["token"].(string)
+	return token, nil
+}
+
 type AppController struct{}
 
 // GET ログイン後のTopページ表示

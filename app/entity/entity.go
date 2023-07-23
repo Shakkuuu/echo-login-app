@@ -23,3 +23,8 @@ type ResponseMessage struct {
 	Status  int    `json:"status"`
 	Message string `json:"message"`
 }
+
+// トークン
+type Token struct {
+	Token string `json:"token"`
+}

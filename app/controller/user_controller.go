@@ -90,7 +90,7 @@ func (uc UserController) Login(c echo.Context) error {
 	}
 
 	// Login処理 パスワードチェック
-	err = us.Login(u.ID, password)
+	token, err := us.Login(u.ID, password, true)
 	if err != nil {
 		log.Println("us.Login error")
 		m := map[string]interface{}{
@@ -98,6 +98,7 @@ func (uc UserController) Login(c echo.Context) error {
 		}
 		return c.Render(http.StatusBadRequest, "login.html", m)
 	}
+	fmt.Printf("ログイン処理後のToken: %v", token)
 
 	// セッション
 	sess, err := session.Get("session", c)
@@ -116,6 +117,7 @@ func (uc UserController) Login(c echo.Context) error {
 	// セッションに値入れ
 	sess.Values["ID"] = u.ID
 	sess.Values["auth"] = true
+	sess.Values["token"] = token.Token
 	err = sess.Save(c.Request(), c.Response())
 	if err != nil {
 		log.Printf("session.Save error: %v\n", err)
@@ -385,7 +387,7 @@ func (uc UserController) ChangePassword(c echo.Context) error {
 	id := sess.Values["ID"].(int)
 
 	// パスワードチェック
-	err = us.Login(id, oldpassword)
+	_, err = us.Login(id, oldpassword, false)
 	if err != nil {
 		log.Println("us.Login error")
 		m := map[string]interface{}{

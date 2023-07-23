@@ -9,8 +9,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-
-	"golang.org/x/crypto/bcrypt"
 )
 
 type UserService struct{}
@@ -101,44 +99,89 @@ func (us UserService) GetByID(id int) (entity.User, error) {
 }
 
 // Login処理
-func (us UserService) Login(id int, password string) error {
+func (us UserService) Login(id int, password string, pleasetoken bool) (*entity.Token, error) {
 	var u entity.User
-	sid := strconv.Itoa(id)
-	url := "http://echo-login-app-api:8081/user/id/" + sid
+	url := "http://echo-login-app-api:8081/user/login"
 
-	// APIから取得
-	resp, err := http.Get(url)
+	u.ID = id
+	u.Password = password
+
+	// GoのデータをJSONに変換
+	j, _ := json.Marshal(u)
+
+	// apiへのユーザー情報送信
+	req, err := http.Post(
+		url,
+		"application/json",
+		bytes.NewBuffer(j),
+	)
 	if err != nil {
-		log.Printf("error http.Get: %v", err)
-		err := fmt.Errorf("ログイン処理時にエラーが派生しました。")
-		return err
+		log.Printf("error http.POST: %v", err)
+		return nil, err
 	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
+	body, err := io.ReadAll(req.Body)
 	if err != nil {
 		log.Printf("error io.ReadAll: %v", err)
-		err := fmt.Errorf("ログイン処理時にエラーが派生しました。")
-		return err
+		return nil, err
 	}
-
-	// JSONをGoのデータに変換
-	if err := json.Unmarshal(body, &u); err != nil {
-		log.Printf("error json.Unmarshal: %v", err)
-		err := fmt.Errorf("ログイン処理時にエラーが派生しました。")
-		return err
-	}
-
-	// ハッシュ化されたパスワードの解読と一致確認
-	err = bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
-	if err != nil {
-		log.Printf("error bcrypt.CompareHashAndPassword: %v", err)
-		err := fmt.Errorf("パスワードが一致していません。")
+	if req.StatusCode != 200 {
+		log.Printf("error http.POST: %v", string(body))
+		err = fmt.Errorf("パスワードが一致していません。")
 		log.Printf("パスワードチェック: %v", err)
-		return err
+		return nil, err
+	}
+	defer req.Body.Close()
+
+	if pleasetoken == true {
+		var token entity.Token
+		// JSONをGoのデータに変換
+		if err := json.Unmarshal(body, &token); err != nil {
+			log.Printf("error json.Unmarshal: %v", err)
+			return nil, err
+		}
+
+		return &token, nil
 	}
 
-	return nil
+	return nil, nil
+
+	// var u entity.User
+	// sid := strconv.Itoa(id)
+	// url := "http://echo-login-app-api:8081/user/id/" + sid
+
+	// // APIから取得
+	// resp, err := http.Get(url)
+	// if err != nil {
+	// 	log.Printf("error http.Get: %v", err)
+	// 	err := fmt.Errorf("ログイン処理時にエラーが派生しました。")
+	// 	return err
+	// }
+	// defer resp.Body.Close()
+
+	// body, err := io.ReadAll(resp.Body)
+	// if err != nil {
+	// 	log.Printf("error io.ReadAll: %v", err)
+	// 	err := fmt.Errorf("ログイン処理時にエラーが派生しました。")
+	// 	return err
+	// }
+
+	// // JSONをGoのデータに変換
+	// if err := json.Unmarshal(body, &u); err != nil {
+	// 	log.Printf("error json.Unmarshal: %v", err)
+	// 	err := fmt.Errorf("ログイン処理時にエラーが派生しました。")
+	// 	return err
+	// }
+
+	// // ハッシュ化されたパスワードの解読と一致確認
+	// err = bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
+	// if err != nil {
+	// 	log.Printf("error bcrypt.CompareHashAndPassword: %v", err)
+	// 	err := fmt.Errorf("パスワードが一致していません。")
+	// 	log.Printf("パスワードチェック: %v", err)
+	// 	return err
+	// }
+
+	// return nil
 }
 
 // ユーザー作成処理

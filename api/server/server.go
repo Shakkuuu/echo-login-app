@@ -3,6 +3,7 @@ package server
 import (
 	"echo-login-app/api/controller"
 	"net/http"
+	"os"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -33,9 +34,11 @@ func Init() {
 	usr.GET("/username/:username", uc.GetByName)
 	usr.PUT("/:id", uc.PutByID)
 	usr.DELETE("/:id", uc.Delete)
+	usr.POST("/login", uc.Login)
 
 	var mc controller.MemoController
 	memo := e.Group("/memo")
+	memo.Use(middleware.JWT([]byte(os.Getenv("TOKEN_KEY"))))
 	memo.GET("", mc.GetAll)
 	memo.POST("", mc.Create)
 	memo.GET("/id/:id", mc.GetByID)
