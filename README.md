@@ -312,13 +312,17 @@ apiでは、`/memo`のURLにアクセスしようとすると、middleware.JWT�
 
 ### APIとバックエンド共通
 
-- middleware.Recover()
+- 突然のサーバーダウン時のリカバー用
 
-突然のサーバーダウン時のリカバー用
+```go
+middleware.Recover()
+```
 
-- middleware.LoggerWithConfig()
+- ログ出力のフォーマット化
 
-ログ出力のフォーマット化
+```go
+middleware.LoggerWithConfig()
+```
 
 ```go
 e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
@@ -335,19 +339,25 @@ e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 
 ### api用
 
-- middleware.JWT([]byte("tokenkey"))
+- JWTのToken確認
 
-JWTのToken確認
+```go
+middleware.JWT([]byte("tokenkey"))
+```
 
 ### app用
 
-- session.Middleware(sessions.NewCookieStore([]byte("sessionkey")))
+- Session用キーの設定
 
-Session用キーの設定
+```go
+session.Middleware(sessions.NewCookieStore([]byte("sessionkey")))
+```
 
-- auc.SessionCheck
+- controller.AuthController.SessionCheck()オリジナルミドルウェア。
 
-controller.AuthController.SessionCheck()オリジナルミドルウェア。
+```go
+auc.SessionCheck
+```
 
 Session内の"auth"がTrueかどうかで、このSessionが有効か無効化を判断する。
 
