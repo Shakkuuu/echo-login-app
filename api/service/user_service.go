@@ -124,5 +124,6 @@ func (us UserService) TokenCreate(id int) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	// fmt.Printf("token: %v", t)
 	return t, nil
 }

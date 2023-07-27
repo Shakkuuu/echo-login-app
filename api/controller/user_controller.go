@@ -161,8 +161,6 @@ func (uc UserController) Login(c echo.Context) error {
 		return c.JSON(e.Status, e)
 	}
 
-	// m := ResMess{Status: 200, Message: "ログイン成功しました。"}
-
 	// Tokens作成処理
 	t, err := us.TokenCreate(u.ID)
 	if err != nil || t == "" {
@@ -176,26 +174,3 @@ func (uc UserController) Login(c echo.Context) error {
 
 	return c.JSON(200, jtoken)
 }
-
-// // Token確認処理
-// func TokenCheck(next echo.HandlerFunc) echo.HandlerFunc {
-// 	return func(c echo.Context) error {
-
-// 	}
-// }
-
-// // 署名の検証
-// token, err := request.ParseFromRequest(c.Request, request.OAuth2Extractor, func(token *jwt.Token) (interface{}, error) {
-// 	b := []byte(secretKey)
-// 	return b, nil
-// })
-// if err != nil {
-// 	return "", err
-// }
-
-// claims := token.Claims.(jwt.MapClaims)
-// uname := fmt.Sprint(claims["user"])
-// msg := fmt.Sprintf("こんにちは、「 %s 」さん", uname)
-// fmt.Println(msg)
-
-// return uname, nil
