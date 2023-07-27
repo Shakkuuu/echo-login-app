@@ -1,5 +1,7 @@
 # echo-login-app
 
+コードの細かい解説はQiitaの[この](https://qiita.com/Shakku/items/2dbf455dc270cc514436)投稿をご覧ください。
+
 ## ディレクトリ構成
 
 ```c
