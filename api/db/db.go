@@ -66,4 +66,5 @@ func Close() {
 func autoMigration() {
 	db.AutoMigrate(&entity.User{})
 	db.AutoMigrate(&entity.Memo{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
+	db.AutoMigrate(&entity.Coin{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
 }
