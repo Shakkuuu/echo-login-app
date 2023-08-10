@@ -17,7 +17,7 @@ type MemoController struct{}
 func (mc MemoController) GetAll(c echo.Context) error {
 	var ms service.MemoService
 
-	// ユーザー全取得処理
+	// メモ全取得処理
 	m, err := ms.GetAll()
 	if err != nil {
 		message := fmt.Sprintf("MemoService.GetAll: %v", err)

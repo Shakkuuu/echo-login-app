@@ -19,6 +19,7 @@ type Memo struct {
 	User_ID   int       `json:"user_id"`
 }
 
+// コイン
 type Coin struct {
 	ID      int `json:"id" gorm:"primaryKey"`
 	Qty     int `json:"qty"`

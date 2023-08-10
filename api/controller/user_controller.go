@@ -32,6 +32,7 @@ func (uc UserController) GetAll(c echo.Context) error {
 // POST ユーザー作成
 func (uc UserController) Create(c echo.Context) error {
 	var us service.UserService
+	var cs service.CoinService
 
 	var u entity.User
 	// JSONをGoのデータに変換
@@ -47,6 +48,16 @@ func (uc UserController) Create(c echo.Context) error {
 	user, err := us.Create(&u)
 	if err != nil {
 		message := fmt.Sprintf("UserService.Create: %v", err)
+		log.Println(message)
+		e := ResMess{Status: 500, Message: message}
+		return c.JSON(e.Status, e)
+	}
+
+	coin := entity.Coin{User_ID: user.ID}
+
+	_, err = cs.Create(&coin)
+	if err != nil {
+		message := fmt.Sprintf("CoinService.Create: %v", err)
 		log.Println(message)
 		e := ResMess{Status: 500, Message: message}
 		return c.JSON(e.Status, e)

@@ -10,73 +10,73 @@ type CoinService struct{}
 // コイン全取得処理
 func (cs CoinService) GetAll() ([]entity.Coin, error) {
 	db := db.GetDB()
-	var c []entity.Coin
+	var coin []entity.Coin
 
-	err := db.Find(&c).Error
+	err := db.Find(&coin).Error
 	if err != nil {
-		return c, err
+		return coin, err
 	}
 
-	return c, nil
+	return coin, nil
 }
 
 // コイン作成処理
-func (cs CoinService) Create(c *entity.Coin) (*entity.Coin, error) {
+func (cs CoinService) Create(coin *entity.Coin) (*entity.Coin, error) {
 	db := db.GetDB()
 
-	err := db.Create(&c).Error
+	err := db.Create(&coin).Error
 	if err != nil {
-		return c, err
+		return coin, err
 	}
 
-	return c, nil
+	return coin, nil
 }
 
 // IDからのコイン取得処理
 func (cs CoinService) GetByID(id string) (entity.Coin, error) {
 	db := db.GetDB()
-	var c entity.Coin
+	var coin entity.Coin
 
-	err := db.Where("id = ?", id).First(&c).Error
+	err := db.Where("id = ?", id).First(&coin).Error
 	if err != nil {
-		return c, err
+		return coin, err
 	}
 
-	return c, nil
+	return coin, nil
 }
 
 // ユーザーIDからのコインの取得処理
 func (cs CoinService) GetByUserID(user_id string) (entity.Coin, error) {
 	db := db.GetDB()
-	var c entity.Coin
+	var coin entity.Coin
 
-	err := db.Where("user_id = ?", user_id).Find(&c).Error
+	err := db.Where("user_id = ?", user_id).Find(&coin).Error
 	if err != nil {
-		return c, err
+		return coin, err
 	}
 
-	return c, nil
+	return coin, nil
 }
 
 // UserIDからのコイン更新処理
-func (cs CoinService) AddByUserID(c *entity.Coin, user_id string) (*entity.Coin, error) {
+func (cs CoinService) AddByUserID(coin *entity.Coin, user_id string) (*entity.Coin, error) {
 	db := db.GetDB()
 
-	err := db.Where("user_id = ?", user_id).Model(&c).Updates(&c).Error
+	err := db.Where("user_id = ?", user_id).Model(&coin).Updates(&coin).Error
 	if err != nil {
-		return c, err
+		return coin, err
 	}
 
-	return c, nil
+	return coin, nil
 }
 
 // User_IDからのコイン削除処理
 func (cs CoinService) Delete(user_id string) error {
 	db := db.GetDB()
 
-	var c entity.Coin
+	var coin entity.Coin
 
-	err := db.Where("user_id = ?", user_id).Delete(&c).Error
+	err := db.Where("user_id = ?", user_id).Delete(&coin).Error
 	if err != nil {
 		return err
 	}
