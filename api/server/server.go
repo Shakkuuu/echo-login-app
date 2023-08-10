@@ -26,6 +26,7 @@ func Init() {
 
 	e.GET("/", Pong)
 
+	// ユーザー
 	var uc controller.UserController
 	usr := e.Group("/user")
 	usr.GET("", uc.GetAll)
@@ -36,6 +37,7 @@ func Init() {
 	usr.DELETE("/:id", uc.Delete)
 	usr.POST("/login", uc.Login)
 
+	// メモ
 	var mc controller.MemoController
 	memo := e.Group("/memo")
 	memo.Use(middleware.JWT([]byte(os.Getenv("TOKEN_KEY"))))
@@ -45,6 +47,16 @@ func Init() {
 	memo.GET("/user_id/:user_id", mc.GetByUserID)
 	memo.PUT("/:id", mc.PutByID)
 	memo.DELETE("/:id", mc.Delete)
+
+	// コイン
+	var cc controller.CoinController
+	coin := e.Group("/coin")
+	coin.Use(middleware.JWT([]byte(os.Getenv("TOKEN_KEY"))))
+	coin.GET("", cc.GetAll)
+	coin.GET("/id/:id", cc.GetByID)
+	coin.GET("/user_id/:user_id", cc.GetByUserID)
+	coin.PUT("/:user_id", cc.PutByUserID)
+	coin.DELETE("/:user_id", cc.Delete)
 
 	e.Logger.Fatal(e.Start(":8081"))
 }

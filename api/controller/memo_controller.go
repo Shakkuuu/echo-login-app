@@ -124,7 +124,7 @@ func (mc MemoController) Delete(c echo.Context) error {
 
 	var ms service.MemoService
 
-	// ユーザー削除処理
+	// メモ削除処理
 	err := ms.Delete(id)
 	if err != nil {
 		message := fmt.Sprintf("MemoService.Delete: %v", err)

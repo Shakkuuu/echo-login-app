@@ -59,7 +59,7 @@ func (cs CoinService) GetByUserID(user_id string) (entity.Coin, error) {
 }
 
 // UserIDからのコイン更新処理
-func (cs CoinService) AddByUserID(coin *entity.Coin, user_id string) (*entity.Coin, error) {
+func (cs CoinService) PutByUserID(coin *entity.Coin, user_id string) (*entity.Coin, error) {
 	db := db.GetDB()
 
 	err := db.Where("user_id = ?", user_id).Model(&coin).Updates(&coin).Error
