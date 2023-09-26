@@ -78,5 +78,12 @@ func Init(sk string) {
 	memo.GET("/delete/:id", mc.Delete)
 	memo.POST("/change/:id", mc.Change)
 
+	// メモ機能
+	coin := app.Group("/coin")
+	var cc controller.CoinController
+	coin.GET("", cc.Top)
+	coin.GET("/add", cc.QtyAdd)
+	coin.GET("/sub", cc.QtySub)
+
 	e.Logger.Fatal(e.Start(":8082"))
 }

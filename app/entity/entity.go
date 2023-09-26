@@ -18,6 +18,13 @@ type Memo struct {
 	User_ID   int       `json:"user_id"`
 }
 
+// コイン
+type Coin struct {
+	ID      int `json:"id"`
+	Qty     int `json:"qty"`
+	User_ID int `json:"user_id"`
+}
+
 // レスポンスメッセージ用構造体
 type ResponseMessage struct {
 	Status  int    `json:"status"`
