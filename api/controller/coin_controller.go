@@ -27,6 +27,32 @@ func (cc CoinController) GetAll(c echo.Context) error {
 	return c.JSON(200, coin)
 }
 
+// POST コイン作成
+func (cc CoinController) Create(c echo.Context) error {
+	var cs service.CoinService
+
+	var coin entity.Coin
+	// JSONをGoのデータに変換
+	err := c.Bind(&coin)
+	if err != nil {
+		message := fmt.Sprintf("Coin Create Bind: %v", err)
+		log.Println(message)
+		e := ResMess{Status: 500, Message: message}
+		return c.JSON(e.Status, e)
+	}
+
+	// メモ作成処理
+	rescoin, err := cs.Create(&coin)
+	if err != nil {
+		message := fmt.Sprintf("CoinService.Create: %v", err)
+		log.Println(message)
+		e := ResMess{Status: 500, Message: message}
+		return c.JSON(e.Status, e)
+	}
+
+	return c.JSON(201, rescoin)
+}
+
 // GET IDからコイン取得
 func (cc CoinController) GetByID(c echo.Context) error {
 	id := c.Param("id")
@@ -78,10 +104,10 @@ func (cc CoinController) PutByUserID(c echo.Context) error {
 	}
 	print(&coin)
 
-	// IDからコイン更新処理
+	// ユーザーIDからコイン更新処理
 	co, err := cs.PutByUserID(&coin, user_id)
 	if err != nil {
-		message := fmt.Sprintf("CoinService.PutByID: %v", err)
+		message := fmt.Sprintf("CoinService.PutByUserID: %v", err)
 		log.Println(message)
 		e := ResMess{Status: 500, Message: message}
 		return c.JSON(e.Status, e)
