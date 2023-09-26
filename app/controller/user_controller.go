@@ -117,7 +117,6 @@ func (uc UserController) Login(c echo.Context) error {
 // POST Signup処理
 func (uc UserController) Signup(c echo.Context) error {
 	var us service.UserService
-	var cs service.CoinService
 
 	// htmlからformの取得
 	username := c.FormValue("username")
@@ -182,62 +181,7 @@ func (uc UserController) Signup(c echo.Context) error {
 	}
 
 	fmt.Println("ユーザー登録成功したよ")
-
-	// ユーザー名からID取得
-	usr, err := us.GetByName(username)
-	if err != nil {
-		log.Println("ID取得時にエラーが発生しました。")
-		m := map[string]interface{}{
-			"message": "ID取得時にエラーが発生しました。",
-		}
-		return c.Render(http.StatusBadRequest, "login.html", m)
-	}
-
-	// Login処理 パスワードチェック
-	token, err := us.Login(usr.ID, password, true)
-	if err != nil {
-		log.Println("us.Login error")
-		m := map[string]interface{}{
-			"message": err,
-		}
-		return c.Render(http.StatusBadRequest, "login.html", m)
-	}
-
-	var auc AuthController
-	// セッション
-	err = auc.SessionCreate(c, usr, token)
-	if err != nil {
-		log.Printf("auc.SessionCreate error: %v\n", err)
-		m := map[string]interface{}{
-			"message": "セッションの確立に失敗しました。もう一度お試しください。",
-		}
-		return c.Render(http.StatusBadRequest, "login.html", m)
-	}
-
-	gettoken, err := auc.TokenGet(c)
-	if err != nil {
-		log.Println("TokenGet error")
-		m := map[string]interface{}{
-			"message": "Token取得時にエラーが発生しました。",
-			"memo":    nil,
-		}
-		return c.Render(http.StatusBadRequest, "login.html", m)
-	}
-
-	err = cs.Create(usr.ID, gettoken)
-	if err != nil {
-		log.Println("ms.Create error")
-		m := map[string]interface{}{
-			"message": "コイン作成時にエラーが発生しました。",
-		}
-		return c.Render(http.StatusBadRequest, "signup.html", m)
-	}
-
-	fmt.Println("ログイン成功したよ")
-	return c.Redirect(http.StatusFound, "/app")
-
-	// fmt.Println("ユーザー登録成功したよ")
-	// return c.Redirect(http.StatusFound, "/login")
+	return c.Redirect(http.StatusFound, "/login")
 }
 
 // GET ログイン後のユーザーページ

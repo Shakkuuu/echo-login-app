@@ -86,8 +86,10 @@ func (cc CoinController) QtyAdd(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "cointop.html", m)
 	}
 
+	addcoin := coin.Qty + 1
+
 	// コイン数変更
-	err = cs.ChangeQty(token, user_id, coin.Qty+1)
+	err = cs.ChangeQty(token, user_id, addcoin)
 	if err != nil {
 		log.Printf("cs.ChangeQty error: %v\n", err)
 		m := map[string]interface{}{
@@ -104,6 +106,7 @@ func (cc CoinController) QtyAdd(c echo.Context) error {
 func (cc CoinController) QtySub(c echo.Context) error {
 	var auc AuthController
 	var cs service.CoinService
+	var subcoin int
 
 	// セッション
 	user_id, err := auc.IDGetBySession(c)
@@ -135,12 +138,18 @@ func (cc CoinController) QtySub(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "cointop.html", m)
 	}
 
+	if coin.Qty == 0 || coin.Qty == 1 {
+		subcoin = 0
+	} else {
+		subcoin = coin.Qty - 1
+	}
+
 	// コイン数変更
-	err = cs.ChangeQty(token, user_id, coin.Qty-1)
+	err = cs.ChangeQty(token, user_id, subcoin)
 	if err != nil {
 		log.Printf("cs.ChangeQty error: %v\n", err)
 		m := map[string]interface{}{
-			"message": "コインの増加に失敗しました。",
+			"message": "コインの減少に失敗しました。",
 			"coin":    nil,
 		}
 		return c.Render(http.StatusBadRequest, "cointop.html", m)
