@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"echo-login-app/app/entity"
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -180,6 +181,8 @@ func (cs CoinService) ChangeQty(token string, user_id, qty int) error {
 
 	// GoのデータをJSONに変換
 	j, _ := json.Marshal(coin)
+
+	fmt.Printf("コイン変更:%v", coin)
 
 	// apiへのコイン情報送信
 	req, err := http.NewRequest(

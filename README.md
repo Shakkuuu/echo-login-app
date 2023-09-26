@@ -470,3 +470,5 @@ ab -n 100 -c 100 localhost:8081/
 -n リクエスト総数 -c 同時接続数
 
 middleware.RemoveTrailingSlash()：こいつはGroupを使っているルータに使おうとすると、下の階層のGroupには反映されなかった。(なので実装見送り)
+
+コインが0枚にならない
