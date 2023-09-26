@@ -4,7 +4,6 @@ import (
 	"echo-login-app/app/service"
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -76,8 +75,6 @@ func (cc CoinController) QtyAdd(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "login.html", m)
 	}
 
-	string_user_id := strconv.Itoa(user_id)
-
 	// コイン取得
 	coin, err := cs.GetByUserID(user_id, token)
 	if err != nil {
@@ -90,7 +87,7 @@ func (cc CoinController) QtyAdd(c echo.Context) error {
 	}
 
 	// コイン数変更
-	err = cs.ChangeQty(string_user_id, token, coin.Qty+1)
+	err = cs.ChangeQty(token, user_id, coin.Qty+1)
 	if err != nil {
 		log.Printf("cs.ChangeQty error: %v\n", err)
 		m := map[string]interface{}{
@@ -127,8 +124,6 @@ func (cc CoinController) QtySub(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "login.html", m)
 	}
 
-	string_user_id := strconv.Itoa(user_id)
-
 	// コイン取得
 	coin, err := cs.GetByUserID(user_id, token)
 	if err != nil {
@@ -141,7 +136,7 @@ func (cc CoinController) QtySub(c echo.Context) error {
 	}
 
 	// コイン数変更
-	err = cs.ChangeQty(string_user_id, token, coin.Qty-1)
+	err = cs.ChangeQty(token, user_id, coin.Qty-1)
 	if err != nil {
 		log.Printf("cs.ChangeQty error: %v\n", err)
 		m := map[string]interface{}{

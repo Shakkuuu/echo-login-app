@@ -157,16 +157,7 @@ func (mc MemoController) Delete(c echo.Context) error {
 	var ms service.MemoService
 	var auc AuthController
 
-	form_id := c.Param("id")
-	id, err := strconv.Atoi(form_id)
-	if err != nil {
-		log.Println("strconv.Atoi error")
-		m := map[string]interface{}{
-			"message": "メモID取得時にエラーが発生しました。",
-			"memo":    nil,
-		}
-		return c.Render(http.StatusBadRequest, "memotop.html", m)
-	}
+	id := c.Param("id")
 
 	token, err := auc.TokenGet(c)
 	if err != nil {

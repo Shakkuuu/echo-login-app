@@ -171,9 +171,10 @@ func (cs CoinService) Create(user_id int, token string) error {
 }
 
 // コインの変更処理
-func (cs CoinService) ChangeQty(user_id, token string, qty int) error {
+func (cs CoinService) ChangeQty(token string, user_id, qty int) error {
 	var coin entity.Coin
-	url := "http://echo-login-app-api:8081/coin/" + user_id
+	sid := strconv.Itoa(user_id)
+	url := "http://echo-login-app-api:8081/coin/" + sid
 
 	coin.Qty = qty
 

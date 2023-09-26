@@ -208,9 +208,8 @@ func (ms MemoService) Change(id, title, content, token string) error {
 }
 
 // メモ削除処理
-func (ms MemoService) Delete(id int, token string) error {
-	sid := strconv.Itoa(id)
-	url := "http://echo-login-app-api:8081/memo/" + sid
+func (ms MemoService) Delete(id, token string) error {
+	url := "http://echo-login-app-api:8081/memo/" + id
 
 	// apiへのユーザー情報送信
 	req, err := http.NewRequest(
