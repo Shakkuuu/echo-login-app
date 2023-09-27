@@ -21,9 +21,9 @@ type Memo struct {
 
 // コイン
 type Coin struct {
-	ID      int `json:"id" gorm:"primaryKey"`
-	Qty     int `json:"qty"`
-	User_ID int `json:"user_id"`
+	ID      int  `json:"id" gorm:"primaryKey"`
+	Qty     *int `json:"qty"`
+	User_ID int  `json:"user_id"`
 }
 
 // レスポンスメッセージ用構造体

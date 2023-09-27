@@ -138,7 +138,7 @@ func (cc CoinController) QtySub(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "cointop.html", m)
 	}
 
-	if coin.Qty == 0 || coin.Qty == 1 {
+	if coin.Qty <= 0 {
 		subcoin = 0
 	} else {
 		subcoin = coin.Qty - 1

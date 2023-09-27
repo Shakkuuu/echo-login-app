@@ -102,7 +102,6 @@ func (cc CoinController) PutByUserID(c echo.Context) error {
 		e := ResMess{Status: 500, Message: message}
 		return c.JSON(e.Status, e)
 	}
-	print(&coin)
 
 	// ユーザーIDからコイン更新処理
 	co, err := cs.PutByUserID(&coin, user_id)
