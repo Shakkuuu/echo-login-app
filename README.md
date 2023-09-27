@@ -471,4 +471,4 @@ ab -n 100 -c 100 localhost:8081/
 
 middleware.RemoveTrailingSlash()：こいつはGroupを使っているルータに使おうとすると、下の階層のGroupには反映されなかった。(なので実装見送り)
 
-コインが0枚にならない(gormの性質上、ゼロ値がくると、Updateをスキップしてしまう。そのため、Qtyのintをポインタの*intに変更するとできる。[](https://qiita.com/cpp0302/items/3b1c0ca3adc698a79bc9))
+コインが0枚にならない(gormの性質上、ゼロ値がくると、Updateをスキップしてしまう。そのため、Qtyのintをポインタの*intに変更するとできる。[参考](https://qiita.com/cpp0302/items/3b1c0ca3adc698a79bc9))
