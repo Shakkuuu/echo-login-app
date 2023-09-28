@@ -59,6 +59,14 @@ func Init() {
 	coin.PUT("/:user_id", cc.PutByUserID)
 	coin.DELETE("/:user_id", cc.Delete)
 
+	// アイテム
+	var ic controller.ItemController
+	item := e.Group("/item")
+	item.Use(middleware.JWT([]byte(os.Getenv("TOKEN_KEY"))))
+	item.GET("", ic.GetAll)
+	item.GET("/:id", ic.GetByID)
+	item.DELETE("/:id", ic.Delete)
+
 	e.Logger.Fatal(e.Start(":8081"))
 }
 
