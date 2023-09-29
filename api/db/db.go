@@ -47,6 +47,8 @@ func Init(un string, up string, dbn string) {
 		}
 	}
 	autoMigration()
+
+	itemdatainsert()
 }
 
 // serviceでデータベースとやりとりする用
@@ -67,4 +69,5 @@ func autoMigration() {
 	db.AutoMigrate(&entity.User{})
 	db.AutoMigrate(&entity.Memo{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
 	db.AutoMigrate(&entity.Coin{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
+	db.AutoMigrate(&entity.Item{})
 }
