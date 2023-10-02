@@ -73,6 +73,17 @@ func Init() {
 	gacha.Use(middleware.JWT([]byte(os.Getenv("TOKEN_KEY"))))
 	gacha.GET("/:times", gc.DrawGacha)
 
+	// 取得済みアイテムリスト
+	var hc controller.HasItemController
+	hasitem := e.Group("/hasitem")
+	hasitem.Use(middleware.JWT([]byte(os.Getenv("TOKEN_KEY"))))
+	hasitem.GET("", hc.GetAll)
+	hasitem.POST("", hc.Create)
+	hasitem.GET("/id/:id", hc.GetByID)
+	hasitem.GET("/user_id/:user_id", hc.GetByUserID)
+	hasitem.PUT("/:user_id", hc.PutByUserID)
+	hasitem.DELETE("/:user_id", hc.Delete)
+
 	e.Logger.Fatal(e.Start(":8081"))
 }
 
