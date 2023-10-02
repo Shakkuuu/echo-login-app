@@ -67,6 +67,12 @@ func Init() {
 	item.GET("/:id", ic.GetByID)
 	item.DELETE("/:id", ic.Delete)
 
+	// ガチャ
+	var gc controller.GachaController
+	gacha := e.Group("/gacha")
+	gacha.Use(middleware.JWT([]byte(os.Getenv("TOKEN_KEY"))))
+	gacha.GET("/:times", gc.DrawGacha)
+
 	e.Logger.Fatal(e.Start(":8081"))
 }
 
