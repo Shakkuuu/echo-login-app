@@ -48,7 +48,7 @@ type Item struct {
 type HasItem struct {
 	ID       int    `json:"id" gorm:"primaryKey"`
 	ItemList []Item `json:"itemlist"`
-	User_ID  Rarity `json:"user_id"`
+	User_ID  int    `json:"user_id"`
 }
 
 // レスポンスメッセージ用構造体
