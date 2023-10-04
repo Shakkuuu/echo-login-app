@@ -12,7 +12,7 @@ func (hs HasItemService) GetAll() ([]entity.HasItem, error) {
 	db := db.GetDB()
 	var hasitem []entity.HasItem
 
-	err := db.Find(&hasitem).Error
+	err := db.Preload("Items").Find(&hasitem).Error
 	if err != nil {
 		return hasitem, err
 	}
@@ -32,25 +32,12 @@ func (hs HasItemService) Create(hasitem *entity.HasItem) (*entity.HasItem, error
 	return hasitem, nil
 }
 
-// IDからの取得済みアイテム取得処理
-func (hs HasItemService) GetByID(id string) (entity.HasItem, error) {
-	db := db.GetDB()
-	var hasitem entity.HasItem
-
-	err := db.Where("id = ?", id).First(&hasitem).Error
-	if err != nil {
-		return hasitem, err
-	}
-
-	return hasitem, nil
-}
-
 // ユーザーIDからの取得済みアイテムの取得処理
 func (hs HasItemService) GetByUserID(user_id string) (entity.HasItem, error) {
 	db := db.GetDB()
 	var hasitem entity.HasItem
 
-	err := db.Where("user_id = ?", user_id).Find(&hasitem).Error
+	err := db.Where("user_id = ?", user_id).Preload("Items").Find(&hasitem).Error
 	if err != nil {
 		return hasitem, err
 	}
@@ -62,7 +49,7 @@ func (hs HasItemService) GetByUserID(user_id string) (entity.HasItem, error) {
 func (hs HasItemService) PutByUserID(hasitem *entity.HasItem, user_id string) (*entity.HasItem, error) {
 	db := db.GetDB()
 
-	err := db.Where("user_id = ?", user_id).Model(&hasitem).Updates(&hasitem).Error
+	err := db.Where("user_id = ?", user_id).Model(&hasitem).Preload("Items").Updates(&hasitem).Error
 	if err != nil {
 		return hasitem, err
 	}
@@ -76,7 +63,7 @@ func (hs HasItemService) Delete(user_id string) error {
 
 	var hasitem entity.HasItem
 
-	err := db.Where("user_id = ?", user_id).Delete(&hasitem).Error
+	err := db.Where("user_id = ?", user_id).Preload("Items").Delete(&hasitem).Error
 	if err != nil {
 		return err
 	}

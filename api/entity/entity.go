@@ -39,16 +39,17 @@ const (
 
 // アイテム
 type Item struct {
-	ID     int    `json:"id" gorm:"primaryKey"`
-	Name   string `json:"name"`
-	Rarity Rarity `json:"rarity"`
-	Ratio  int    `json:"ratio"`
+	ID       int       `json:"id" gorm:"primaryKey"`
+	Name     string    `json:"name"`
+	Rarity   Rarity    `json:"rarity"`
+	Ratio    int       `json:"ratio"`
+	HasItems []HasItem `gorm:"many2many:hasitem_items;"`
 }
 
 type HasItem struct {
-	ID       int    `json:"id" gorm:"primaryKey"`
-	ItemList []Item `json:"itemlist"`
-	User_ID  int    `json:"user_id"`
+	ID      int    `json:"id" gorm:"primaryKey"`
+	Items   []Item `json:"items" gorm:"many2many:hasitem_items;"`
+	User_ID int    `json:"user_id"`
 }
 
 // レスポンスメッセージ用構造体

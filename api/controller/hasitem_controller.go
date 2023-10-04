@@ -53,23 +53,6 @@ func (hc HasItemController) Create(c echo.Context) error {
 	return c.JSON(201, reshasitem)
 }
 
-// GET IDから取得済みアイテムリスト取得
-func (hc HasItemController) GetByID(c echo.Context) error {
-	id := c.Param("id")
-
-	var hs service.HasItemService
-	// IDからの取得済みアイテムリスト取得処理
-	hasitem, err := hs.GetByID(id)
-	if err != nil {
-		message := fmt.Sprintf("HasItemService.GetByID: %v", err)
-		log.Println(message)
-		e := ResMess{Status: 500, Message: message}
-		return c.JSON(e.Status, e)
-	}
-
-	return c.JSON(200, hasitem)
-}
-
 // GET ユーザーIDから取得済みアイテムリスト取得
 func (hc HasItemController) GetByUserID(c echo.Context) error {
 	user_id := c.Param("user_id")

@@ -65,7 +65,7 @@ func (uc UserController) Create(c echo.Context) error {
 		return c.JSON(e.Status, e)
 	}
 
-	hasitem := entity.HasItem{ItemList: []entity.Item{}, User_ID: user.ID}
+	hasitem := entity.HasItem{Items: []entity.Item{}, User_ID: user.ID}
 
 	_, err = hs.Create(&hasitem)
 	if err != nil {

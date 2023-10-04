@@ -79,7 +79,6 @@ func Init() {
 	hasitem.Use(middleware.JWT([]byte(os.Getenv("TOKEN_KEY"))))
 	hasitem.GET("", hc.GetAll)
 	hasitem.POST("", hc.Create)
-	hasitem.GET("/id/:id", hc.GetByID)
 	hasitem.GET("/user_id/:user_id", hc.GetByUserID)
 	hasitem.PUT("/:user_id", hc.PutByUserID)
 	hasitem.DELETE("/:user_id", hc.Delete)
