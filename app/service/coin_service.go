@@ -135,42 +135,6 @@ func (cs CoinService) GetByID(id int, token string) (entity.Coin, error) {
 	return coin, nil
 }
 
-// コイン作成処理
-func (cs CoinService) Create(user_id int, token string) error {
-	var coin entity.Coin
-	url := "http://echo-login-app-api:8081/coin"
-
-	coin.Qty = 0
-	coin.User_ID = user_id
-
-	// GoのデータをJSONに変換
-	j, _ := json.Marshal(coin)
-
-	// apiへのコイン情報送信
-	req, err := http.NewRequest(
-		"POST",
-		url,
-		bytes.NewBuffer(j),
-	)
-	if err != nil {
-		log.Printf("error http.POST: %v", err)
-		return err
-	}
-
-	// Headerセット
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+token)
-	client := &http.Client{}
-	re, err := client.Do(req)
-	if err != nil {
-		log.Printf("error http.client.Do: %v", err)
-		return err
-	}
-	defer re.Body.Close()
-
-	return nil
-}
-
 // コインの変更処理
 func (cs CoinService) ChangeQty(token string, user_id, qty int) error {
 	var coin entity.Coin

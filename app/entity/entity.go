@@ -25,6 +25,31 @@ type Coin struct {
 	User_ID int `json:"user_id"`
 }
 
+type Rarity string
+
+const (
+	RarityN   Rarity = "N"
+	RarityR   Rarity = "R"
+	RaritySR  Rarity = "SR"
+	RaritySSR Rarity = "SSR"
+	RarityUR  Rarity = "UR"
+	RarityLR  Rarity = "LR"
+)
+
+// アイテム
+type Item struct {
+	ID     int    `json:"id"`
+	Name   string `json:"name"`
+	Rarity Rarity `json:"rarity"`
+	Ratio  int    `json:"ratio"`
+}
+
+type HasItem struct {
+	ID      int    `json:"id"`
+	Items   []Item `json:"items"`
+	User_ID int    `json:"user_id"`
+}
+
 // レスポンスメッセージ用構造体
 type ResponseMessage struct {
 	Status  int    `json:"status"`

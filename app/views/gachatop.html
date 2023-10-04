@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>GachaTop</title>
+</head>
+<body>
+    <h1>GachaTop</h1>
+    <p>{{.message}}</p>
+    <p>現在の所持コイン：{{.coin.Qty}}枚</p>
+
+    <form action="/app/gacha/draw" method="POST">
+        <label for="times">回数</input>
+        <input type="number" name="times" min="1" value="1">
+        <input type="submit" value="ガチャを引く">
+    </form>
+    {{range $v := .result}}
+        <div>
+            <div>
+                <p>{{$v.Name}} ({{$v.Rarity}})</p>
+            </div>
+        </div>
+    {{end}}
+
+    <p><a href="/app">戻る</a></p>
+</body>
+</html>
