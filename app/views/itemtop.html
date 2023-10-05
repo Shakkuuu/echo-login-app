@@ -8,10 +8,10 @@
     <h1>ItemTop</h1>
     <p>{{.message}}</p>
     <h3>所持アイテム</h3>
-    {{range $v := .items.Items}}
+    {{range $v := .items}}
         <div>
             <div>
-                <p>{{$v.Name}} ({{$v.Rarity}})</p>
+                <p>{{$v.Item.Name}} ({{$v.Item.Rarity}}) : {{$v.Qty}}個</p>
             </div>
         </div>
     {{end}}

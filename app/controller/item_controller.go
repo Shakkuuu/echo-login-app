@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"echo-login-app/app/entity"
 	"echo-login-app/app/service"
 	"log"
 	"net/http"
@@ -35,7 +36,7 @@ func (ic ItemController) Top(c echo.Context) error {
 	}
 
 	// 所持済みアイテム取得
-	items, err := hs.GetByUserID(user_id, token)
+	hasitem, err := hs.GetByUserID(user_id, token)
 	if err != nil {
 		log.Printf("ms.GetByUserID error: %v\n", err)
 		m := map[string]interface{}{
@@ -44,6 +45,23 @@ func (ic ItemController) Top(c echo.Context) error {
 		}
 		return c.Render(http.StatusBadRequest, "itemtop.html", m)
 	}
+
+	// 重複カウント用map
+	counts := make(map[entity.Item]int)
+	for _, v := range hasitem.Items {
+		counts[v]++
+	}
+
+	// 改めて格納
+	var items []entity.ShowItems
+	for key, value := range counts {
+		item := entity.ShowItems{
+			Item: key,
+			Qty:  value,
+		}
+		items = append(items, item)
+	}
+
 	m := map[string]interface{}{
 		"message": "",
 		"items":   items,

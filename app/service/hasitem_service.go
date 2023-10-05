@@ -12,46 +12,6 @@ import (
 
 type HasItemService struct{}
 
-// // 全ユーザーの取得済みアイテムリスト全取得
-// func (hs HasItemService) GetAll(token string) ([]entity.HasItem, error) {
-// 	var hasitem []entity.HasItem
-// 	url := "http://echo-login-app-api:8081/hasitem"
-
-// 	// APIから取得
-// 	req, err := http.NewRequest(
-// 		"GET",
-// 		url,
-// 		nil,
-// 	)
-// 	if err != nil {
-// 		log.Printf("error http.Get: %v\n", err)
-// 		return hasitem, err
-// 	}
-// 	// Headerセット
-// 	req.Header.Set("Authorization", "Bearer "+token)
-// 	client := &http.Client{}
-// 	re, err := client.Do(req)
-// 	if err != nil {
-// 		log.Printf("error http.client.Do: %v\n", err)
-// 		return hasitem, err
-// 	}
-// 	defer re.Body.Close()
-
-// 	body, err := io.ReadAll(re.Body)
-// 	if err != nil {
-// 		log.Printf("error io.ReadAll: %v\n", err)
-// 		return hasitem, err
-// 	}
-
-// 	// JSONをGoのデータに変換
-// 	if err := json.Unmarshal(body, &hasitem); err != nil {
-// 		log.Printf("error json.Unmarshal: %v\n", err)
-// 		return hasitem, err
-// 	}
-
-// 	return hasitem, nil
-// }
-
 // ユーザーIDから取得済みアイテムリストの取得
 func (hs HasItemService) GetByUserID(user_id int, token string) (entity.HasItem, error) {
 	var hasitem entity.HasItem
@@ -98,11 +58,19 @@ func (hs HasItemService) Add(token string, user_id int, item entity.Item) error 
 	sid := strconv.Itoa(user_id)
 	url := "http://echo-login-app-api:8081/hasitem/" + sid
 
-	// hasitem, _ := hs.GetByUserID(user_id, token)
-	// fmt.Printf("追加前:%v\n", hasitem)
-
-	// hasitem.Items = append(hasitem.Items, item)
-	// fmt.Printf("追加後:%v\n", hasitem)
+	if item.ID <= 200 {
+		hasitem, err := hs.GetByUserID(user_id, token)
+		if err != nil {
+			log.Printf("error hs.GetByUserID: %v\n", err)
+			return err
+		}
+		for _, v := range hasitem.Items {
+			if v.Name == item.Name {
+				log.Println("既に持っているアタッチメントです。")
+				return nil
+			}
+		}
+	}
 
 	// GoのデータをJSONに変換
 	j, _ := json.Marshal(item)

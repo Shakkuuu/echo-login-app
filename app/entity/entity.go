@@ -44,10 +44,17 @@ type Item struct {
 	Ratio  int    `json:"ratio"`
 }
 
+// 所有済みアイテム
 type HasItem struct {
 	// ID      int    `json:"id"`
 	Items   []Item `json:"items"`
 	User_ID int    `json:"user_id"`
+}
+
+// アイテム表示用
+type ShowItems struct {
+	Item Item
+	Qty  int
 }
 
 // レスポンスメッセージ用構造体
