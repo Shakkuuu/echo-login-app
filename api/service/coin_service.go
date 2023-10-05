@@ -32,19 +32,6 @@ func (cs CoinService) Create(coin *entity.Coin) (*entity.Coin, error) {
 	return coin, nil
 }
 
-// IDからのコイン取得処理
-func (cs CoinService) GetByID(id string) (entity.Coin, error) {
-	db := db.GetDB()
-	var coin entity.Coin
-
-	err := db.Where("id = ?", id).First(&coin).Error
-	if err != nil {
-		return coin, err
-	}
-
-	return coin, nil
-}
-
 // ユーザーIDからのコインの取得処理
 func (cs CoinService) GetByUserID(user_id string) (entity.Coin, error) {
 	db := db.GetDB()
@@ -68,18 +55,4 @@ func (cs CoinService) PutByUserID(coin *entity.Coin, user_id string) (*entity.Co
 	}
 
 	return coin, nil
-}
-
-// User_IDからのコイン削除処理
-func (cs CoinService) Delete(user_id string) error {
-	db := db.GetDB()
-
-	var coin entity.Coin
-
-	err := db.Where("user_id = ?", user_id).Delete(&coin).Error
-	if err != nil {
-		return err
-	}
-
-	return nil
 }

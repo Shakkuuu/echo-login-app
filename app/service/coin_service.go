@@ -94,47 +94,6 @@ func (cs CoinService) GetByUserID(user_id int, token string) (entity.Coin, error
 	return coin, nil
 }
 
-// IDからコインの取得
-func (cs CoinService) GetByID(id int, token string) (entity.Coin, error) {
-	var coin entity.Coin
-	sid := strconv.Itoa(id)
-	url := "http://echo-login-app-api:8081/coin/id/" + sid
-
-	// APIから取得
-	req, err := http.NewRequest(
-		"GET",
-		url,
-		nil,
-	)
-	if err != nil {
-		log.Printf("error http.Get: %v\n", err)
-		return coin, err
-	}
-	// Headerセット
-	req.Header.Set("Authorization", "Bearer "+token)
-	client := &http.Client{}
-	re, err := client.Do(req)
-	if err != nil {
-		log.Printf("error http.client.Do: %v\n", err)
-		return coin, err
-	}
-	defer re.Body.Close()
-
-	body, err := io.ReadAll(re.Body)
-	if err != nil {
-		log.Printf("error io.ReadAll: %v\n", err)
-		return coin, err
-	}
-
-	// JSONをGoのデータに変換
-	if err := json.Unmarshal(body, &coin); err != nil {
-		log.Printf("error json.Unmarshal: %v\n", err)
-		return coin, err
-	}
-
-	return coin, nil
-}
-
 // コインの変更処理
 func (cs CoinService) ChangeQty(token string, user_id, qty int) error {
 	var coin entity.Coin
@@ -161,33 +120,6 @@ func (cs CoinService) ChangeQty(token string, user_id, qty int) error {
 
 	// Headerセット
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+token)
-	client := &http.Client{}
-	re, err := client.Do(req)
-	if err != nil {
-		log.Printf("error http.client.Do: %v\n", err)
-		return err
-	}
-	defer re.Body.Close()
-
-	return nil
-}
-
-// コイン削除処理
-func (cs CoinService) Delete(user_id int, token string) error {
-	sid := strconv.Itoa(user_id)
-	url := "http://echo-login-app-api:8081/coin/" + sid
-
-	// apiへのユーザー情報送信
-	req, err := http.NewRequest(
-		"DELETE",
-		url,
-		nil,
-	)
-	if err != nil {
-		log.Printf("error http.DELETE: %v\n", err)
-		return err
-	}
 	req.Header.Set("Authorization", "Bearer "+token)
 	client := &http.Client{}
 	re, err := client.Do(req)

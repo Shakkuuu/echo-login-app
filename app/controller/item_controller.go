@@ -68,5 +68,3 @@ func (ic ItemController) Top(c echo.Context) error {
 	}
 	return c.Render(http.StatusOK, "itemtop.html", m)
 }
-
-// // GET 未所持アイテムページ

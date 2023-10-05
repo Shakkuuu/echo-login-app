@@ -53,23 +53,6 @@ func (cc CoinController) Create(c echo.Context) error {
 	return c.JSON(201, rescoin)
 }
 
-// GET IDからコイン取得
-func (cc CoinController) GetByID(c echo.Context) error {
-	id := c.Param("id")
-
-	var cs service.CoinService
-	// IDからのコイン取得処理
-	coin, err := cs.GetByID(id)
-	if err != nil {
-		message := fmt.Sprintf("CoinService.GetByID: %v", err)
-		log.Println(message)
-		e := ResMess{Status: 500, Message: message}
-		return c.JSON(e.Status, e)
-	}
-
-	return c.JSON(200, coin)
-}
-
 // GET ユーザーIDからコイン取得
 func (cc CoinController) GetByUserID(c echo.Context) error {
 	user_id := c.Param("user_id")
@@ -114,24 +97,4 @@ func (cc CoinController) PutByUserID(c echo.Context) error {
 	}
 
 	return c.JSON(200, co)
-}
-
-// DELETE コインの削除
-func (cc CoinController) Delete(c echo.Context) error {
-	user_id := c.Param("user_id")
-
-	var cs service.CoinService
-
-	// コイン削除処理
-	err := cs.Delete(user_id)
-	if err != nil {
-		message := fmt.Sprintf("CoinService.Delete: %v", err)
-		log.Println(message)
-		e := ResMess{Status: 500, Message: message}
-		return c.JSON(e.Status, e)
-	}
-
-	m := ResMess{Status: 200, Message: "Coin Deleted: " + user_id}
-
-	return c.JSON(200, m)
 }
