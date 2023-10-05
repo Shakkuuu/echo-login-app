@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ItemTop</title>
+</head>
+<body>
+    <h1>ItemTop</h1>
+    <p>{{.message}}</p>
+    <h3>所持アイテム</h3>
+    {{range $v := .items.Items}}
+        <div>
+            <div>
+                <p>{{$v.Name}} ({{$v.Rarity}})</p>
+            </div>
+        </div>
+    {{end}}
+
+    <p><a href="/app">戻る</a></p>
+</body>
+</html>

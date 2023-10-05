@@ -33,7 +33,7 @@ func (uc UserController) GetAll(c echo.Context) error {
 func (uc UserController) Create(c echo.Context) error {
 	var us service.UserService
 	var cs service.CoinService
-	var hs service.HasItemService
+	// var hs service.HasItemService
 
 	var u entity.User
 	// JSONをGoのデータに変換
@@ -65,15 +65,15 @@ func (uc UserController) Create(c echo.Context) error {
 		return c.JSON(e.Status, e)
 	}
 
-	hasitem := entity.HasItem{Items: []entity.Item{}, User_ID: user.ID}
+	// hasitem := entity.HasItem{Items: []entity.Item{}, User_ID: user.ID}
 
-	_, err = hs.Create(&hasitem)
-	if err != nil {
-		message := fmt.Sprintf("HasItemService.Create: %v", err)
-		log.Println(message)
-		e := ResMess{Status: 500, Message: message}
-		return c.JSON(e.Status, e)
-	}
+	// _, err = hs.Create(&hasitem)
+	// if err != nil {
+	// 	message := fmt.Sprintf("HasItemService.Create: %v", err)
+	// 	log.Println(message)
+	// 	e := ResMess{Status: 500, Message: message}
+	// 	return c.JSON(e.Status, e)
+	// }
 
 	return c.JSON(201, user)
 }

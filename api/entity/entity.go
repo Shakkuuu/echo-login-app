@@ -37,18 +37,38 @@ const (
 	RarityLR  Rarity = "LR"
 )
 
+// // アイテム
+// type Item struct {
+// 	ID       int       `json:"id" gorm:"primaryKey"`
+// 	Name     string    `json:"name"`
+// 	Rarity   Rarity    `json:"rarity"`
+// 	Ratio    int       `json:"ratio"`
+// 	HasItems []HasItem `gorm:"many2many:hasitem_items;"`
+// }
+
+// type HasItem struct {
+// 	ID      int    `json:"id" gorm:"primaryKey"`
+// 	Items   []Item `json:"items" gorm:"many2many:hasitem_items;"`
+// 	User_ID int    `json:"user_id"`
+// }
+
 // アイテム
 type Item struct {
-	ID       int       `json:"id" gorm:"primaryKey"`
-	Name     string    `json:"name"`
-	Rarity   Rarity    `json:"rarity"`
-	Ratio    int       `json:"ratio"`
-	HasItems []HasItem `gorm:"many2many:hasitem_items;"`
+	ID     int    `json:"id" gorm:"primaryKey"`
+	Name   string `json:"name"`
+	Rarity Rarity `json:"rarity"`
+	Ratio  int    `json:"ratio"`
+}
+
+type HasItemList struct {
+	ID     int `gorm:"primaryKey"`
+	UserID int
+	ItemID int
 }
 
 type HasItem struct {
-	ID      int    `json:"id" gorm:"primaryKey"`
-	Items   []Item `json:"items" gorm:"many2many:hasitem_items;"`
+	// ID      int    `json:"id"`
+	Items   []Item `json:"items"`
 	User_ID int    `json:"user_id"`
 }
 

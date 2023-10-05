@@ -77,11 +77,12 @@ func Init() {
 	var hc controller.HasItemController
 	hasitem := e.Group("/hasitem")
 	hasitem.Use(middleware.JWT([]byte(os.Getenv("TOKEN_KEY"))))
-	hasitem.GET("", hc.GetAll)
-	hasitem.POST("", hc.Create)
+	// hasitem.GET("", hc.GetAll)
+	hasitem.POST("/:user_id", hc.Add)
 	hasitem.GET("/user_id/:user_id", hc.GetByUserID)
-	hasitem.PUT("/:user_id", hc.PutByUserID)
-	hasitem.DELETE("/:user_id", hc.Delete)
+	// hasitem.PUT("/:user_id", hc.PutByUserID)
+	// hasitem.DELETE("/:user_id", hc.Delete)
+	hasitem.DELETE("/:id", hc.Delete)
 
 	e.Logger.Fatal(e.Start(":8081"))
 }

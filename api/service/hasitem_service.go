@@ -7,63 +7,64 @@ import (
 
 type HasItemService struct{}
 
-// 全ユーザーの取得済みアイテム全取得処理
-func (hs HasItemService) GetAll() ([]entity.HasItem, error) {
+// 全取得済みアイテム取得処理
+func (hs HasItemService) GetAll() ([]entity.HasItemList, error) {
 	db := db.GetDB()
-	var hasitem []entity.HasItem
+	var hasitemlist []entity.HasItemList
 
-	err := db.Preload("Items").Find(&hasitem).Error
+	err := db.Find(&hasitemlist).Error
 	if err != nil {
-		return hasitem, err
+		return hasitemlist, err
 	}
 
-	return hasitem, nil
+	return hasitemlist, nil
 }
 
-// 取得済みアイテムリスト作成処理
-func (hs HasItemService) Create(hasitem *entity.HasItem) (*entity.HasItem, error) {
+// 取得済みアイテムリスト追加処理
+func (hs HasItemService) Add(hasitemlist *entity.HasItemList) (*entity.HasItemList, error) {
 	db := db.GetDB()
 
-	err := db.Create(&hasitem).Error
+	err := db.Create(&hasitemlist).Error
 	if err != nil {
-		return hasitem, err
+		return hasitemlist, err
 	}
 
-	return hasitem, nil
+	return hasitemlist, nil
 }
 
 // ユーザーIDからの取得済みアイテムの取得処理
-func (hs HasItemService) GetByUserID(user_id string) (entity.HasItem, error) {
+func (hs HasItemService) GetByUserID(user_id string) ([]entity.HasItemList, error) {
 	db := db.GetDB()
-	var hasitem entity.HasItem
+	var hasitemlist []entity.HasItemList
 
-	err := db.Where("user_id = ?", user_id).Preload("Items").Find(&hasitem).Error
+	err := db.Where("user_id = ?", user_id).Find(&hasitemlist).Error
 	if err != nil {
-		return hasitem, err
+		return hasitemlist, err
 	}
 
-	return hasitem, nil
+	return hasitemlist, nil
 }
 
-// UserIDからの取得済みアイテム更新処理
-func (hs HasItemService) PutByUserID(hasitem *entity.HasItem, user_id string) (*entity.HasItem, error) {
+// // UserIDからの取得済みアイテム更新処理
+// func (hs HasItemService) PutByUserID(hasitem *entity.HasItem, user_id string) (*entity.HasItem, error) {
+// 	db := db.GetDB()
+
+// 	// err := db.Where("user_id = ?", user_id).Model(&hasitem).Preload("Items").Updates(&hasitem).Error
+// 	err := db.Where("user_id = ?", user_id).Model(&hasitem).Updates(&hasitem).Error
+// 	if err != nil {
+// 		return hasitem, err
+// 	}
+
+// 	return hasitem, nil
+// }
+
+// Item_IDからの取得済みアイテムの最初の削除処理
+func (hs HasItemService) Delete(id string) error {
 	db := db.GetDB()
 
-	err := db.Where("user_id = ?", user_id).Model(&hasitem).Preload("Items").Updates(&hasitem).Error
-	if err != nil {
-		return hasitem, err
-	}
+	var hasitemlist entity.HasItemList
 
-	return hasitem, nil
-}
-
-// User_IDからの取得済みアイテム削除処理
-func (hs HasItemService) Delete(user_id string) error {
-	db := db.GetDB()
-
-	var hasitem entity.HasItem
-
-	err := db.Where("user_id = ?", user_id).Preload("Items").Delete(&hasitem).Error
+	err := db.Where("id = ?", id).First(&hasitemlist).Delete(&hasitemlist).Error
 	if err != nil {
 		return err
 	}

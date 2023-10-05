@@ -91,5 +91,10 @@ func Init(sk string) {
 	gacha.GET("", gc.Top)
 	gacha.POST("/draw", gc.Draw)
 
+	// アイテム機能
+	item := app.Group("/item")
+	var ic controller.ItemController
+	item.GET("", ic.Top)
+
 	e.Logger.Fatal(e.Start(":8082"))
 }

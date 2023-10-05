@@ -131,7 +131,7 @@ func (gc GachaController) Draw(c echo.Context) error {
 
 	// 所持アイテムリストに追加
 	for _, item := range result {
-		err = hs.Change(token, user_id, item)
+		err = hs.Add(token, user_id, item)
 		if err != nil {
 			log.Printf("hs.Change error: %v\n", err)
 			m := map[string]interface{}{
