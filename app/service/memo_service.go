@@ -24,7 +24,7 @@ func (ms MemoService) GetAll(token string) ([]entity.Memo, error) {
 		nil,
 	)
 	if err != nil {
-		log.Printf("error http.Get: %v", err)
+		log.Printf("error http.Get: %v\n", err)
 		return m, err
 	}
 	// Headerセット
@@ -32,20 +32,20 @@ func (ms MemoService) GetAll(token string) ([]entity.Memo, error) {
 	client := &http.Client{}
 	re, err := client.Do(req)
 	if err != nil {
-		log.Printf("error http.client.Do: %v", err)
+		log.Printf("error http.client.Do: %v\n", err)
 		return m, err
 	}
 	defer re.Body.Close()
 
 	body, err := io.ReadAll(re.Body)
 	if err != nil {
-		log.Printf("error io.ReadAll: %v", err)
+		log.Printf("error io.ReadAll: %v\n", err)
 		return m, err
 	}
 
 	// JSONをGoのデータに変換
 	if err := json.Unmarshal(body, &m); err != nil {
-		log.Printf("error json.Unmarshal: %v", err)
+		log.Printf("error json.Unmarshal: %v\n", err)
 		return m, err
 	}
 
@@ -65,7 +65,7 @@ func (ms MemoService) GetByUserID(user_id int, token string) ([]entity.Memo, err
 		nil,
 	)
 	if err != nil {
-		log.Printf("error http.Get: %v", err)
+		log.Printf("error http.Get: %v\n", err)
 		return m, err
 	}
 	// Headerセット
@@ -73,20 +73,20 @@ func (ms MemoService) GetByUserID(user_id int, token string) ([]entity.Memo, err
 	client := &http.Client{}
 	re, err := client.Do(req)
 	if err != nil {
-		log.Printf("error http.client.Do: %v", err)
+		log.Printf("error http.client.Do: %v\n", err)
 		return m, err
 	}
 	defer re.Body.Close()
 
 	body, err := io.ReadAll(re.Body)
 	if err != nil {
-		log.Printf("error io.ReadAll: %v", err)
+		log.Printf("error io.ReadAll: %v\n", err)
 		return m, err
 	}
 
 	// JSONをGoのデータに変換
 	if err := json.Unmarshal(body, &m); err != nil {
-		log.Printf("error json.Unmarshal: %v", err)
+		log.Printf("error json.Unmarshal: %v\n", err)
 		return m, err
 	}
 
@@ -106,7 +106,7 @@ func (ms MemoService) GetByID(id int, token string) (entity.Memo, error) {
 		nil,
 	)
 	if err != nil {
-		log.Printf("error http.Get: %v", err)
+		log.Printf("error http.Get: %v\n", err)
 		return m, err
 	}
 	// Headerセット
@@ -114,20 +114,20 @@ func (ms MemoService) GetByID(id int, token string) (entity.Memo, error) {
 	client := &http.Client{}
 	re, err := client.Do(req)
 	if err != nil {
-		log.Printf("error http.client.Do: %v", err)
+		log.Printf("error http.client.Do: %v\n", err)
 		return m, err
 	}
 	defer re.Body.Close()
 
 	body, err := io.ReadAll(re.Body)
 	if err != nil {
-		log.Printf("error io.ReadAll: %v", err)
+		log.Printf("error io.ReadAll: %v\n", err)
 		return m, err
 	}
 
 	// JSONをGoのデータに変換
 	if err := json.Unmarshal(body, &m); err != nil {
-		log.Printf("error json.Unmarshal: %v", err)
+		log.Printf("error json.Unmarshal: %v\n", err)
 		return m, err
 	}
 
@@ -153,7 +153,7 @@ func (ms MemoService) Create(title, content string, user_id int, token string) e
 		bytes.NewBuffer(j),
 	)
 	if err != nil {
-		log.Printf("error http.POST: %v", err)
+		log.Printf("error http.POST: %v\n", err)
 		return err
 	}
 
@@ -163,7 +163,7 @@ func (ms MemoService) Create(title, content string, user_id int, token string) e
 	client := &http.Client{}
 	re, err := client.Do(req)
 	if err != nil {
-		log.Printf("error http.client.Do: %v", err)
+		log.Printf("error http.client.Do: %v\n", err)
 		return err
 	}
 	defer re.Body.Close()
@@ -189,7 +189,7 @@ func (ms MemoService) Change(id, title, content, token string) error {
 		bytes.NewBuffer(j),
 	)
 	if err != nil {
-		log.Printf("error http.PUT: %v", err)
+		log.Printf("error http.PUT: %v\n", err)
 		return err
 	}
 
@@ -199,7 +199,7 @@ func (ms MemoService) Change(id, title, content, token string) error {
 	client := &http.Client{}
 	re, err := client.Do(req)
 	if err != nil {
-		log.Printf("error http.client.Do: %v", err)
+		log.Printf("error http.client.Do: %v\n", err)
 		return err
 	}
 	defer re.Body.Close()
@@ -218,14 +218,14 @@ func (ms MemoService) Delete(id, token string) error {
 		nil,
 	)
 	if err != nil {
-		log.Printf("error http.DELETE: %v", err)
+		log.Printf("error http.DELETE: %v\n", err)
 		return err
 	}
 	req.Header.Set("Authorization", "Bearer "+token)
 	client := &http.Client{}
 	re, err := client.Do(req)
 	if err != nil {
-		log.Printf("error http.client.Do: %v", err)
+		log.Printf("error http.client.Do: %v\n", err)
 		return err
 	}
 	defer re.Body.Close()

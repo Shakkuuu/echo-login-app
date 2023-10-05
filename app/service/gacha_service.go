@@ -24,7 +24,7 @@ func (ms GachaService) Draw(times int, token string) ([]entity.Item, error) {
 		nil,
 	)
 	if err != nil {
-		log.Printf("error http.Get: %v", err)
+		log.Printf("error http.Get: %v\n", err)
 		return item, err
 	}
 	// Headerセット
@@ -32,20 +32,20 @@ func (ms GachaService) Draw(times int, token string) ([]entity.Item, error) {
 	client := &http.Client{}
 	re, err := client.Do(req)
 	if err != nil {
-		log.Printf("error http.client.Do: %v", err)
+		log.Printf("error http.client.Do: %v\n", err)
 		return item, err
 	}
 	defer re.Body.Close()
 
 	body, err := io.ReadAll(re.Body)
 	if err != nil {
-		log.Printf("error io.ReadAll: %v", err)
+		log.Printf("error io.ReadAll: %v\n", err)
 		return item, err
 	}
 
 	// JSONをGoのデータに変換
 	if err := json.Unmarshal(body, &item); err != nil {
-		log.Printf("error json.Unmarshal: %v", err)
+		log.Printf("error json.Unmarshal: %v\n", err)
 		return item, err
 	}
 

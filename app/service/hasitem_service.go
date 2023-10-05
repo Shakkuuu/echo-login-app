@@ -25,7 +25,7 @@ func (hs HasItemService) GetAll(token string) ([]entity.HasItem, error) {
 		nil,
 	)
 	if err != nil {
-		log.Printf("error http.Get: %v", err)
+		log.Printf("error http.Get: %v\n", err)
 		return hasitem, err
 	}
 	// Headerセット
@@ -33,20 +33,20 @@ func (hs HasItemService) GetAll(token string) ([]entity.HasItem, error) {
 	client := &http.Client{}
 	re, err := client.Do(req)
 	if err != nil {
-		log.Printf("error http.client.Do: %v", err)
+		log.Printf("error http.client.Do: %v\n", err)
 		return hasitem, err
 	}
 	defer re.Body.Close()
 
 	body, err := io.ReadAll(re.Body)
 	if err != nil {
-		log.Printf("error io.ReadAll: %v", err)
+		log.Printf("error io.ReadAll: %v\n", err)
 		return hasitem, err
 	}
 
 	// JSONをGoのデータに変換
 	if err := json.Unmarshal(body, &hasitem); err != nil {
-		log.Printf("error json.Unmarshal: %v", err)
+		log.Printf("error json.Unmarshal: %v\n", err)
 		return hasitem, err
 	}
 
@@ -66,7 +66,7 @@ func (hs HasItemService) GetByUserID(user_id int, token string) (entity.HasItem,
 		nil,
 	)
 	if err != nil {
-		log.Printf("error http.Get: %v", err)
+		log.Printf("error http.Get: %v\n", err)
 		return hasitem, err
 	}
 	// Headerセット
@@ -74,20 +74,20 @@ func (hs HasItemService) GetByUserID(user_id int, token string) (entity.HasItem,
 	client := &http.Client{}
 	re, err := client.Do(req)
 	if err != nil {
-		log.Printf("error http.client.Do: %v", err)
+		log.Printf("error http.client.Do: %v\n", err)
 		return hasitem, err
 	}
 	defer re.Body.Close()
 
 	body, err := io.ReadAll(re.Body)
 	if err != nil {
-		log.Printf("error io.ReadAll: %v", err)
+		log.Printf("error io.ReadAll: %v\n", err)
 		return hasitem, err
 	}
 
 	// JSONをGoのデータに変換
 	if err := json.Unmarshal(body, &hasitem); err != nil {
-		log.Printf("error json.Unmarshal: %v", err)
+		log.Printf("error json.Unmarshal: %v\n", err)
 		return hasitem, err
 	}
 
@@ -101,15 +101,15 @@ func (hs HasItemService) Change(token string, user_id int, item entity.Item) err
 	url := "http://echo-login-app-api:8081/hasitem/" + sid
 
 	hasitem, _ := hs.GetByUserID(user_id, token)
-	fmt.Printf("追加前:%v", hasitem)
+	fmt.Printf("追加前:%v\n", hasitem)
 
 	hasitem.Items = append(hasitem.Items, item)
-	fmt.Printf("追加後:%v", hasitem)
+	fmt.Printf("追加後:%v\n", hasitem)
 
 	// GoのデータをJSONに変換
 	j, _ := json.Marshal(hasitem)
 
-	fmt.Printf("所有済みアイテムリスト変更:%v", hasitem)
+	fmt.Printf("所有済みアイテムリスト変更:%v\n", hasitem)
 
 	// apiへの情報送信
 	req, err := http.NewRequest(
@@ -118,7 +118,7 @@ func (hs HasItemService) Change(token string, user_id int, item entity.Item) err
 		bytes.NewBuffer(j),
 	)
 	if err != nil {
-		log.Printf("error http.PUT: %v", err)
+		log.Printf("error http.PUT: %v\n", err)
 		return err
 	}
 
@@ -128,7 +128,7 @@ func (hs HasItemService) Change(token string, user_id int, item entity.Item) err
 	client := &http.Client{}
 	re, err := client.Do(req)
 	if err != nil {
-		log.Printf("error http.client.Do: %v", err)
+		log.Printf("error http.client.Do: %v\n", err)
 		return err
 	}
 	defer re.Body.Close()

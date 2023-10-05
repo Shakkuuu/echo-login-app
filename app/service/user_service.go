@@ -21,20 +21,20 @@ func (us UserService) GetAll() ([]entity.User, error) {
 	// APIから取得
 	resp, err := http.Get(url)
 	if err != nil {
-		log.Printf("error http.Get: %v", err)
+		log.Printf("error http.Get: %v\n", err)
 		return u, err
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Printf("error io.ReadAll: %v", err)
+		log.Printf("error io.ReadAll: %v\n", err)
 		return u, err
 	}
 
 	// JSONをGoのデータに変換
 	if err := json.Unmarshal(body, &u); err != nil {
-		log.Printf("error json.Unmarshal: %v", err)
+		log.Printf("error json.Unmarshal: %v\n", err)
 		return u, err
 	}
 
@@ -49,20 +49,20 @@ func (us UserService) GetByName(username string) (entity.User, error) {
 	// APIから取得
 	resp, err := http.Get(url)
 	if err != nil {
-		log.Printf("error http.Get: %v", err)
+		log.Printf("error http.Get: %v\n", err)
 		return u, err
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Printf("error io.ReadAll: %v", err)
+		log.Printf("error io.ReadAll: %v\n", err)
 		return u, err
 	}
 
 	// JSONをGoのデータに変換
 	if err := json.Unmarshal(body, &u); err != nil {
-		log.Printf("error json.Unmarshal: %v", err)
+		log.Printf("error json.Unmarshal: %v\n", err)
 		return u, err
 	}
 
@@ -78,20 +78,20 @@ func (us UserService) GetByID(id int) (entity.User, error) {
 	// APIから取得
 	resp, err := http.Get(url)
 	if err != nil {
-		log.Printf("error http.Get: %v", err)
+		log.Printf("error http.Get: %v\n", err)
 		return u, err
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Printf("error io.ReadAll: %v", err)
+		log.Printf("error io.ReadAll: %v\n", err)
 		return u, err
 	}
 
 	// JSONをGoのデータに変換
 	if err := json.Unmarshal(body, &u); err != nil {
-		log.Printf("error json.Unmarshal: %v", err)
+		log.Printf("error json.Unmarshal: %v\n", err)
 		return u, err
 	}
 
@@ -116,18 +116,18 @@ func (us UserService) Login(id int, password string, pleasetoken bool) (*entity.
 		bytes.NewBuffer(j),
 	)
 	if err != nil {
-		log.Printf("error http.POST: %v", err)
+		log.Printf("error http.POST: %v\n", err)
 		return nil, err
 	}
 	body, err := io.ReadAll(req.Body)
 	if err != nil {
-		log.Printf("error io.ReadAll: %v", err)
+		log.Printf("error io.ReadAll: %v\n", err)
 		return nil, err
 	}
 	if req.StatusCode != 200 {
-		log.Printf("error http.POST: %v", string(body))
+		log.Printf("error http.POST: %v\n", string(body))
 		err = fmt.Errorf("パスワードが一致していません。")
-		log.Printf("パスワードチェック: %v", err)
+		log.Printf("パスワードチェック: %v\n", err)
 		return nil, err
 	}
 	defer req.Body.Close()
@@ -136,7 +136,7 @@ func (us UserService) Login(id int, password string, pleasetoken bool) (*entity.
 		var token entity.Token
 		// JSONをGoのデータに変換
 		if err := json.Unmarshal(body, &token); err != nil {
-			log.Printf("error json.Unmarshal: %v", err)
+			log.Printf("error json.Unmarshal: %v\n", err)
 			return nil, err
 		}
 
@@ -165,7 +165,7 @@ func (us UserService) Create(id int, username, password string) error {
 		bytes.NewBuffer(j),
 	)
 	if err != nil {
-		log.Printf("error http.POST: %v", err)
+		log.Printf("error http.POST: %v\n", err)
 		return err
 	}
 	defer req.Body.Close()
@@ -191,7 +191,7 @@ func (us UserService) ChangeName(id int, username string) error {
 		bytes.NewBuffer(j),
 	)
 	if err != nil {
-		log.Printf("error http.PUT: %v", err)
+		log.Printf("error http.PUT: %v\n", err)
 		return err
 	}
 
@@ -200,7 +200,7 @@ func (us UserService) ChangeName(id int, username string) error {
 	client := &http.Client{}
 	re, err := client.Do(req)
 	if err != nil {
-		log.Printf("error http.client.Do: %v", err)
+		log.Printf("error http.client.Do: %v\n", err)
 		return err
 	}
 	defer re.Body.Close()
@@ -226,7 +226,7 @@ func (us UserService) ChangePassword(id int, password string) error {
 		bytes.NewBuffer(j),
 	)
 	if err != nil {
-		log.Printf("error http.PUT: %v", err)
+		log.Printf("error http.PUT: %v\n", err)
 		return err
 	}
 
@@ -235,7 +235,7 @@ func (us UserService) ChangePassword(id int, password string) error {
 	client := &http.Client{}
 	re, err := client.Do(req)
 	if err != nil {
-		log.Printf("error http.client.Do: %v", err)
+		log.Printf("error http.client.Do: %v\n", err)
 		return err
 	}
 	defer re.Body.Close()
@@ -255,13 +255,13 @@ func (us UserService) Delete(id int) error {
 		nil,
 	)
 	if err != nil {
-		log.Printf("error http.DELETE: %v", err)
+		log.Printf("error http.DELETE: %v\n", err)
 		return err
 	}
 	client := &http.Client{}
 	re, err := client.Do(req)
 	if err != nil {
-		log.Printf("error http.client.Do: %v", err)
+		log.Printf("error http.client.Do: %v\n", err)
 		return err
 	}
 	defer re.Body.Close()

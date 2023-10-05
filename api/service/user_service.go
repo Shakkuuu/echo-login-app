@@ -103,9 +103,9 @@ func (us UserService) Login(u *entity.User) error {
 	// ハッシュ化されたパスワードの解読と一致確認
 	err = bcrypt.CompareHashAndPassword([]byte(getu.Password), []byte(u.Password))
 	if err != nil {
-		log.Printf("error bcrypt.CompareHashAndPassword: %v", err)
+		log.Printf("error bcrypt.CompareHashAndPassword: %v\n", err)
 		err := fmt.Errorf("パスワードが一致していません。")
-		log.Printf("パスワードチェック: %v", err)
+		log.Printf("パスワードチェック: %v\n", err)
 		return err
 	}
 	return nil

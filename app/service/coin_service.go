@@ -25,7 +25,7 @@ func (cs CoinService) GetAll(token string) ([]entity.Coin, error) {
 		nil,
 	)
 	if err != nil {
-		log.Printf("error http.Get: %v", err)
+		log.Printf("error http.Get: %v\n", err)
 		return coin, err
 	}
 	// Headerセット
@@ -33,20 +33,20 @@ func (cs CoinService) GetAll(token string) ([]entity.Coin, error) {
 	client := &http.Client{}
 	re, err := client.Do(req)
 	if err != nil {
-		log.Printf("error http.client.Do: %v", err)
+		log.Printf("error http.client.Do: %v\n", err)
 		return coin, err
 	}
 	defer re.Body.Close()
 
 	body, err := io.ReadAll(re.Body)
 	if err != nil {
-		log.Printf("error io.ReadAll: %v", err)
+		log.Printf("error io.ReadAll: %v\n", err)
 		return coin, err
 	}
 
 	// JSONをGoのデータに変換
 	if err := json.Unmarshal(body, &coin); err != nil {
-		log.Printf("error json.Unmarshal: %v", err)
+		log.Printf("error json.Unmarshal: %v\n", err)
 		return coin, err
 	}
 
@@ -66,7 +66,7 @@ func (cs CoinService) GetByUserID(user_id int, token string) (entity.Coin, error
 		nil,
 	)
 	if err != nil {
-		log.Printf("error http.Get: %v", err)
+		log.Printf("error http.Get: %v\n", err)
 		return coin, err
 	}
 	// Headerセット
@@ -74,20 +74,20 @@ func (cs CoinService) GetByUserID(user_id int, token string) (entity.Coin, error
 	client := &http.Client{}
 	re, err := client.Do(req)
 	if err != nil {
-		log.Printf("error http.client.Do: %v", err)
+		log.Printf("error http.client.Do: %v\n", err)
 		return coin, err
 	}
 	defer re.Body.Close()
 
 	body, err := io.ReadAll(re.Body)
 	if err != nil {
-		log.Printf("error io.ReadAll: %v", err)
+		log.Printf("error io.ReadAll: %v\n", err)
 		return coin, err
 	}
 
 	// JSONをGoのデータに変換
 	if err := json.Unmarshal(body, &coin); err != nil {
-		log.Printf("error json.Unmarshal: %v", err)
+		log.Printf("error json.Unmarshal: %v\n", err)
 		return coin, err
 	}
 
@@ -107,7 +107,7 @@ func (cs CoinService) GetByID(id int, token string) (entity.Coin, error) {
 		nil,
 	)
 	if err != nil {
-		log.Printf("error http.Get: %v", err)
+		log.Printf("error http.Get: %v\n", err)
 		return coin, err
 	}
 	// Headerセット
@@ -115,20 +115,20 @@ func (cs CoinService) GetByID(id int, token string) (entity.Coin, error) {
 	client := &http.Client{}
 	re, err := client.Do(req)
 	if err != nil {
-		log.Printf("error http.client.Do: %v", err)
+		log.Printf("error http.client.Do: %v\n", err)
 		return coin, err
 	}
 	defer re.Body.Close()
 
 	body, err := io.ReadAll(re.Body)
 	if err != nil {
-		log.Printf("error io.ReadAll: %v", err)
+		log.Printf("error io.ReadAll: %v\n", err)
 		return coin, err
 	}
 
 	// JSONをGoのデータに変換
 	if err := json.Unmarshal(body, &coin); err != nil {
-		log.Printf("error json.Unmarshal: %v", err)
+		log.Printf("error json.Unmarshal: %v\n", err)
 		return coin, err
 	}
 
@@ -146,7 +146,7 @@ func (cs CoinService) ChangeQty(token string, user_id, qty int) error {
 	// GoのデータをJSONに変換
 	j, _ := json.Marshal(coin)
 
-	fmt.Printf("コイン変更:%v", coin)
+	fmt.Printf("コイン変更:%v\n", coin)
 
 	// apiへのコイン情報送信
 	req, err := http.NewRequest(
@@ -155,7 +155,7 @@ func (cs CoinService) ChangeQty(token string, user_id, qty int) error {
 		bytes.NewBuffer(j),
 	)
 	if err != nil {
-		log.Printf("error http.PUT: %v", err)
+		log.Printf("error http.PUT: %v\n", err)
 		return err
 	}
 
@@ -165,7 +165,7 @@ func (cs CoinService) ChangeQty(token string, user_id, qty int) error {
 	client := &http.Client{}
 	re, err := client.Do(req)
 	if err != nil {
-		log.Printf("error http.client.Do: %v", err)
+		log.Printf("error http.client.Do: %v\n", err)
 		return err
 	}
 	defer re.Body.Close()
@@ -185,14 +185,14 @@ func (cs CoinService) Delete(user_id int, token string) error {
 		nil,
 	)
 	if err != nil {
-		log.Printf("error http.DELETE: %v", err)
+		log.Printf("error http.DELETE: %v\n", err)
 		return err
 	}
 	req.Header.Set("Authorization", "Bearer "+token)
 	client := &http.Client{}
 	re, err := client.Do(req)
 	if err != nil {
-		log.Printf("error http.client.Do: %v", err)
+		log.Printf("error http.client.Do: %v\n", err)
 		return err
 	}
 	defer re.Body.Close()
