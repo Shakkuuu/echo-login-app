@@ -83,7 +83,7 @@ func Init(sk string) {
 	var cc controller.CoinController
 	coin.GET("", cc.Top)
 	coin.POST("/add", cc.QtyAdd)
-	coin.GET("/sub", cc.QtySub)
+	coin.POST("/sub", cc.QtySub)
 
 	// ガチャ機能
 	gacha := app.Group("/gacha")

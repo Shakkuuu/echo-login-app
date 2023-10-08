@@ -89,7 +89,7 @@ func (cc CoinController) QtyAdd(c echo.Context) error {
 
 	// htmlからformの取得
 	s_addqty := c.FormValue("addqty")
-	addwty, err := strconv.Atoi(s_addqty)
+	addqty, err := strconv.Atoi(s_addqty)
 	if err != nil {
 		log.Println("strconv.Atoi error")
 		m := map[string]interface{}{
@@ -99,7 +99,7 @@ func (cc CoinController) QtyAdd(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "cointop.html", m)
 	}
 
-	addcoin := coin.Qty + addwty
+	addcoin := coin.Qty + addqty
 
 	// コイン数変更
 	err = cs.ChangeQty(token, user_id, addcoin)
@@ -151,10 +151,22 @@ func (cc CoinController) QtySub(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "cointop.html", m)
 	}
 
+	// htmlからformの取得
+	s_subqty := c.FormValue("subqty")
+	subqty, err := strconv.Atoi(s_subqty)
+	if err != nil {
+		log.Println("strconv.Atoi error")
+		m := map[string]interface{}{
+			"message": "コイン減少枚数を正しく指定してください。",
+			"coin":    coin,
+		}
+		return c.Render(http.StatusBadRequest, "cointop.html", m)
+	}
+
 	if coin.Qty <= 0 {
 		subcoin = 0
 	} else {
-		subcoin = coin.Qty - 1
+		subcoin = coin.Qty - subqty
 	}
 
 	// コイン数変更
