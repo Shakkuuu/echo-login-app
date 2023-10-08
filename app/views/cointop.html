@@ -8,7 +8,12 @@
     <h1>CoinTop</h1>
     <p>{{.message}}</p>
     <p>コイン：{{.coin.Qty}}枚</p>
-    <p><a href="/app/coin/add">コイン増加</a></p>
+    <!-- <p><a href="/app/coin/add">コイン増加</a></p> -->
+    <form action="/app/coin/add" method="POST">
+        <label for="addqty">追加枚数</input>
+        <input type="number" name="addqty" min="1" value="1">
+        <input type="submit" value="コイン追加">
+    </form>
     <p><a href="/app/coin/sub">コイン減少</a></p>
     <p><a href="/app">戻る</a></p>
 </body>

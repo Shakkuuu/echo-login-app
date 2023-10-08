@@ -79,6 +79,15 @@ func Init() {
 	hasitem.GET("/user_id/:user_id", hc.GetByUserID)
 	hasitem.DELETE("/:id", hc.Delete)
 
+	// シューティングゲーム用ステータス
+	var sc controller.StatusController
+	status := e.Group("/status")
+	status.Use(middleware.JWT([]byte(os.Getenv("TOKEN_KEY"))))
+	status.GET("", sc.GetAll)
+	status.POST("", sc.Create)
+	status.GET("/user_id/:user_id", sc.GetByUserID)
+	status.PUT("/:user_id", sc.PutByUserID)
+
 	e.Logger.Fatal(e.Start(":8081"))
 }
 

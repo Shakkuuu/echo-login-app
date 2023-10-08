@@ -4,6 +4,7 @@ import (
 	"echo-login-app/app/service"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -51,7 +52,7 @@ func (cc CoinController) Top(c echo.Context) error {
 	return c.Render(http.StatusOK, "cointop.html", m)
 }
 
-// GET コイン追加
+// POST コイン追加
 func (cc CoinController) QtyAdd(c echo.Context) error {
 	var auc AuthController
 	var cs service.CoinService
@@ -86,7 +87,19 @@ func (cc CoinController) QtyAdd(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "cointop.html", m)
 	}
 
-	addcoin := coin.Qty + 1
+	// htmlからformの取得
+	s_addqty := c.FormValue("addqty")
+	addwty, err := strconv.Atoi(s_addqty)
+	if err != nil {
+		log.Println("strconv.Atoi error")
+		m := map[string]interface{}{
+			"message": "コイン追加枚数を正しく指定してください。",
+			"coin":    coin,
+		}
+		return c.Render(http.StatusBadRequest, "cointop.html", m)
+	}
+
+	addcoin := coin.Qty + addwty
 
 	// コイン数変更
 	err = cs.ChangeQty(token, user_id, addcoin)

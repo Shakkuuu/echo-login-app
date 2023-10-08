@@ -71,4 +71,5 @@ func autoMigration() {
 	db.AutoMigrate(&entity.Coin{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
 	db.AutoMigrate(&entity.Item{})
 	db.AutoMigrate(entity.HasItemList{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
+	db.AutoMigrate(entity.Status{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
 }

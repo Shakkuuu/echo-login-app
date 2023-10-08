@@ -82,7 +82,7 @@ func Init(sk string) {
 	coin := app.Group("/coin")
 	var cc controller.CoinController
 	coin.GET("", cc.Top)
-	coin.GET("/add", cc.QtyAdd)
+	coin.POST("/add", cc.QtyAdd)
 	coin.GET("/sub", cc.QtySub)
 
 	// ガチャ機能
@@ -95,6 +95,14 @@ func Init(sk string) {
 	item := app.Group("/item")
 	var ic controller.ItemController
 	item.GET("", ic.Top)
+
+	// ゲーム機能
+	game := app.Group("/game")
+
+	// ShotGame
+	shot := game.Group("/shot")
+	var sc controller.ShotGameController
+	shot.GET("", sc.Top)
 
 	e.Logger.Fatal(e.Start(":8082"))
 }

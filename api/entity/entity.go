@@ -60,16 +60,29 @@ type Item struct {
 	Ratio  int    `json:"ratio"`
 }
 
+// db保存用アイテムリスト
 type HasItemList struct {
 	ID     int `gorm:"primaryKey"`
 	UserID int
 	ItemID int
 }
 
+// appとのやりとり用ユーザーの所持アイテム
 type HasItem struct {
 	// ID      int    `json:"id"`
 	Items   []Item `json:"items"`
 	User_ID int    `json:"user_id"`
+}
+
+// シューティングゲーム用ユーザーのステータス
+type Status struct {
+	ID        int `json:"id" gorm:"primaryKey"`
+	Damage    int `json:"damage"`
+	Hp        int `json:"hp"`
+	ShotSpeed int `json:"shot_speed"`
+	EnmCool   int `json:"enm_cool"`
+	Score     int `json:"score"`
+	User_ID   int `json:"user_id"`
 }
 
 // レスポンスメッセージ用構造体
