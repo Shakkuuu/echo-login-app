@@ -6,6 +6,7 @@
 </head>
 <body>
     <h1>StatusPage</h1>
+    <p>{{.message}}</p>
     <h3>ダメージ：{{.status.Damage}}</h3>
     <p>素材必要個数30個 Damage20まで</p>
     <form action="/app/game/shot/status" method="POST">

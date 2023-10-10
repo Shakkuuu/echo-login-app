@@ -343,7 +343,7 @@ func (sc ShotGameController) StatusUp(c echo.Context) error {
 			if count < SHOTSPEEDRATE*shotspeed {
 				log.Println("素材が足りません")
 				m := map[string]interface{}{
-					"message": "HPの素材が足りません",
+					"message": "ShotSpeedの素材が足りません",
 					"status":  status,
 				}
 				return c.Render(http.StatusBadRequest, "status.html", m)
