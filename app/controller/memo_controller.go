@@ -231,6 +231,6 @@ func (mc MemoController) Change(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "memotop.html", m)
 	}
 
-	fmt.Println("ユーザー名変更成功したよ")
+	fmt.Println("メモ変更成功したよ")
 	return c.Redirect(http.StatusFound, "/app/memo/view/"+param_id)
 }

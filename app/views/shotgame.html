@@ -30,7 +30,8 @@
         mydamage="{{.status.Damage}}"; //変更 自機の弾のダメージ(1)
         enemydamage=1; //変更 敵のダメージ
         ups="{{.status.Score}}"; //変更 スコアのアップ幅(1)
-        upsco=ups*1
+        upsco=ups*1 // テンプレート機能の変数そのままだと整数だとうまく判定してくれなかっため無理やり
+        coinrate=10 // コイン一枚獲得に必要なスコア
         scoolconst="{{.status.ShotSpeed}}"; //変更 クールタイムの追加数 小さいほど連射up(20)
 
         // msx=[-1,-1,-1]; //自弾x座標
@@ -280,7 +281,7 @@
                         //場所はランダム
                         enx[i]=Math.floor( Math.random() * (399-ensize) );
                         eny[i]=1;
-                        ent[i]=Math.floor( Math.random() * 5 )+1;
+                        ent[i]=Math.floor( Math.random() * 20 )+1;
                         //レベル50以上なら体力に補正を加える
                         if(lev>=50) ent[i]+=Math.floor((lev-50)/5);
                         break;
@@ -449,6 +450,7 @@
         <p><input type="hidden" id="addqty" name="addqty" value=""></p>
         <p><input type="submit" value="コインゲット"></p>
     </form>
+    <p><a href="/app/game/shot/status">ステータス</a></p>
     <p><a href="/app">戻る</a></p>
 </body>
 </html>

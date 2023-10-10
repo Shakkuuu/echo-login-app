@@ -77,7 +77,7 @@ func Init() {
 	hasitem.Use(middleware.JWT([]byte(os.Getenv("TOKEN_KEY"))))
 	hasitem.POST("/:user_id", hc.Add)
 	hasitem.GET("/user_id/:user_id", hc.GetByUserID)
-	hasitem.DELETE("/:id", hc.Delete)
+	hasitem.DELETE("/:item_id", hc.Delete)
 
 	// シューティングゲーム用ステータス
 	var sc controller.StatusController

@@ -59,12 +59,12 @@ func (hs HasItemService) GetByUserID(user_id string) ([]entity.HasItemList, erro
 // }
 
 // Item_IDからの取得済みアイテムの最初の削除処理
-func (hs HasItemService) Delete(id string) error {
+func (hs HasItemService) Delete(item_id string) error {
 	db := db.GetDB()
 
 	var hasitemlist entity.HasItemList
 
-	err := db.Where("id = ?", id).First(&hasitemlist).Delete(&hasitemlist).Error
+	err := db.Where("item_id = ?", item_id).First(&hasitemlist).Delete(&hasitemlist).Error
 	if err != nil {
 		return err
 	}

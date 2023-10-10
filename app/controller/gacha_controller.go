@@ -9,6 +9,10 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+const (
+	GACHARATE int = 300 // ガチャ一回に必要なコイン枚数
+)
+
 type GachaController struct{}
 
 // GET Topページ表示
@@ -105,8 +109,8 @@ func (gc GachaController) Draw(c echo.Context) error {
 		return c.Render(http.StatusBadRequest, "gachatop.html", m)
 	}
 
-	// subcoin := coin.Qty - times*300
-	subcoin := coin.Qty - times
+	subcoin := coin.Qty - times*GACHARATE
+	// subcoin := coin.Qty - times
 	if subcoin < 0 {
 		log.Printf("gs.Draw error: %v\n", err)
 		m := map[string]interface{}{

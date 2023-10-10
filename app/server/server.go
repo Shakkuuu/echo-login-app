@@ -103,6 +103,8 @@ func Init(sk string) {
 	shot := game.Group("/shot")
 	var sc controller.ShotGameController
 	shot.GET("", sc.Top)
+	shot.GET("/status", sc.StatusPage)
+	shot.POST("/status", sc.StatusUp)
 
 	e.Logger.Fatal(e.Start(":8082"))
 }
