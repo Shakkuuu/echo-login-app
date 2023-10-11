@@ -11,6 +11,14 @@ import (
 )
 
 const (
+	RIGHTID     int = 101
+	LEFTID      int = 102
+	DOWNID      int = 103
+	UPRIGHTID   int = 104
+	UPLEFTID    int = 105
+	DOWNRIGHTID int = 106
+	DOWNLEFT    int = 107
+
 	DAMAGEID    int = 201
 	HPID        int = 202
 	SHOTSPEEDID int = 203
@@ -36,6 +44,7 @@ type ShotGameController struct{}
 func (gc ShotGameController) Top(c echo.Context) error {
 	var auc AuthController
 	var ss service.StatusService
+	var hs service.HasItemService
 
 	// セッション
 	user_id, err := auc.IDGetBySession(c)
@@ -63,13 +72,35 @@ func (gc ShotGameController) Top(c echo.Context) error {
 		m := map[string]interface{}{
 			"message": "ユーザーのステータス一覧の取得に失敗しました。",
 			"status":  nil,
+			"att":     nil,
 		}
 		return c.Render(http.StatusBadRequest, "shotgame.html", m)
+	}
+
+	// ユーザーの所持アイテム一覧取得
+	hasitem, err := hs.GetByUserID(user_id, token)
+	if err != nil {
+		log.Printf("hs.GetByUserID error: %v\n", err)
+		m := map[string]interface{}{
+			"message": "ユーザーの所持アイテムの取得に失敗しました。",
+			"status":  status,
+			"att":     nil,
+		}
+		return c.Render(http.StatusBadRequest, "shotgame.html", m)
+	}
+
+	atttf := map[string]int{"右アタッチメント": 0, "左アタッチメント": 0, "下アタッチメント": 0, "右上アタッチメント": 0, "左上アタッチメント": 0, "右下アタッチメント": 0, "左下アタッチメント": 0}
+
+	for _, v := range hasitem.Items {
+		if v.ID == RIGHTID || v.ID == LEFTID || v.ID == DOWNID || v.ID == UPRIGHTID || v.ID == UPLEFTID || v.ID == DOWNRIGHTID || v.ID == DOWNLEFT {
+			atttf[v.Name] = 1
+		}
 	}
 
 	m := map[string]interface{}{
 		"message": "",
 		"status":  status,
+		"att":     atttf,
 	}
 
 	return c.Render(http.StatusOK, "shotgame.html", m)
@@ -160,16 +191,6 @@ func (sc ShotGameController) StatusUp(c echo.Context) error {
 	s_shotspeed := c.FormValue("shotspeed")
 	s_enmcool := c.FormValue("enmcool")
 	s_score := c.FormValue("score")
-
-	// // 入力漏れのチェック
-	// if s_damage == "" && s_hp == "" && s_shotspeed == "" && s_enmcool == "" && s_score == "" {
-	// 	log.Println("どのステータスも入力されていません。")
-	// 	m := map[string]interface{}{
-	// 		"message": "どのステータスも入力されていません。",
-	// 		"status":  status,
-	// 	}
-	// 	return c.Render(http.StatusBadRequest, "status.html", m)
-	// }
 
 	// 所持済みアイテム取得
 	hasitem, err := hs.GetByUserID(user_id, token)
