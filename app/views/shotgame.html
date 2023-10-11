@@ -39,10 +39,39 @@
         // msmax=3; //自弾最大
         // mssize=5; //自弾サイズ
         // 変更 したよっつ
-        msx=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]; //自弾x座標
-        msy=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]; //自弾y座標
-        msmax=25; //自弾最大
+        umsx=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]; //自弾x座標
+        umsy=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]; //自弾y座標
+        umsmax=25; //自弾最大
+        lmsx=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]; //自弾x座標
+        lmsy=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]; //自弾y座標
+        lmsmax=25; //自弾最大
+        rmsx=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]; //自弾x座標
+        rmsy=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]; //自弾y座標
+        rmsmax=25; //自弾最大
+        dmsx=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]; //自弾x座標
+        dmsy=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]; //自弾y座標
+        dmsmax=25; //自弾最大
+        urmsx=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]; //自弾x座標
+        urmsy=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]; //自弾y座標
+        urmsmax=25; //自弾最大
+        ulmsx=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]; //自弾x座標
+        ulmsy=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]; //自弾y座標
+        ulmsmax=25; //自弾最大
+        drmsx=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]; //自弾x座標
+        drmsy=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]; //自弾y座標
+        drmsmax=25; //自弾最大
+        dlmsx=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]; //自弾x座標
+        dlmsy=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]; //自弾y座標
+        dlmsmax=25; //自弾最大
         mssize=5; //自弾サイズ
+
+        leftatt=0;
+        rightatt=1;
+        downatt=1;
+        upleftatt=0;
+        uprightatt=1;
+        downleftatt=0;
+        downrightat=1;
 
         enx=[]; //敵機x座標
         eny=[]; //敵機y座標
@@ -185,9 +214,47 @@
             mp.ctx.fillRect(xx,yy,sizesize,sizesize); //自機
             //緑
             mp.ctx.fillStyle = "rgb(0, 255, 0)";
-            for(var i=0;i<msmax;i++){
-                if(msx[i]!=-1){
-                    mp.ctx.fillRect(msx[i],msy[i],mssize,mssize); //自弾
+            // for(var i=0;i<msmax;i++){
+            for(var i=0;i<umsmax;i++){
+                // if(msx[i]!=-1){
+                if(umsx[i]!=-1){
+                    // mp.ctx.fillRect(msx[i],msy[i],mssize,mssize); //自弾
+                    mp.ctx.fillRect(umsx[i],umsy[i],mssize,mssize); //自弾
+                }
+            }
+            for(var i=0;i<lmsmax;i++){
+                if(lmsx[i]!=-1){
+                    mp.ctx.fillRect(lmsx[i],lmsy[i],mssize,mssize); //自弾
+                }
+            }
+            for(var i=0;i<rmsmax;i++){
+                if(rmsx[i]!=-1){
+                    mp.ctx.fillRect(rmsx[i],rmsy[i],mssize,mssize); //自弾
+                }
+            }
+            for(var i=0;i<dmsmax;i++){
+                if(dmsx[i]!=-1){
+                    mp.ctx.fillRect(dmsx[i],dmsy[i],mssize,mssize); //自弾
+                }
+            }
+            for(var i=0;i<urmsmax;i++){
+                if(urmsx[i]!=-1){
+                    mp.ctx.fillRect(urmsx[i],urmsy[i],mssize,mssize); //自弾
+                }
+            }
+            for(var i=0;i<ulmsmax;i++){
+                if(ulmsx[i]!=-1){
+                    mp.ctx.fillRect(ulmsx[i],ulmsy[i],mssize,mssize); //自弾
+                }
+            }
+            for(var i=0;i<drmsmax;i++){
+                if(drmsx[i]!=-1){
+                    mp.ctx.fillRect(drmsx[i],drmsy[i],mssize,mssize); //自弾
+                }
+            }
+            for(var i=0;i<dlmsmax;i++){
+                if(dlmsx[i]!=-1){
+                    mp.ctx.fillRect(dlmsx[i],dlmsy[i],mssize,mssize); //自弾
                 }
             }
             for(var i=0;i<enmax;i++){
@@ -229,30 +296,247 @@
         function myshot(){
             //クールタイム減少
             scool--;
-            //スペースキー押下中で、クールタイム中でないなら
+            //押下中で、クールタイム中でないなら
             if(spa==1&&scool<0){
                 //自弾データの中で使っていない所を探す
                 //ないなら、発射上限のため発射しない
-                for(var i=0;i<msmax;i++){
-                    if(msx[i]==-1){
+                // for(var i=0;i<msmax;i++){
+                for(var i=0;i<umsmax;i++){
+                    // if(msx[i]==-1){
+                    if(umsx[i]==-1){
                         //発射
-                        msx[i]=xx+sizesize/2-mssize/2;
-                        msy[i]=yy-1;
+                        // msx[i]=xx+sizesize/2-mssize/2;
+                        umsx[i]=xx+sizesize/2-mssize/2;
+                        // msy[i]=yy-1;
+                        umsy[i]=yy-1;
                         // scool=20;
                         scool= scoolconst; //変更
                         break;
                     }
                 }
+                if(leftatt==1){
+                    for(var i=0;i<lmsmax;i++){
+                        // if(msx[i]==-1){
+                        if(lmsx[i]==-1){
+                            //発射
+                            // msx[i]=xx+sizesize/2-mssize/2;
+                            lmsx[i]=xx+sizesize/2-mssize/2;
+                            // msy[i]=yy-1;
+                            lmsy[i]=yy-1;
+                            // scool=20;
+                            scool= scoolconst; //変更
+                            break;
+                        }
+                    }
+                }
+                if(rightatt==1){
+                    for(var i=0;i<rmsmax;i++){
+                        // if(msx[i]==-1){
+                        if(rmsx[i]==-1){
+                            //発射
+                            // msx[i]=xx+sizesize/2-mssize/2;
+                            rmsx[i]=xx+sizesize/2-mssize/2;
+                            // msy[i]=yy-1;
+                            rmsy[i]=yy-1;
+                            // scool=20;
+                            scool= scoolconst; //変更
+                            break;
+                        }
+                    }
+                }
+                if(downatt==1){
+                    for(var i=0;i<dmsmax;i++){
+                        // if(msx[i]==-1){
+                        if(dmsx[i]==-1){
+                            //発射
+                            // msx[i]=xx+sizesize/2-mssize/2;
+                            dmsx[i]=xx+sizesize/2-mssize/2;
+                            // msy[i]=yy-1;
+                            dmsy[i]=yy-1;
+                            // scool=20;
+                            scool= scoolconst; //変更
+                            break;
+                        }
+                    }
+                }
+                if(uprightatt==1){
+                    for(var i=0;i<urmsmax;i++){
+                        // if(msx[i]==-1){
+                        if(urmsx[i]==-1){
+                            //発射
+                            // msx[i]=xx+sizesize/2-mssize/2;
+                            urmsx[i]=xx+sizesize/2-mssize/2;
+                            // msy[i]=yy-1;
+                            urmsy[i]=yy-1;
+                            // scool=20;
+                            scool= scoolconst; //変更
+                            break;
+                        }
+                    }
+                }
+                if(upleftatt==1){
+                    for(var i=0;i<ulmsmax;i++){
+                        // if(msx[i]==-1){
+                        if(ulmsx[i]==-1){
+                            //発射
+                            // msx[i]=xx+sizesize/2-mssize/2;
+                            ulmsx[i]=xx+sizesize/2-mssize/2;
+                            // msy[i]=yy-1;
+                            ulmsy[i]=yy-1;
+                            // scool=20;
+                            scool= scoolconst; //変更
+                            break;
+                        }
+                    }
+                }
+                if(downrightat==1){
+                    for(var i=0;i<drmsmax;i++){
+                        // if(msx[i]==-1){
+                        if(drmsx[i]==-1){
+                            //発射
+                            // msx[i]=xx+sizesize/2-mssize/2;
+                            drmsx[i]=xx+sizesize/2-mssize/2;
+                            // msy[i]=yy-1;
+                            drmsy[i]=yy-1;
+                            // scool=20;
+                            scool= scoolconst; //変更
+                            break;
+                        }
+                    }
+                }
+                if(downleftatt==1){
+                    for(var i=0;i<dlmsmax;i++){
+                        // if(msx[i]==-1){
+                        if(dlmsx[i]==-1){
+                            //発射
+                            // msx[i]=xx+sizesize/2-mssize/2;
+                            dlmsx[i]=xx+sizesize/2-mssize/2;
+                            // msy[i]=yy-1;
+                            dlmsy[i]=yy-1;
+                            // scool=20;
+                            scool= scoolconst; //変更
+                            break;
+                        }
+                    }
+                }
             }
             //発射中の弾を進める
-            for(var i=0;i<msmax;i++){
-                if(msx[i]!=-1){
-                    msy[i]-=6;
+            // for(var i=0;i<msmax;i++){
+            for(var i=0;i<umsmax;i++){
+                // if(msx[i]!=-1){
+                if(umsx[i]!=-1){
+                    // msy[i]-=6;
+                    umsy[i]-=6;
                 }
                 //画面外なら削除
-                if(msy[i]<-1){
-                    msy[i]=-1;
-                    msx[i]=-1;
+                // if(msy[i]<-1){
+                if(umsy[i]<-1){
+                    // msy[i]=-1;
+                    umsy[i]=-1;
+                    // msx[i]=-1;
+                    umsx[i]=-1;
+                }
+            }
+            //発射中の弾を進める
+            // for(var i=0;i<msmax;i++){
+            if(leftatt==1){
+                for(var i=0;i<lmsmax;i++){
+                    if(lmsx[i]!=-1){
+                        lmsx[i]-=6;
+                    }
+                    //画面外なら削除
+                    if(lmsx[i]<-1){
+                        lmsy[i]=-1;
+                        lmsx[i]=-1;
+                    }
+                }
+            }
+            //発射中の弾を進める
+            // for(var i=0;i<msmax;i++){
+            if(rightatt==1){
+                for(var i=0;i<rmsmax;i++){
+                    if(rmsx[i]!=-1){
+                        rmsx[i]+=6;
+                    }
+                    //画面外なら削除
+                    if(rmsx[i]>300){
+                        rmsy[i]=-1;
+                        rmsx[i]=-1;
+                    }
+                }
+            }
+            //発射中の弾を進める
+            // for(var i=0;i<msmax;i++){
+            if(downatt==1){
+                for(var i=0;i<dmsmax;i++){
+                    if(dmsx[i]!=-1){
+                        dmsy[i]+=6;
+                    }
+                    //画面外なら削除
+                    if(dmsy[i]>400){
+                        dmsy[i]=-1;
+                        dmsx[i]=-1;
+                    }
+                }
+            }
+            //発射中の弾を進める
+            // for(var i=0;i<msmax;i++){
+            if(uprightatt==1){
+                for(var i=0;i<urmsmax;i++){
+                    if(urmsx[i]!=-1){
+                        urmsx[i]+=3;
+                        urmsy[i]-=3;
+                    }
+                    //画面外なら削除
+                    if(urmsy[i]<-1){
+                        urmsy[i]=-1;
+                        urmsx[i]=-1;
+                    }
+                }
+            }
+            //発射中の弾を進める
+            // for(var i=0;i<msmax;i++){
+            if(upleftatt==1){
+                for(var i=0;i<ulmsmax;i++){
+                    if(ulmsx[i]!=-1){
+                        ulmsx[i]-=3;
+                        ulmsy[i]-=3;
+                    }
+                    //画面外なら削除
+                    if(ulmsy[i]<-1){
+                        ulmsy[i]=-1;
+                        ulmsx[i]=-1;
+                    }
+                }
+            }
+            //発射中の弾を進める
+            // for(var i=0;i<msmax;i++){
+            if(downrightat==1){
+                for(var i=0;i<drmsmax;i++){
+                    if(drmsx[i]!=-1){
+                        drmsx[i]+=3;
+                        drmsy[i]+=3;
+                    }
+                    //画面外なら削除
+                    if(drmsy[i]>400){
+                        drmsy[i]=-1;
+                        drmsx[i]=-1;
+                    }
+                }
+            }
+            //発射中の弾を進める
+            // for(var i=0;i<msmax;i++){
+            if(downleftatt==1){
+                for(var i=0;i<dlmsmax;i++){
+                    if(dlmsx[i]!=-1){
+                        dlmsx[i]-=3;
+                        dlmsy[i]+=3;
+                    }
+                    //画面外なら削除
+                    if(dlmsy[i]>400){
+                        dlmsy[i]=-1;
+                        dlmsx[i]=-1;
+                    }
                 }
             }
         }
@@ -316,10 +600,13 @@
             //敵機と自弾
             for(var i=0;i<enmax;i++){
                 if(enx[i]!=-1){
-                    for(var j=0;j<msmax;j++){
-                        if(msx[j]!=-1){
+                    // for(var j=0;j<msmax;j++){
+                    for(var j=0;j<umsmax;j++){
+                        // if(msx[j]!=-1){
+                        if(umsx[j]!=-1){
                             //当たり判定を行う
-                            if(atari(enx[i],eny[i],ensize,ensize,msx[j],msy[j],mssize,mssize)==1){
+                            // if(atari(enx[i],eny[i],ensize,ensize,msx[j],msy[j],mssize,mssize)==1){
+                            if(atari(enx[i],eny[i],ensize,ensize,umsx[j],umsy[j],mssize,mssize)==1){
                                 // //当たっているので敵機の体力を1減らす
                                 // //自弾は消す
                                 // ent[i]--;
@@ -328,8 +615,8 @@
                                 //変更 当たっているので敵機の体力を減らす
                                 //自弾は消す
                                 ent[i]= ent[i] - mydamage;
-                                msx[j]=-1;
-                                msy[j]=-1;
+                                umsx[j]=-1;
+                                umsy[j]=-1;
                                 if(ent[i]<=0){
                                     //敵機の体力が無くなったら、敵機を消す
                                     ent[i]=-1;
@@ -338,6 +625,202 @@
                                     //スコアアップ！
                                     sco=sco+upsco;
                                     break;
+                                }
+                            }
+                        }
+                    }
+                    if(leftatt==1){
+                        for(var j=0;j<lmsmax;j++){
+                            if(lmsx[j]!=-1){
+                                //当たり判定を行う
+                                if(atari(enx[i],eny[i],ensize,ensize,lmsx[j],lmsy[j],mssize,mssize)==1){
+                                    // //当たっているので敵機の体力を1減らす
+                                    // //自弾は消す
+                                    // ent[i]--;
+                                    // msx[j]=-1;
+                                    // msy[j]=-1;
+                                    //変更 当たっているので敵機の体力を減らす
+                                    //自弾は消す
+                                    ent[i]= ent[i] - mydamage;
+                                    lmsx[j]=-1;
+                                    lmsy[j]=-1;
+                                    if(ent[i]<=0){
+                                        //敵機の体力が無くなったら、敵機を消す
+                                        ent[i]=-1;
+                                        enx[i]=-1;
+                                        eny[i]=-1;
+                                        //スコアアップ！
+                                        sco=sco+upsco;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if(rightatt==1){
+                        for(var j=0;j<rmsmax;j++){
+                            if(rmsx[j]!=-1){
+                                //当たり判定を行う
+                                if(atari(enx[i],eny[i],ensize,ensize,rmsx[j],rmsy[j],mssize,mssize)==1){
+                                    // //当たっているので敵機の体力を1減らす
+                                    // //自弾は消す
+                                    // ent[i]--;
+                                    // msx[j]=-1;
+                                    // msy[j]=-1;
+                                    //変更 当たっているので敵機の体力を減らす
+                                    //自弾は消す
+                                    ent[i]= ent[i] - mydamage;
+                                    rmsx[j]=-1;
+                                    rmsy[j]=-1;
+                                    if(ent[i]<=0){
+                                        //敵機の体力が無くなったら、敵機を消す
+                                        ent[i]=-1;
+                                        enx[i]=-1;
+                                        eny[i]=-1;
+                                        //スコアアップ！
+                                        sco=sco+upsco;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if(downatt==1){
+                        for(var j=0;j<dmsmax;j++){
+                            if(dmsx[j]!=-1){
+                                //当たり判定を行う
+                                if(atari(enx[i],eny[i],ensize,ensize,dmsx[j],dmsy[j],mssize,mssize)==1){
+                                    // //当たっているので敵機の体力を1減らす
+                                    // //自弾は消す
+                                    // ent[i]--;
+                                    // msx[j]=-1;
+                                    // msy[j]=-1;
+                                    //変更 当たっているので敵機の体力を減らす
+                                    //自弾は消す
+                                    ent[i]= ent[i] - mydamage;
+                                    dmsx[j]=-1;
+                                    dmsy[j]=-1;
+                                    if(ent[i]<=0){
+                                        //敵機の体力が無くなったら、敵機を消す
+                                        ent[i]=-1;
+                                        enx[i]=-1;
+                                        eny[i]=-1;
+                                        //スコアアップ！
+                                        sco=sco+upsco;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if(uprightatt==1){
+                        for(var j=0;j<urmsmax;j++){
+                            if(urmsx[j]!=-1){
+                                //当たり判定を行う
+                                if(atari(enx[i],eny[i],ensize,ensize,urmsx[j],urmsy[j],mssize,mssize)==1){
+                                    // //当たっているので敵機の体力を1減らす
+                                    // //自弾は消す
+                                    // ent[i]--;
+                                    // msx[j]=-1;
+                                    // msy[j]=-1;
+                                    //変更 当たっているので敵機の体力を減らす
+                                    //自弾は消す
+                                    ent[i]= ent[i] - mydamage;
+                                    urmsx[j]=-1;
+                                    urmsy[j]=-1;
+                                    if(ent[i]<=0){
+                                        //敵機の体力が無くなったら、敵機を消す
+                                        ent[i]=-1;
+                                        enx[i]=-1;
+                                        eny[i]=-1;
+                                        //スコアアップ！
+                                        sco=sco+upsco;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if(upleftatt==1){
+                        for(var j=0;j<ulmsmax;j++){
+                            if(ulmsx[j]!=-1){
+                                //当たり判定を行う
+                                if(atari(enx[i],eny[i],ensize,ensize,ulmsx[j],ulmsy[j],mssize,mssize)==1){
+                                    // //当たっているので敵機の体力を1減らす
+                                    // //自弾は消す
+                                    // ent[i]--;
+                                    // msx[j]=-1;
+                                    // msy[j]=-1;
+                                    //変更 当たっているので敵機の体力を減らす
+                                    //自弾は消す
+                                    ent[i]= ent[i] - mydamage;
+                                    ulmsx[j]=-1;
+                                    ulmsy[j]=-1;
+                                    if(ent[i]<=0){
+                                        //敵機の体力が無くなったら、敵機を消す
+                                        ent[i]=-1;
+                                        enx[i]=-1;
+                                        eny[i]=-1;
+                                        //スコアアップ！
+                                        sco=sco+upsco;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if(downrightat==1){
+                        for(var j=0;j<drmsmax;j++){
+                            if(drmsx[j]!=-1){
+                                //当たり判定を行う
+                                if(atari(enx[i],eny[i],ensize,ensize,drmsx[j],drmsy[j],mssize,mssize)==1){
+                                    // //当たっているので敵機の体力を1減らす
+                                    // //自弾は消す
+                                    // ent[i]--;
+                                    // msx[j]=-1;
+                                    // msy[j]=-1;
+                                    //変更 当たっているので敵機の体力を減らす
+                                    //自弾は消す
+                                    ent[i]= ent[i] - mydamage;
+                                    drmsx[j]=-1;
+                                    drmsy[j]=-1;
+                                    if(ent[i]<=0){
+                                        //敵機の体力が無くなったら、敵機を消す
+                                        ent[i]=-1;
+                                        enx[i]=-1;
+                                        eny[i]=-1;
+                                        //スコアアップ！
+                                        sco=sco+upsco;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if(downleftatt==1){
+                        for(var j=0;j<dlmsmax;j++){
+                            if(dlmsx[j]!=-1){
+                                //当たり判定を行う
+                                if(atari(enx[i],eny[i],ensize,ensize,dlmsx[j],dlmsy[j],mssize,mssize)==1){
+                                    // //当たっているので敵機の体力を1減らす
+                                    // //自弾は消す
+                                    // ent[i]--;
+                                    // msx[j]=-1;
+                                    // msy[j]=-1;
+                                    //変更 当たっているので敵機の体力を減らす
+                                    //自弾は消す
+                                    ent[i]= ent[i] - mydamage;
+                                    dlmsx[j]=-1;
+                                    dlmsy[j]=-1;
+                                    if(ent[i]<=0){
+                                        //敵機の体力が無くなったら、敵機を消す
+                                        ent[i]=-1;
+                                        enx[i]=-1;
+                                        eny[i]=-1;
+                                        //スコアアップ！
+                                        sco=sco+upsco;
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -437,15 +920,15 @@
 	<canvas id="canvas_e" style="background-color: #ffffff;" width="400" height="300"></canvas><br>
 	<button id="start" class="std" onclick="clstart()">ゲーム開始</button>
 	<button id="rstart" CLASS="std" onclick="rclstart()">もう一回！</button><br>
-	<p>たくさん敵を倒してスコアを稼ごう</p>
-	※操作説明<br>
-	矢印キー　左右移動<br>
+	<br>
+	矢印キー　上下左右移動<br>
 	スペースキー　ショット<br>
 	<br>
 	水色が自分、赤色が敵だよ。<br>
 	敵は体力が低くなると黒くなっていくよ。黒い敵を積極的に倒そう<br>
     スコアによってコインがもらえるよ<br>
-    <p>GameOverになったら、下のボタンを押してコインを獲得しよう!</p>
+    <br>
+    GameOverになったら、下のボタンを押してコインを獲得しよう!<br>
     <form id="scoform" action="/app/coin/add" method="POST">
         <p><input type="hidden" id="addqty" name="addqty" value=""></p>
         <p><input type="submit" value="コインゲット"></p>
