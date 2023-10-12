@@ -61,7 +61,7 @@ func (auc AuthController) SessionCreate(c echo.Context, u entity.User, token *en
 	}
 	// セッション作成
 	sess.Options = &sessions.Options{
-		MaxAge:   600,
+		MaxAge:   2 * 60 * 60,
 		HttpOnly: true,
 	}
 	// セッションに値入れ

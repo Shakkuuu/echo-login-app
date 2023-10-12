@@ -117,7 +117,7 @@ func (us UserService) TokenCreate(id int) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	token.Claims = jwt.MapClaims{
 		"id":  id,
-		"exp": time.Now().Add(time.Hour * 1).Unix(), // 1時間でToken失効
+		"exp": time.Now().Add(time.Hour * 2).Unix(), // 2時間でToken失効
 	}
 
 	t, err := token.SignedString([]byte(os.Getenv("TOKEN_KEY")))

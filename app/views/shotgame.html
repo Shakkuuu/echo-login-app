@@ -32,6 +32,7 @@
         ups="{{.status.Score}}"; //変更 スコアのアップ幅(1)
         upsco=ups*1 // テンプレート機能の変数そのままだと整数だとうまく判定してくれなかっため無理やり
         scoolconst="{{.status.ShotSpeed}}"; //変更 クールタイムの追加数 小さいほど連射up(20)
+        coinrate=10; // 変更 スコアからコインへの変換用
 
         // msx=[-1,-1,-1]; //自弾x座標
         // msy=[-1,-1,-1]; //自弾y座標
@@ -861,7 +862,7 @@
                             var form = document.getElementById("scoform");
 
                             // フォームのinput要素に変数の値を設定
-                            document.getElementById("addqty").value = String(sco);
+                            document.getElementById("addqty").value = String(sco*coinrate);
 
                             // フォーム送信時の処理を設定
                             form.addEventListener("submit", function(event) {
