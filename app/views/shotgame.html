@@ -31,7 +31,6 @@
         enemydamage=1; //変更 敵のダメージ
         ups="{{.status.Score}}"; //変更 スコアのアップ幅(1)
         upsco=ups*1 // テンプレート機能の変数そのままだと整数だとうまく判定してくれなかっため無理やり
-        coinrate=10 // コイン一枚獲得に必要なスコア
         scoolconst="{{.status.ShotSpeed}}"; //変更 クールタイムの追加数 小さいほど連射up(20)
 
         // msx=[-1,-1,-1]; //自弾x座標
@@ -79,6 +78,8 @@
         ensize=20; //敵機大きさ
         enmax=2000; //敵機最大
 
+        entmax=10;  //初期の敵体力最大値
+
         //敵機配列作成
         for(var i=0;i<enmax;i++){
             enx.push(-1);
@@ -95,6 +96,8 @@
             mp = new MainPanel(canvas, ctx);
             //リスタートボタン非表示
             document.getElementById('rstart').style.display = "none";
+            //コインゲットボタン非表示
+            document.getElementById('coinget').style.display = "none";
         }
 
         //スタートボタン押下時に実行される
@@ -115,6 +118,8 @@
         {
             //リスタートボタン非表示
             document.getElementById('rstart').style.display = "none";
+            //コインゲットボタン非表示
+            document.getElementById('coinget').style.display = "none";
             //キャンパスをクリアする
             mp.ctx.clearRect(0, 0, mp.canvas.width, mp.canvas.height);
             //初期化処理
@@ -565,9 +570,9 @@
                         //場所はランダム
                         enx[i]=Math.floor( Math.random() * (399-ensize) );
                         eny[i]=1;
-                        ent[i]=Math.floor( Math.random() * 20 )+1;
-                        //レベル50以上なら体力に補正を加える
-                        if(lev>=50) ent[i]+=Math.floor((lev-50)/5);
+                        ent[i]=Math.floor( Math.random() * entmax )+1;
+                        //レベル30以上なら体力に補正を加える
+                        if(lev>=30) ent[i]+=Math.floor((lev-30)/5);
                         break;
                     }
                 }
@@ -849,6 +854,9 @@
                             //紫色30ptでゲームオーバー表示
                             mp.ctx.fillText("GAME OVER", 20, 120);
 
+                            //コインゲットボタン表示
+                            document.getElementById('coinget').style.display = "block";
+
                             // フォームを取得
                             var form = document.getElementById("scoform");
 
@@ -919,7 +927,7 @@
     <p>{{.message}}</p>
 	<canvas id="canvas_e" style="background-color: #ffffff;" width="400" height="300"></canvas><br>
 	<button id="start" class="std" onclick="clstart()">ゲーム開始</button>
-	<button id="rstart" CLASS="std" onclick="rclstart()">もう一回！</button><br>
+	<button id="rstart" class="std" onclick="rclstart()">もう一回！</button><br>
 	<br>
 	矢印キー　上下左右移動<br>
 	スペースキー　ショット<br>
@@ -931,7 +939,7 @@
     GameOverになったら、下のボタンを押してコインを獲得しよう!<br>
     <form id="scoform" action="/app/coin/add" method="POST">
         <p><input type="hidden" id="addqty" name="addqty" value=""></p>
-        <p><input type="submit" value="コインゲット"></p>
+        <p><input type="submit" id="coinget" value="コインゲット"></p>
     </form>
     <p><a href="/app/game/shot/status">ステータス</a></p>
     <p><a href="/app">戻る</a></p>
