@@ -46,7 +46,6 @@ type Item struct {
 
 // 所有済みアイテム
 type HasItem struct {
-	// ID      int    `json:"id"`
 	Items   []Item `json:"items"`
 	User_ID int    `json:"user_id"`
 }

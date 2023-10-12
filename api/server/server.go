@@ -53,7 +53,6 @@ func Init() {
 	coin := e.Group("/coin")
 	coin.Use(middleware.JWT([]byte(os.Getenv("TOKEN_KEY"))))
 	coin.GET("", cc.GetAll)
-	coin.POST("", cc.Create)
 	coin.GET("/user_id/:user_id", cc.GetByUserID)
 	coin.PUT("/:user_id", cc.PutByUserID)
 
@@ -84,7 +83,6 @@ func Init() {
 	status := e.Group("/status")
 	status.Use(middleware.JWT([]byte(os.Getenv("TOKEN_KEY"))))
 	status.GET("", sc.GetAll)
-	status.POST("", sc.Create)
 	status.GET("/user_id/:user_id", sc.GetByUserID)
 	status.PUT("/:user_id", sc.PutByUserID)
 

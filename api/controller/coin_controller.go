@@ -27,32 +27,6 @@ func (cc CoinController) GetAll(c echo.Context) error {
 	return c.JSON(200, coin)
 }
 
-// POST コイン作成
-func (cc CoinController) Create(c echo.Context) error {
-	var cs service.CoinService
-
-	var coin entity.Coin
-	// JSONをGoのデータに変換
-	err := c.Bind(&coin)
-	if err != nil {
-		message := fmt.Sprintf("Coin Create Bind: %v", err)
-		log.Println(message)
-		e := ResMess{Status: 500, Message: message}
-		return c.JSON(e.Status, e)
-	}
-
-	// コイン作成処理
-	rescoin, err := cs.Create(&coin)
-	if err != nil {
-		message := fmt.Sprintf("CoinService.Create: %v", err)
-		log.Println(message)
-		e := ResMess{Status: 500, Message: message}
-		return c.JSON(e.Status, e)
-	}
-
-	return c.JSON(201, rescoin)
-}
-
 // GET ユーザーIDからコイン取得
 func (cc CoinController) GetByUserID(c echo.Context) error {
 	user_id := c.Param("user_id")

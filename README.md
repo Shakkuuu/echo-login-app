@@ -1,6 +1,10 @@
 # echo-login-app
 
-コードの細かい解説はQiitaの[この](https://qiita.com/Shakku/items/2dbf455dc270cc514436)投稿をご覧ください。
+プログラムの細かい解説はQiitaの[この](https://qiita.com/Shakku/items/2dbf455dc270cc514436)投稿をご覧ください。
+
+追記:コイン,ガチャ,アイテム,シューティングゲーム機能が実装されました。
+
+追記:上記のQiitaの記事は、Signup,Login,メモ機能まで実装した際に作成された記事のため、それ以降の機能については記載されていません。(このREADMEには一部書かれています。)
 
 ## ディレクトリ構成
 
@@ -8,16 +12,27 @@
 echo-login-app/
 ├── api
 │   ├── controller
+│   │   ├── coin_controller.go
+│   │   ├── gacha_controller.go
+│   │   ├── hasitem_controller.go
+│   │   ├── item_controller.go
 │   │   ├── memo_controller.go
+│   │   ├── status_controller.go
 │   │   └── user_controller.go
 │   ├── db
-│   │   └── db.go
+│   │   ├── db.go
+│   │   └── itemdata.go
 │   ├── entity
 │   │   └── entity.go
 │   ├── server
 │   │   └── server.go
 │   ├── service
+│   │   ├── coin_service.go
+│   │   ├── gacha_service.go
+│   │   ├── hasitem_service.go
+│   │   ├── item_service.go
 │   │   ├── memo_service.go
+│   │   ├── status_service.go
 │   │   └── user_service.go
 │   ├── dockerfile
 │   ├── go.mod
@@ -27,21 +42,35 @@ echo-login-app/
 │   ├── controller
 │   │   ├── app_controller.go
 │   │   ├── auth_controller.go
+│   │   ├── coin_controller.go
+│   │   ├── gacha_controller.go
+│   │   ├── item_controller.go
 │   │   ├── memo_controller.go
+│   │   ├── shotgame_controller.go
 │   │   └── user_controller.go
 │   ├── entity
 │   │   └── entity.go
 │   ├── server
 │   │   └── server.go
 │   ├── service
+│   │   ├── coin_service.go
+│   │   ├── gacha_service.go
+│   │   ├── hasitem_service.go
+│   │   ├── item_service.go
 │   │   ├── memo_service.go
+│   │   ├── status_service.go
 │   │   └── user_service.go
 │   ├── views
+│   │   ├── coin.html
+│   │   ├── gachatop.html
 │   │   ├── index.html
+│   │   ├── itemtop.html
 │   │   ├── login.html
 │   │   ├── memocreate.html
 │   │   ├── memotop.html
+│   │   ├── shotgame.html
 │   │   ├── signup.html
+│   │   ├── status.html
 │   │   ├── top.html
 │   │   ├── userchangename.html
 │   │   ├── userchangepassword.html
@@ -139,11 +168,73 @@ docker compose up -d
 
 - IDからメモ更新
 
-`PUT /memo:id`
+`PUT /memo/:id`
 
 - IDからメモ削除
 
 `DELETE /memo/:id`
+
+### api コイン機能
+
+- 全ユーザーのコイン取得
+
+`GET /coin`
+
+- ユーザーIDからコイン取得
+
+`GET /coin/user_id/:user_id`
+
+- ユーザーIDからコイン更新
+
+`PUT /memo/:user_id`
+
+### api アイテム機能
+
+- 全アイテム取得
+
+`GET /item`
+
+- IDからアイテム取得
+
+`GET /item/:id`
+
+- IDからアイテム削除
+
+`DELETE /item/:id`
+
+### api ガチャ機能
+
+  ガチャ実行と結果取得
+
+`GET /gacha/:times`
+
+### api 取得済みアイテムリスト機能
+
+- 取得済みアイテムに追加
+
+`POST /hasitem/:user_id`
+
+- ユーザーIDから取得済みアイテムリスト取得
+
+`GET /hasitem/user_id/:user_id`
+
+- アイテムIDから取得済みアイテム削除
+
+`DELETE /hasitem/:item_id`
+
+### api シューティングゲーム用ステータス機能
+
+- 全ユーザーのステータス取得
+
+`GET /status`
+
+- ユーザーIDからステータス取得
+
+`GET /status/user_id/:user_id`
+
+- ユーザーIDからステータス更新
+
+`PUT /status/:user_id`
 
 ## app
 
@@ -231,6 +322,50 @@ docker compose up -d
 
 `POST /app/memo/change/:id`
 
+### app コイン機能
+
+- コイントップページ
+
+`GET /app/coin`
+
+- コイン増加
+
+`POST /app/coin/add`
+
+- コイン減少
+
+`POST /app/coin/sub`
+
+### app ガチャ機能
+
+- ガチャトップページ
+
+`GET /app/gacha`
+
+- メモ作成
+
+`POST /app/gacha/draw`
+
+### app アイテム機能
+
+- 所持アイテム一覧表示ページ
+
+`GET /app/item`
+
+### app シューティングゲーム機能
+
+- シューティングゲームページ
+
+`GET /app/game/shot`
+
+- ステータス表示ページ
+
+`GET /app/game/shot/status`
+
+- ステータス強化
+
+`POST /app/game/shot/status`
+
 ## entity
 
 ### User
@@ -252,6 +387,84 @@ docker compose up -d
     "title":"タイトル",
     "content":"内容",
     "createdat":"2023-05-21T12:34:56+09:00",
+    "user_id":12345678,
+}
+```
+
+### Coin
+
+```json
+{
+    "id":1,
+    "qty":3000,
+    "user_id":12345678,
+}
+```
+
+### レアリティ定数
+
+```go
+type Rarity string
+
+const (
+    RarityN   Rarity = "N"
+    RarityR   Rarity = "R"
+    RaritySR  Rarity = "SR"
+    RaritySSR Rarity = "SSR"
+    RarityUR  Rarity = "UR"
+    RarityLR  Rarity = "LR"
+)
+```
+
+### Item
+
+```json
+{
+    "id":201,
+    "name":"ダメージアップの素材",
+    "rarity": "N",
+    "raito":1000,
+}
+```
+
+### HasItem
+
+```json
+{
+    "items": "Item entityが複数入った配列",
+    "user_id":12345678,
+}
+```
+
+### HasItemList(api)
+
+```json
+{
+    "id":1,
+    "user_id":12345678,
+    "item_id":201,
+}
+```
+
+### ShowItems(app)
+
+```json
+{
+    "item":"Item entity",
+    "qty":12,
+}
+```
+
+### Status
+
+```json
+{
+    "id":1,
+    "damage":1,
+    "hp":10,
+    "shotspeed":20,
+    "enmcool":100,
+    "score":1,
     "user_id":12345678,
 }
 ```
@@ -278,7 +491,7 @@ docker compose up -d
 - UserのIDは99999999までのランダムな整数が自動で設定されます。
 - UserのPasswordはbcryptによってハッシュ化されて、apiとのやりとりや、データベースへの保存に使用されます。
 - UserのGetAllやMemoのGetAll,GetByUserIDなど、複数のデータを取得する際は、リスト形式のJSONがレスポンスとして帰ってきます。
-- MemoのUser_IDは、そのメモを作成したユーザーのIDがForeignKeyとして保存されます。それにより、そのユーザーが作成したメモをUser_IDから全取得できます。
+- MemoなどのUser_IDは、そのメモを作成したユーザーのIDがForeignKeyとして保存されます。それにより、そのユーザーが作成したものをUser_IDから全取得できます。
 
 ```mysql
 | memos | CREATE TABLE `memos` (
@@ -292,6 +505,11 @@ docker compose up -d
   CONSTRAINT `memos_user_id_users_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci |
 ```
+
+- コインの枚数を0枚に更新するようDBに命令することができなかったため、CoinのQtyのintをポインタにする必要があった。
+- Itemは、apiサーバーでのdb接続確認完了直後にitemdata.goによって、ガチャで排出されるアイテムが登録されている。
+- apiサーバーの方では、HasItemList entityを使用したDBのテーブルにUserIDとItemIDを紐付けて登録しており、apiからappにそのユーザーの所持アイテム一覧を送るときは、UserIDからHasItemListのテーブルを検索して全て取得し、HasItem entityのItemsに詰めて送る。
+- ShowItemsは、HasItemのItemsの配列を展開して、アイテムごとの個数を保存して表示するためのもの。
 
 ## 認証
 
@@ -308,7 +526,7 @@ docker compose up -d
 
 appでは、`/app`以下や`/setting`のURLにアクセスしようとすると、Session確認用のミドルウェアが実行され、Sessionの確認を行う。
 
-apiでは、`/memo`のURLにアクセスしようとすると、middleware.JWTが実行されて、Tokenの確認が行われる。
+apiでは、`/memo`などのURLにアクセスしようとすると、middleware.JWTが実行されて、Tokenの確認が行われる。
 
 ## Middleware
 
@@ -462,6 +680,12 @@ func (uc UserController) Index(c echo.Context) error {
 - github.com/gorilla/sessions
 - github.com/labstack/echo-contrib
 - github.com/labstack/echo-contrib/session
+
+## 参考
+
+- [【gorm】数値のカラムを0で更新する Qiita](https://qiita.com/cpp0302/items/3b1c0ca3adc698a79bc9)
+- シューティングゲームのプログラムの引用・参考サイト[javascriptでゲームを作ってみた - ぬるからの雑記帳](https://nullkara.jp/2020/10/25/javascriptmakegame001/)
+- ガチャのアルゴリズム参考[Golangで重み付き乱択アルゴリズムを作成したので検証してみる Zenn](https://zenn.dev/koupro0204/articles/bf87dea2478b72)
 
 ## めも
 

@@ -107,35 +107,6 @@ func (hc HasItemController) GetByUserID(c echo.Context) error {
 	return c.JSON(200, hasitem)
 }
 
-// // PUT User_IDから取得済みアイテムリスト更新
-// func (hc HasItemController) PutByUserID(c echo.Context) error {
-// 	user_id := c.Param("user_id")
-
-// 	var hs service.HasItemService
-
-// 	// JSONをGoのデータに変換
-// 	var hasitem entity.HasItem
-// 	err := c.Bind(&hasitem)
-// 	if err != nil {
-// 		message := fmt.Sprintf("HasItem Update Bind: %v", err)
-// 		log.Println(message)
-// 		e := ResMess{Status: 500, Message: message}
-// 		return c.JSON(e.Status, e)
-// 	}
-// 	print(&hasitem)
-
-// 	// ユーザーIDから取得済みアイテムリスト更新処理
-// 	hi, err := hs.PutByUserID(&hasitem, user_id)
-// 	if err != nil {
-// 		message := fmt.Sprintf("HasItemService.PutByUserID: %v", err)
-// 		log.Println(message)
-// 		e := ResMess{Status: 500, Message: message}
-// 		return c.JSON(e.Status, e)
-// 	}
-
-// 	return c.JSON(200, hi)
-// }
-
 // DELETE アイテムIDから取得済みアイテムリストの削除
 func (hc HasItemController) Delete(c echo.Context) error {
 	item_id := c.Param("item_id")

@@ -27,32 +27,6 @@ func (sc StatusController) GetAll(c echo.Context) error {
 	return c.JSON(200, coin)
 }
 
-// POST ユーザーのステータス一覧作成
-func (sc StatusController) Create(c echo.Context) error {
-	var ss service.StatusService
-
-	var status entity.Status
-	// JSONをGoのデータに変換
-	err := c.Bind(&status)
-	if err != nil {
-		message := fmt.Sprintf("Status Create Bind: %v", err)
-		log.Println(message)
-		e := ResMess{Status: 500, Message: message}
-		return c.JSON(e.Status, e)
-	}
-
-	// ユーザーのステータス一覧作成処理
-	resstatus, err := ss.Create(&status)
-	if err != nil {
-		message := fmt.Sprintf("StatusService.Create: %v", err)
-		log.Println(message)
-		e := ResMess{Status: 500, Message: message}
-		return c.JSON(e.Status, e)
-	}
-
-	return c.JSON(201, resstatus)
-}
-
 // GET ユーザーIDからユーザーのステータス一覧取得
 func (sc StatusController) GetByUserID(c echo.Context) error {
 	user_id := c.Param("user_id")
