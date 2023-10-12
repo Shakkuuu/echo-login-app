@@ -34,6 +34,7 @@ func (uc UserController) Create(c echo.Context) error {
 	var us service.UserService
 	var cs service.CoinService
 	var ss service.StatusService
+	var hs service.HasItemService
 
 	var u entity.User
 	// JSONをGoのデータに変換
@@ -54,7 +55,7 @@ func (uc UserController) Create(c echo.Context) error {
 		return c.JSON(e.Status, e)
 	}
 
-	// ユーザー作成時にコインとユーザーのステータス一覧を作成
+	// ユーザー作成時にコインとユーザーのステータス一覧の作成と、アイテム1つ付与
 	coin := entity.Coin{User_ID: user.ID}
 
 	_, err = cs.Create(&coin)
@@ -70,6 +71,16 @@ func (uc UserController) Create(c echo.Context) error {
 	_, err = ss.Create(&status)
 	if err != nil {
 		message := fmt.Sprintf("StatusService.Create: %v", err)
+		log.Println(message)
+		e := ResMess{Status: 500, Message: message}
+		return c.JSON(e.Status, e)
+	}
+
+	hasitem := entity.HasItemList{UserID: user.ID, ItemID: 201}
+
+	_, err = hs.Add(&hasitem)
+	if err != nil {
+		message := fmt.Sprintf("HasItemService.Add: %v", err)
 		log.Println(message)
 		e := ResMess{Status: 500, Message: message}
 		return c.JSON(e.Status, e)

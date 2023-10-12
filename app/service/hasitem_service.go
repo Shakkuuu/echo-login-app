@@ -54,26 +54,50 @@ func (hs HasItemService) GetByUserID(user_id int, token string) (entity.HasItem,
 }
 
 // 所有済みアイテムリストの追加処理
-func (hs HasItemService) Add(token string, user_id int, item entity.Item) error {
+func (hs HasItemService) Add(token string, user_id int, result []entity.Item) error {
 	sid := strconv.Itoa(user_id)
 	url := "http://echo-login-app-api:8081/hasitem/" + sid
 
-	if item.ID <= 200 {
-		hasitem, err := hs.GetByUserID(user_id, token)
-		if err != nil {
-			log.Printf("error hs.GetByUserID: %v\n", err)
-			return err
-		}
-		for _, v := range hasitem.Items {
-			if v.Name == item.Name {
-				log.Println("既に持っているアタッチメントです。")
-				return nil
-			}
-		}
+	hasitem, err := hs.GetByUserID(user_id, token)
+	if err != nil {
+		log.Printf("error hs.GetByUserID: %v\n", err)
+		return err
 	}
 
+	var items []entity.Item
+	var flag int = 0
+
+	for _, item := range result {
+		if item.ID <= 200 {
+			for _, v := range hasitem.Items {
+				if v.Name == item.Name {
+					log.Println("既に持っているアタッチメントです。")
+					flag = 1
+					break
+				}
+			}
+			for _, v2 := range items {
+				if v2.Name == item.Name {
+					log.Println("既に出現したアタッチメントです。")
+					flag = 1
+					break
+				}
+			}
+			if flag == 0 {
+				items = append(items, item)
+				continue
+			} else {
+				flag = 0
+				continue
+			}
+		}
+		items = append(items, item)
+	}
+
+	posthasitem := entity.HasItem{Items: items, User_ID: user_id}
+
 	// GoのデータをJSONに変換
-	j, _ := json.Marshal(item)
+	j, _ := json.Marshal(posthasitem)
 
 	// apiへのユーザー情報送信
 	req, err := http.NewRequest(

@@ -2,7 +2,6 @@ package service
 
 import (
 	"echo-login-app/api/entity"
-	"fmt"
 	"math/rand"
 	"time"
 )
@@ -25,7 +24,7 @@ func (gs GachaService) DrawGacha(times int, allitem []entity.Item) []entity.Item
 	// 乱数生成された数字を超えたものをスライスに突っ込む
 	for i := 0; i < times; i++ {
 		val := r.Intn(totalRatio)
-		fmt.Println(val)
+		// fmt.Println(val)
 		var nowRatio int
 		for _, value := range allitem {
 			nowRatio += value.Ratio

@@ -34,9 +34,9 @@ func (hc HasItemController) Add(c echo.Context) error {
 
 	var hs service.HasItemService
 
-	var item entity.Item
+	var hasitem entity.HasItem
 	// JSONをGoのデータに変換
-	err := c.Bind(&item)
+	err := c.Bind(&hasitem)
 	if err != nil {
 		message := fmt.Sprintf("HasItem Create Bind: %v", err)
 		log.Println(message)
@@ -51,18 +51,22 @@ func (hc HasItemController) Add(c echo.Context) error {
 		e := ResMess{Status: 500, Message: message}
 		return c.JSON(e.Status, e)
 	}
-	hasitemlist := entity.HasItemList{UserID: i_user_id, ItemID: item.ID}
 
-	// 取得済みアイテムリスト作成処理
-	reshasitem, err := hs.Add(&hasitemlist)
-	if err != nil {
-		message := fmt.Sprintf("HasItemService.Create: %v", err)
-		log.Println(message)
-		e := ResMess{Status: 500, Message: message}
-		return c.JSON(e.Status, e)
+	for _, item := range hasitem.Items {
+		hasitemlist := entity.HasItemList{UserID: i_user_id, ItemID: item.ID}
+
+		// 取得済みアイテムリスト作成処理
+		_, err := hs.Add(&hasitemlist)
+		if err != nil {
+			message := fmt.Sprintf("HasItemService.Create: %v", err)
+			log.Println(message)
+			e := ResMess{Status: 500, Message: message}
+			return c.JSON(e.Status, e)
+		}
 	}
 
-	return c.JSON(201, reshasitem)
+	// return c.JSON(201, reshasitem)
+	return nil
 }
 
 // GET ユーザーIDから取得済みアイテムリスト取得

@@ -134,18 +134,28 @@ func (gc GachaController) Draw(c echo.Context) error {
 	}
 
 	// 所持アイテムリストに追加
-	for _, item := range result {
-		err = hs.Add(token, user_id, item)
-		if err != nil {
-			log.Printf("hs.Change error: %v\n", err)
-			m := map[string]interface{}{
-				"message": "所持アイテムリスト追加に失敗しました。",
-				"result":  result,
-				"coin":    coin,
-			}
-			return c.Render(http.StatusBadRequest, "gachatop.html", m)
+	err = hs.Add(token, user_id, result)
+	if err != nil {
+		log.Printf("hs.Change error: %v\n", err)
+		m := map[string]interface{}{
+			"message": "所持アイテムリスト追加に失敗しました。",
+			"result":  result,
+			"coin":    coin,
 		}
+		return c.Render(http.StatusBadRequest, "gachatop.html", m)
 	}
+	// for _, item := range result {
+	// 	err = hs.Add(token, user_id, item)
+	// 	if err != nil {
+	// 		log.Printf("hs.Change error: %v\n", err)
+	// 		m := map[string]interface{}{
+	// 			"message": "所持アイテムリスト追加に失敗しました。",
+	// 			"result":  result,
+	// 			"coin":    coin,
+	// 		}
+	// 		return c.Render(http.StatusBadRequest, "gachatop.html", m)
+	// 	}
+	// }
 
 	// コイン消費
 	err = cs.ChangeQty(token, user_id, subcoin)
