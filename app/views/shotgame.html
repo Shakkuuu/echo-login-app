@@ -273,7 +273,7 @@
             mp.ctx.fillStyle = "rgb(0, 0, 0)";
             mp.ctx.strokeRect(0,0,400,300); //外枠
             //紫
-            mp.ctx.fillStyle = "rgb(255, 0, 255)";
+            // mp.ctx.fillStyle = "rgb(255, 0, 255)";
             //文字は15ptのMSゴシック
             mp.ctx.font = "15px 'ＭＳ ゴシック'";
             mp.ctx.fillText("count:"+String(cnt), 10, 20); //時間
@@ -850,9 +850,9 @@
                             gameover=1;
                             //リスタートボタン表示
                             document.getElementById('rstart').style.display = "block";
-                            mp.ctx.fillStyle = "rgb(255, 0, 255)";
+                            mp.ctx.fillStyle = "rgb(0, 0, 0)";
                             mp.ctx.font = "30px 'ＭＳ ゴシック'";
-                            //紫色30ptでゲームオーバー表示
+                            //黒色30ptでゲームオーバー表示
                             mp.ctx.fillText("GAME OVER", 20, 120);
 
                             //コインゲットボタン表示
