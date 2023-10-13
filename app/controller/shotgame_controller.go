@@ -256,19 +256,28 @@ func (sc ShotGameController) StatusUp(c echo.Context) error {
 			}
 
 			// 消費した素材の削除
-			i := 0
-			for i < DAMAGERATE*damage {
-				err = hs.Delete(strconv.Itoa(DAMAGEID), token)
-				if err != nil {
-					log.Println("hs.Delete error")
-					m := map[string]interface{}{
-						"message": "素材の消費に失敗しました。",
-						"status":  status,
-					}
-					return c.Render(http.StatusBadRequest, "status.html", m)
+			err = hs.Delete(strconv.Itoa(DAMAGEID), token, DAMAGERATE*damage)
+			if err != nil {
+				log.Println("hs.Delete error")
+				m := map[string]interface{}{
+					"message": "素材の消費に失敗しました。",
+					"status":  status,
 				}
-				i++
+				return c.Render(http.StatusBadRequest, "status.html", m)
 			}
+			// i := 0
+			// for i < DAMAGERATE*damage {
+			// 	err = hs.Delete(strconv.Itoa(DAMAGEID), token)
+			// 	if err != nil {
+			// 		log.Println("hs.Delete error")
+			// 		m := map[string]interface{}{
+			// 			"message": "素材の消費に失敗しました。",
+			// 			"status":  status,
+			// 		}
+			// 		return c.Render(http.StatusBadRequest, "status.html", m)
+			// 	}
+			// 	i++
+			// }
 		}
 	case s_hp != "":
 		{
@@ -319,19 +328,28 @@ func (sc ShotGameController) StatusUp(c echo.Context) error {
 			}
 
 			// 消費した素材の削除
-			i := 0
-			for i < HPRATE*hp {
-				err = hs.Delete(strconv.Itoa(HPID), token)
-				if err != nil {
-					log.Println("hs.Delete error")
-					m := map[string]interface{}{
-						"message": "素材の消費に失敗しました。",
-						"status":  status,
-					}
-					return c.Render(http.StatusBadRequest, "status.html", m)
+			err = hs.Delete(strconv.Itoa(HPID), token, HPRATE*hp)
+			if err != nil {
+				log.Println("hs.Delete error")
+				m := map[string]interface{}{
+					"message": "素材の消費に失敗しました。",
+					"status":  status,
 				}
-				i++
+				return c.Render(http.StatusBadRequest, "status.html", m)
 			}
+			// i := 0
+			// for i < HPRATE*hp {
+			// 	err = hs.Delete(strconv.Itoa(HPID), token)
+			// 	if err != nil {
+			// 		log.Println("hs.Delete error")
+			// 		m := map[string]interface{}{
+			// 			"message": "素材の消費に失敗しました。",
+			// 			"status":  status,
+			// 		}
+			// 		return c.Render(http.StatusBadRequest, "status.html", m)
+			// 	}
+			// 	i++
+			// }
 		}
 	case s_shotspeed != "":
 		{
@@ -382,19 +400,28 @@ func (sc ShotGameController) StatusUp(c echo.Context) error {
 			}
 
 			// 消費した素材の削除
-			i := 0
-			for i < SHOTSPEEDRATE*shotspeed {
-				err = hs.Delete(strconv.Itoa(SHOTSPEEDID), token)
-				if err != nil {
-					log.Println("hs.Delete error")
-					m := map[string]interface{}{
-						"message": "素材の消費に失敗しました。",
-						"status":  status,
-					}
-					return c.Render(http.StatusBadRequest, "status.html", m)
+			err = hs.Delete(strconv.Itoa(SHOTSPEEDID), token, SHOTSPEEDRATE*shotspeed)
+			if err != nil {
+				log.Println("hs.Delete error")
+				m := map[string]interface{}{
+					"message": "素材の消費に失敗しました。",
+					"status":  status,
 				}
-				i++
+				return c.Render(http.StatusBadRequest, "status.html", m)
 			}
+			// i := 0
+			// for i < SHOTSPEEDRATE*shotspeed {
+			// 	err = hs.Delete(strconv.Itoa(SHOTSPEEDID), token)
+			// 	if err != nil {
+			// 		log.Println("hs.Delete error")
+			// 		m := map[string]interface{}{
+			// 			"message": "素材の消費に失敗しました。",
+			// 			"status":  status,
+			// 		}
+			// 		return c.Render(http.StatusBadRequest, "status.html", m)
+			// 	}
+			// 	i++
+			// }
 		}
 	case s_enmcool != "":
 		{
@@ -445,19 +472,28 @@ func (sc ShotGameController) StatusUp(c echo.Context) error {
 			}
 
 			// 消費した素材の削除
-			i := 0
-			for i < ENMCOOLRATE*enmcool {
-				err = hs.Delete(strconv.Itoa(ENMCOOLID), token)
-				if err != nil {
-					log.Println("hs.Delete error")
-					m := map[string]interface{}{
-						"message": "素材の消費に失敗しました。",
-						"status":  status,
-					}
-					return c.Render(http.StatusBadRequest, "status.html", m)
+			err = hs.Delete(strconv.Itoa(ENMCOOLID), token, ENMCOOLRATE*enmcool)
+			if err != nil {
+				log.Println("hs.Delete error")
+				m := map[string]interface{}{
+					"message": "素材の消費に失敗しました。",
+					"status":  status,
 				}
-				i++
+				return c.Render(http.StatusBadRequest, "status.html", m)
 			}
+			// i := 0
+			// for i < ENMCOOLRATE*enmcool {
+			// 	err = hs.Delete(strconv.Itoa(ENMCOOLID), token)
+			// 	if err != nil {
+			// 		log.Println("hs.Delete error")
+			// 		m := map[string]interface{}{
+			// 			"message": "素材の消費に失敗しました。",
+			// 			"status":  status,
+			// 		}
+			// 		return c.Render(http.StatusBadRequest, "status.html", m)
+			// 	}
+			// 	i++
+			// }
 		}
 	case s_score != "":
 		{
@@ -508,19 +544,28 @@ func (sc ShotGameController) StatusUp(c echo.Context) error {
 			}
 
 			// 消費した素材の削除
-			i := 0
-			for i < SCORERATE*score {
-				err = hs.Delete(strconv.Itoa(SCOREID), token)
-				if err != nil {
-					log.Println("hs.Delete error")
-					m := map[string]interface{}{
-						"message": "素材の消費に失敗しました。",
-						"status":  status,
-					}
-					return c.Render(http.StatusBadRequest, "status.html", m)
+			err = hs.Delete(strconv.Itoa(SCOREID), token, SCORERATE*score)
+			if err != nil {
+				log.Println("hs.Delete error")
+				m := map[string]interface{}{
+					"message": "素材の消費に失敗しました。",
+					"status":  status,
 				}
-				i++
+				return c.Render(http.StatusBadRequest, "status.html", m)
 			}
+			// i := 0
+			// for i < SCORERATE*score {
+			// 	err = hs.Delete(strconv.Itoa(SCOREID), token)
+			// 	if err != nil {
+			// 		log.Println("hs.Delete error")
+			// 		m := map[string]interface{}{
+			// 			"message": "素材の消費に失敗しました。",
+			// 			"status":  status,
+			// 		}
+			// 		return c.Render(http.StatusBadRequest, "status.html", m)
+			// 	}
+			// 	i++
+			// }
 		}
 	default:
 		log.Println("どのステータスも入力されていません。")

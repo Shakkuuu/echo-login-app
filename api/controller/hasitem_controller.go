@@ -113,17 +113,30 @@ func (hc HasItemController) GetByUserID(c echo.Context) error {
 
 // DELETE アイテムIDから取得済みアイテムリストの削除
 func (hc HasItemController) Delete(c echo.Context) error {
-	item_id := c.Param("item_id")
+	item_id := c.QueryParam("item_id")
+	str_times := c.QueryParam("times")
+
+	times, err := strconv.Atoi(str_times)
+	if err != nil {
+		message := fmt.Sprintf("strconv.Atoi error: %v", err)
+		log.Println(message)
+		e := ResMess{Status: 500, Message: message}
+		return c.JSON(e.Status, e)
+	}
 
 	var hs service.HasItemService
 
 	// 取得済みアイテムリスト削除処理
-	err := hs.Delete(item_id)
-	if err != nil {
-		message := fmt.Sprintf("HasItemService.Delete: %v", err)
-		log.Println(message)
-		e := ResMess{Status: 500, Message: message}
-		return c.JSON(e.Status, e)
+	var i int = 0
+	for i < times {
+		err := hs.Delete(item_id)
+		if err != nil {
+			message := fmt.Sprintf("HasItemService.Delete: %v", err)
+			log.Println(message)
+			e := ResMess{Status: 500, Message: message}
+			return c.JSON(e.Status, e)
+		}
+		i++
 	}
 
 	m := ResMess{Status: 200, Message: " HasItem Deleted: " + item_id}

@@ -125,8 +125,9 @@ func (hs HasItemService) Add(token string, user_id int, result []entity.Item) er
 }
 
 // アイテムリストから削除する処理
-func (hs HasItemService) Delete(id, token string) error {
-	url := "http://echo-login-app-api:8081/hasitem/" + id
+func (hs HasItemService) Delete(id, token string, times int) error {
+	// url := "http://echo-login-app-api:8081/hasitem/" + id
+	url := "http://echo-login-app-api:8081/hasitem?item_id=" + id + "&times=" + strconv.Itoa(times)
 
 	// apiへのユーザー情報送信
 	req, err := http.NewRequest(
