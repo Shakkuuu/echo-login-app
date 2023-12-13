@@ -77,7 +77,7 @@
         eny=[]; //敵機y座標
         ent=[]; //敵機体力
         ensize=20; //敵機大きさ
-        enmax=2000; //敵機最大
+        enmax=20000; //敵機最大
 
         entmax=10;  //初期の敵体力最大値
 
@@ -99,6 +99,8 @@
             document.getElementById('rstart').style.display = "none";
             //コインゲットボタン非表示
             document.getElementById('coinget').style.display = "none";
+            //ゲーム終了ボタン非表示
+            document.getElementById('gameend').style.display = "none";
         }
 
         //スタートボタン押下時に実行される
@@ -106,6 +108,8 @@
         {
             //スタートボタン非表示
             document.getElementById('start').style.display = "none";
+            //ゲーム終了ボタン表示
+            document.getElementById('gameend').style.display = "block";
             //キャンパスをクリアする
             mp.ctx.clearRect(0, 0, mp.canvas.width, mp.canvas.height);
             //初期化処理
@@ -121,12 +125,70 @@
             document.getElementById('rstart').style.display = "none";
             //コインゲットボタン非表示
             document.getElementById('coinget').style.display = "none";
+            //ゲーム終了ボタン表示
+            document.getElementById('gameend').style.display = "block";
             //キャンパスをクリアする
             mp.ctx.clearRect(0, 0, mp.canvas.width, mp.canvas.height);
             //初期化処理
             ini();
             //メインループ実行
             main();
+        }
+
+        // ゲーム終了ボタン押下時に実行される
+        function clgameend()
+        {
+            //ゲーム終了ボタン非表示
+            document.getElementById('gameend').style.display = "none";
+            //ゲームオーバー判定として、終了させる
+            //フラグを1にすることでゲームを止める
+            gameover=1;
+            //リスタートボタン表示
+            document.getElementById('rstart').style.display = "block";
+            mp.ctx.fillStyle = "rgb(0, 0, 0)";
+            mp.ctx.font = "30px 'ＭＳ ゴシック'";
+            //黒色30ptでゲームオーバー表示
+            mp.ctx.fillText("GAME OVER", 20, 120);
+
+            //コインゲットボタン表示
+            document.getElementById('coinget').style.display = "block";
+
+            // フォームを取得
+            var form = document.getElementById("scoform");
+
+            // フォームのinput要素に変数の値を設定
+            document.getElementById("addqty").value = String(sco*coinrate);
+
+            // フォーム送信時の処理を設定
+            form.addEventListener("submit", function(event) {
+                event.preventDefault(); // デフォルトのフォーム送信をキャンセル
+
+                // フォームデータを取得
+                var formData = new FormData(form);
+
+                // フォームデータを表示（テスト用）
+                for (var pair of formData.entries()) {
+                    console.log(pair[0] + ": " + pair[1]);
+                }
+
+                // フォームデータを非同期で送信
+                fetch(form.action, {
+                    method: form.method,
+                    body: formData
+                })
+                .then(function(response) {
+                    // レスポンスを処理
+                    return response.text();
+                })
+                .then(function(data) {
+                    console.log(data);
+                })
+                .catch(function(error) {
+                    console.error("エラー: " + error);
+                });
+                // フォームのinput要素に変数の値を設定
+                document.getElementById("addqty").value = "";
+            });
         }
 
         //キャンパス情報を保持する
@@ -846,6 +908,8 @@
                         // 変更 hp0になったらゲームオーバー
                         if (myhp==0){
                             //ゲームオーバー処理を行う
+                            //ゲーム終了ボタン非表示
+                            document.getElementById('gameend').style.display = "none";
                             //フラグを1にすることでゲームを止める
                             gameover=1;
                             //リスタートボタン表示
@@ -929,13 +993,14 @@
 	<canvas id="canvas_e" style="background-color: #ffffff;" width="400" height="300"></canvas><br>
 	<button id="start" class="std" onclick="clstart()">ゲーム開始</button>
 	<button id="rstart" class="std" onclick="rclstart()">もう一回！</button><br>
+    <button id="gameend" class="std" onclick="clgameend()">ゲーム終了</button><br>
 	<br>
 	矢印キー　上下左右移動<br>
 	スペースキー　ショット<br>
 	<br>
 	水色が自分、赤色が敵だよ。<br>
 	敵は体力が低くなると黒くなっていくよ。黒い敵を積極的に倒そう<br>
-    スコアによってコインがもらえるよ<br>
+    スコア×10のコインがもらえるよ<br>
     <br>
     GameOverになったら、下のボタンを押してコインを獲得しよう!<br>
     <form id="scoform" action="/app/coin/add" method="POST">
