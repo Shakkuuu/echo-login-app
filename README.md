@@ -489,7 +489,7 @@ const (
 ### 補足
 
 - UserのIDは99999999までのランダムな整数が自動で設定されます。
-- UserのPasswordはbcryptによってハッシュ化されて、apiとのやりとりや、データベースへの保存に使用されます。
+- UserのPasswordはbcryptによって暗号化されて、apiとのやりとりや、データベースへの保存に使用されます。
 - UserのGetAllやMemoのGetAll,GetByUserIDなど、複数のデータを取得する際は、リスト形式のJSONがレスポンスとして帰ってきます。
 - MemoなどのUser_IDは、そのメモを作成したユーザーのIDがForeignKeyとして保存されます。それにより、そのユーザーが作成したものをUser_IDから全取得できます。
 
