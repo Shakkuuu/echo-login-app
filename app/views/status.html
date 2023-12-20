@@ -10,31 +10,31 @@
     <h3>ダメージ：{{.status.Damage}}</h3>
     <p>素材必要個数30個 Damage20まで</p>
     <form action="/app/game/shot/status" method="POST">
-        <input type="number" name="damage">
+        <input type="number" name="damage" min="0">
         <p><input type="submit" value="強化"></p>
     </form>
     <h3>HP：{{.status.Hp}}</h3>
     <p>素材必要個数20個 Hp999まで</p>
     <form action="/app/game/shot/status" method="POST">
-        <input type="number" name="hp">
+        <input type="number" name="hp" min="0">
         <p><input type="submit" value="強化"></p>
     </form>
     <h3>射撃クールタイム：{{.status.ShotSpeed}}</h3>
     <p>素材必要個数25個 射撃クールタイム1まで</p>
     <form action="/app/game/shot/status" method="POST">
-        <input type="number" name="shotspeed">
+        <input type="number" name="shotspeed" min="0">
         <p><input type="submit" value="強化"></p>
     </form>
     <h3>敵の出現頻度増加：{{.status.EnmCool}} 秒ごと</h3>
     <p>素材必要個数25個 敵出現頻度600まで</p>
     <form action="/app/game/shot/status" method="POST">
-        <input type="number" name="enmcool">
+        <input type="number" name="enmcool" min="0">
         <p><input type="submit" value="強化"></p>
     </form>
     <h3>スコア倍率：{{.status.Score}}</h3>
     <p>素材必要個数10個 スコア倍率100まで</p>
     <form action="/app/game/shot/status" method="POST">
-        <input type="number" name="score">
+        <input type="number" name="score" min="0">
         <p><input type="submit" value="強化"></p>
     </form>
 
